@@ -264,25 +264,11 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
 /* ===== NOTICE ===== */
 .notice { text-align: center; font-size: 11px; color: var(--text-muted); padding: 10px 16px 6px; }
 
-/* ===== PRINT — mobile native only ===== */
+/* ===== PRINT — suppress everything, we use iframe method for all devices ===== */
 @media print {
-  @page { size: letter portrait; margin: 0.4in; }
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body * { visibility: hidden; }
   .action-bar { display: none !important; }
   .notice { display: none !important; }
-  body { max-width: none !important; padding: 0 !important; background: #fff !important; }
-  .page-wrapper { gap: 0 !important; }
-  .form-page {
-    page-break-after: always !important; break-after: page !important;
-    width: 100% !important; max-width: none !important;
-    padding: 12px !important; margin: 0 !important; background: #fff !important;
-    box-shadow: none !important;
-  }
-  .form-page:last-child { page-break-after: auto !important; break-after: auto !important; }
-  * { color: #1F2937 !important; background: transparent !important; box-shadow: none !important; }
-  table.mat-table th { background: #4B5563 !important; color: #fff !important; }
-  table.mat-table td.row-label { background: #f0f0f0 !important; }
-  table.mat-table td.row-label.section-header { background: #4B5563 !important; color: #fff !important; }
 }
 </style>
 </head>
@@ -293,8 +279,7 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
   <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:100%;">
     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;">
       <button class="btn" onclick="window.location.href='https://brandonaog.github.io/AOG-hub/'">🏠 HOME</button>
-      <button class="btn" id="printBtnMobile" onclick="printMobile()" style="display:none;">📄 PDF</button>
-      <button class="btn" id="printBtnDesktop" onclick="printAsImage()" style="display:none;">📄 PDF</button>
+      <button class="btn" id="printBtn" onclick="printAsImage()">📄 PDF</button>
       <button class="btn" onclick="clearForm()">🗑 CLEAR</button>
       <button class="btn" onclick="saveForIPhone()">📱 iPhone</button>
       <button class="btn" onclick="saveForAndroid()">🤖 Android</button>
@@ -488,16 +473,6 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 
-// ===== DEVICE DETECTION =====
-function isMobile() {
-  return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-function showCorrectPrintBtn() {
-  document.getElementById('printBtnMobile').style.display = isMobile() ? 'inline-flex' : 'none';
-  document.getElementById('printBtnDesktop').style.display = isMobile() ? 'none' : 'inline-flex';
-}
-window.addEventListener('resize', showCorrectPrintBtn);
-
 // ===== THEME =====
 const THEME_KEY = 'aog_gas_theme';
 function getInitialTheme() {
@@ -556,7 +531,6 @@ function buildTableRows(id, rows, sizes) {
   rows.forEach(name => addRow(tbody, name, sizes, false));
 }
 
-// Pipe table
 (function() {
   const tbody = document.getElementById('pipe-body');
   addRow(tbody, 'Rigid Pipe', pipeSizes, false);
@@ -564,7 +538,6 @@ function buildTableRows(id, rows, sizes) {
   fittingRows.forEach(name => addRow(tbody, name, pipeSizes, false));
 })();
 
-// Galvanized Nipples table
 (function() {
   const tbody = document.getElementById('galv-nipples-body');
   const sizes = ['2"','1-1/4"','1"','¾"','½"'];
@@ -613,10 +586,10 @@ function applyYNColors() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  applyYNColors(); setupThemeToggle(); showCorrectPrintBtn();
+  applyYNColors(); setupThemeToggle();
 });
 if (document.readyState !== 'loading') {
-  setTimeout(() => { applyYNColors(); setupThemeToggle(); showCorrectPrintBtn(); }, 50);
+  setTimeout(() => { applyYNColors(); setupThemeToggle(); }, 50);
 }
 
 // ===== CLEAR =====
@@ -630,34 +603,18 @@ function clearForm() {
   });
 }
 
-// ===== MOBILE PRINT =====
-function printMobile() {
-  setStatus('Opening print preview…');
-  const wasDark = document.body.classList.contains('dark-mode');
-  if (wasDark) document.body.classList.remove('dark-mode');
-  const ab = document.querySelector('.action-bar');
-  const nt = document.querySelector('.notice');
-  if (ab) ab.style.display = 'none';
-  if (nt) nt.style.display = 'none';
-  window.print();
-  if (ab) ab.style.display = '';
-  if (nt) nt.style.display = '';
-  if (wasDark) document.body.classList.add('dark-mode');
-  setStatus('');
-}
-
-// ===== DESKTOP PRINT — capture each page div separately =====
+// ===== CORE CAPTURE + PRINT — used by ALL devices =====
 function printAsImage() {
-  const btn = document.getElementById('printBtnDesktop');
-  btn.textContent = '⏳ Rendering…';
+  const btn = document.getElementById('printBtn');
+  btn.textContent = '⏳ Please wait…';
   btn.disabled = true;
-  setStatus('Capturing form pages, please wait…');
+  setStatus('Capturing pages, please wait…');
 
-  // Switch to light mode for clean capture
+  // Force light mode for capture
   const wasDark = document.body.classList.contains('dark-mode');
   if (wasDark) document.body.classList.remove('dark-mode');
 
-  // Hide UI chrome — visibility:hidden keeps layout stable so pages don't reflow
+  // Hide UI chrome without reflowing layout
   const ab = document.querySelector('.action-bar');
   const nt = document.querySelector('.notice');
   if (ab) ab.style.visibility = 'hidden';
@@ -668,67 +625,90 @@ function printAsImage() {
     document.getElementById('page2')
   ];
 
-  // Letter at 96dpi = 816 × 1056px
-  const LETTER_W = 816;
-  const LETTER_H = 1056;
+  // --- Determine target width ---
+  // On mobile, page1/page2 are full viewport width.
+  // We want to render at a fixed "desktop-like" width so the
+  // two-column layout is preserved in the capture.
+  // We temporarily set each page to 1050px wide, capture, then restore.
+  const RENDER_W = 1050; // logical px — matches max-width on desktop
 
-  // Capture options — capture each page at its exact rendered size
-  const captureOpts = {
-    scale: 2,           // 2× for sharpness
-    useCORS: true,
-    backgroundColor: '#ffffff',
-    logging: false
-  };
+  // Letter page at 96dpi = 816 × 1056 logical px
+  // We render at 2× so canvas pixels = 2100 × (auto)
+  // Then we fit to Letter width in the iframe.
+  const LETTER_W_PX = 816;
+  const LETTER_H_PX = 1056;
 
-  // Wait a tick for visibility change to settle
+  // Save original styles
+  const origStyles = pages.map(p => ({
+    width: p.style.width,
+    maxWidth: p.style.maxWidth,
+    minWidth: p.style.minWidth
+  }));
+
+  // Lock each page to RENDER_W so layout matches desktop
+  pages.forEach(p => {
+    p.style.width = RENDER_W + 'px';
+    p.style.maxWidth = RENDER_W + 'px';
+    p.style.minWidth = RENDER_W + 'px';
+  });
+
+  // Give browser a frame to reflow at the new width
   setTimeout(() => {
-    // Capture all pages in parallel
     const promises = pages.map(page =>
       html2canvas(page, {
-        ...captureOpts,
-        width: page.offsetWidth,
-        height: page.offsetHeight,
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        width: RENDER_W,
+        height: page.scrollHeight,
+        windowWidth: RENDER_W,
         scrollX: 0,
-        scrollY: -window.scrollY
+        scrollY: 0
       })
     );
 
     Promise.all(promises).then(canvases => {
 
-      // Restore UI + theme immediately after capture
+      // Restore page widths
+      pages.forEach((p, i) => {
+        p.style.width = origStyles[i].width;
+        p.style.maxWidth = origStyles[i].maxWidth;
+        p.style.minWidth = origStyles[i].minWidth;
+      });
+
+      // Restore UI + theme
       if (ab) ab.style.visibility = '';
       if (nt) nt.style.visibility = '';
       if (wasDark) document.body.classList.add('dark-mode');
 
-      // For each canvas, build a scaled image that fits exactly into Letter width.
-      // If the page is taller than one letter, it tiles onto additional pages.
+      // Build iframe pages
       let pagesHTML = '';
 
       canvases.forEach(canvas => {
-        // canvas is 2× resolution — logical size is canvas.width/2 × canvas.height/2
-        const logicalW = canvas.width / 2;
+        // canvas is 2× — logical render size
+        const logicalW = canvas.width / 2;   // = RENDER_W
         const logicalH = canvas.height / 2;
 
-        // Scale so image fills letter width exactly
-        const scaleToLetter = LETTER_W / logicalW;
-        const scaledH = logicalH * scaleToLetter;
-        const imgW = LETTER_W;          // final display width in iframe px
-        const imgH = scaledH;           // final display height
+        // Scale image to fit Letter width exactly
+        const scale = LETTER_W_PX / logicalW;
+        const imgDisplayW = LETTER_W_PX;
+        const imgDisplayH = logicalH * scale;
 
         const dataURL = canvas.toDataURL('image/png');
 
-        if (imgH <= LETTER_H) {
-          // ── Fits on one page ──
+        if (imgDisplayH <= LETTER_H_PX) {
+          // Fits on one letter page — center vertically optional
           pagesHTML += `
             <div class="print-page">
               <img src="${dataURL}"
-                   style="width:${imgW}px;height:${imgH}px;display:block;" />
+                   style="width:${imgDisplayW}px;height:${imgDisplayH}px;display:block;" />
             </div>`;
         } else {
-          // ── Taller than one letter page — slice into pieces ──
-          const numSlices = Math.ceil(imgH / LETTER_H);
+          // Taller than one page — slice
+          const numSlices = Math.ceil(imgDisplayH / LETTER_H_PX);
           for (let i = 0; i < numSlices; i++) {
-            const offsetY = -(i * LETTER_H);
+            const offsetY = -(i * LETTER_H_PX);
             pagesHTML += `
               <div class="print-page">
                 <div class="clip">
@@ -737,8 +717,8 @@ function printAsImage() {
                          position:absolute;
                          top:${offsetY}px;
                          left:0;
-                         width:${imgW}px;
-                         height:${imgH}px;
+                         width:${imgDisplayW}px;
+                         height:${imgDisplayH}px;
                        " />
                 </div>
               </div>`;
@@ -753,32 +733,35 @@ function printAsImage() {
 
       const doc = iframe.contentWindow.document;
       doc.open();
-      doc.write(`<!DOCTYPE html><html><head><style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        @page { size:${LETTER_W}px ${LETTER_H}px; margin:0; }
-        body { margin:0; padding:0; background:#fff; }
-        .print-page {
-          width:${LETTER_W}px;
-          height:${LETTER_H}px;
-          overflow:hidden;
-          page-break-after:always;
-          break-after:page;
-          position:relative;
-          background:#fff;
-        }
-        .print-page:last-child {
-          page-break-after:avoid;
-          break-after:avoid;
-        }
-        .clip {
-          position:absolute;
-          top:0; left:0;
-          width:${LETTER_W}px;
-          height:${LETTER_H}px;
-          overflow:hidden;
-        }
-        img { display:block; }
-      </style></head><body>${pagesHTML}</body></html>`);
+      doc.write(`<!DOCTYPE html><html><head>
+        <meta charset="UTF-8">
+        <style>
+          * { margin:0; padding:0; box-sizing:border-box; }
+          @page { size:${LETTER_W_PX}px ${LETTER_H_PX}px; margin:0; }
+          body { margin:0; padding:0; background:#fff; }
+          .print-page {
+            width:${LETTER_W_PX}px;
+            height:${LETTER_H_PX}px;
+            overflow:hidden;
+            page-break-after:always;
+            break-after:page;
+            position:relative;
+            background:#fff;
+          }
+          .print-page:last-child {
+            page-break-after:avoid;
+            break-after:avoid;
+          }
+          .clip {
+            position:absolute;
+            top:0; left:0;
+            width:${LETTER_W_PX}px;
+            height:${LETTER_H_PX}px;
+            overflow:hidden;
+          }
+          img { display:block; }
+        </style>
+      </head><body>${pagesHTML}</body></html>`);
       doc.close();
 
       iframe.onload = () => {
@@ -790,12 +773,17 @@ function printAsImage() {
             btn.textContent = '📄 PDF';
             btn.disabled = false;
             setStatus('');
-          }, 2000);
-        }, 500);
+          }, 3000);
+        }, 800);
       };
 
     }).catch(err => {
       console.error('Capture error:', err);
+      pages.forEach((p, i) => {
+        p.style.width = origStyles[i].width;
+        p.style.maxWidth = origStyles[i].maxWidth;
+        p.style.minWidth = origStyles[i].minWidth;
+      });
       if (ab) ab.style.visibility = '';
       if (nt) nt.style.visibility = '';
       if (wasDark) document.body.classList.add('dark-mode');
@@ -805,17 +793,17 @@ function printAsImage() {
       setTimeout(() => setStatus(''), 4000);
     });
 
-  }, 150); // settle delay
+  }, 200); // reflow settle time
 }
 
-// ===== iPHONE =====
+// ===== iPHONE SAVE =====
 function saveForIPhone() {
   setStatus('Rendering pages, please wait…');
   const pages = document.querySelectorAll('.form-page');
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;';
   const closeBtn = document.createElement('button');
-  closeBtn.style.cssText = 'position:sticky;top:16px;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:bold;z-index:10000;';
+  closeBtn.style.cssText = 'position:sticky;top:0;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:bold;z-index:10000;margin-bottom:12px;';
   closeBtn.textContent = '✕ Close';
   const container = document.createElement('div');
   container.style.cssText = 'display:flex;flex-direction:column;gap:12px;width:100%;max-width:600px;';
@@ -823,50 +811,55 @@ function saveForIPhone() {
   const wasDark = document.body.classList.contains('dark-mode');
   if (wasDark) document.body.classList.remove('dark-mode');
   let completed = 0;
+  const RENDER_W = 1050;
   pages.forEach((page, idx) => {
-    const wrapper = document.createElement('div'); wrapper.style.cssText = 'text-align:center;';
-    const lbl = document.createElement('div'); lbl.style.cssText = 'color:#ccc;font-size:11px;margin-bottom:8px;';
-    lbl.textContent = `Page ${idx+1} of ${pages.length}`;
-    const img = document.createElement('img');
-    html2canvas(page, { scale:2, useCORS:true, backgroundColor:'#fff', logging:false }).then(canvas => {
-      img.src = canvas.toDataURL('image/jpeg', 0.85);
-      img.style.cssText = 'max-width:100%;border:2px solid #555;border-radius:4px;display:block;margin:0 auto;';
-      img.alt = `Form page ${idx+1}`;
-      wrapper.appendChild(lbl); wrapper.appendChild(img); container.appendChild(wrapper);
-      completed++;
-      if (completed === pages.length) {
-        setStatus('Images ready. Long-press to save to Photos.');
-        if (wasDark) document.body.classList.add('dark-mode');
-      }
-    });
+    const origW = page.style.width, origMax = page.style.maxWidth, origMin = page.style.minWidth;
+    page.style.width = RENDER_W + 'px';
+    page.style.maxWidth = RENDER_W + 'px';
+    page.style.minWidth = RENDER_W + 'px';
+    setTimeout(() => {
+      html2canvas(page, { scale:2, useCORS:true, backgroundColor:'#fff', logging:false, width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W }).then(canvas => {
+        page.style.width = origW; page.style.maxWidth = origMax; page.style.minWidth = origMin;
+        const wrapper = document.createElement('div'); wrapper.style.cssText = 'text-align:center;';
+        const lbl = document.createElement('div'); lbl.style.cssText = 'color:#ccc;font-size:11px;margin-bottom:6px;';
+        lbl.textContent = `Page ${idx+1} — long-press image to save`;
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/jpeg', 0.88);
+        img.style.cssText = 'max-width:100%;border:2px solid #555;border-radius:4px;display:block;margin:0 auto;';
+        img.alt = `Form page ${idx+1}`;
+        wrapper.appendChild(lbl); wrapper.appendChild(img); container.appendChild(wrapper);
+        completed++;
+        if (completed === pages.length) { setStatus('Long-press each image to save to Photos.'); if (wasDark) document.body.classList.add('dark-mode'); }
+      });
+    }, idx * 100);
   });
-  closeBtn.onclick = () => {
-    setStatus('');
-    if (wasDark) document.body.classList.add('dark-mode');
-    document.body.removeChild(overlay);
-  };
+  closeBtn.onclick = () => { setStatus(''); if (wasDark) document.body.classList.add('dark-mode'); document.body.removeChild(overlay); };
 }
 
-// ===== ANDROID =====
+// ===== ANDROID SAVE =====
 function saveForAndroid() {
   setStatus('Rendering pages, please wait…');
   const pages = document.querySelectorAll('.form-page');
   const wasDark = document.body.classList.contains('dark-mode');
   if (wasDark) document.body.classList.remove('dark-mode');
+  const RENDER_W = 1050;
   let completed = 0;
   pages.forEach((page, idx) => {
-    html2canvas(page, { scale:2, useCORS:true, backgroundColor:'#fff', logging:false }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = pages.length === 1 ? 'AOG_Gas_Install_Form.jpg' : `AOG_Gas_Install_Form_Page${idx+1}.jpg`;
-      link.href = canvas.toDataURL('image/jpeg', 0.85);
-      link.click();
-      completed++;
-      if (completed === pages.length) {
-        setStatus(`${pages.length} image(s) sent to your Downloads folder.`);
-        setTimeout(() => setStatus(''), 4000);
-        if (wasDark) document.body.classList.add('dark-mode');
-      }
-    });
+    const origW = page.style.width, origMax = page.style.maxWidth, origMin = page.style.minWidth;
+    page.style.width = RENDER_W + 'px';
+    page.style.maxWidth = RENDER_W + 'px';
+    page.style.minWidth = RENDER_W + 'px';
+    setTimeout(() => {
+      html2canvas(page, { scale:2, useCORS:true, backgroundColor:'#fff', logging:false, width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W }).then(canvas => {
+        page.style.width = origW; page.style.maxWidth = origMax; page.style.minWidth = origMin;
+        const link = document.createElement('a');
+        link.download = pages.length === 1 ? 'AOG_Gas_Install.jpg' : `AOG_Gas_Install_Page${idx+1}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 0.88);
+        link.click();
+        completed++;
+        if (completed === pages.length) { setStatus('Images saved to Downloads.'); setTimeout(() => setStatus(''), 4000); if (wasDark) document.body.classList.add('dark-mode'); }
+      });
+    }, idx * 100);
   });
 }
 
