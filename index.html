@@ -264,7 +264,7 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
 /* ===== NOTICE ===== */
 .notice { text-align: center; font-size: 11px; color: var(--text-muted); padding: 10px 16px 6px; }
 
-/* ===== PRINT — suppress everything, we use iframe method for all devices ===== */
+/* ===== PRINT ===== */
 @media print {
   body * { visibility: hidden; }
   .action-bar { display: none !important; }
@@ -603,18 +603,16 @@ function clearForm() {
   });
 }
 
-// ===== CORE CAPTURE + PRINT — used by ALL devices =====
+// ===== PRINT AS IMAGE =====
 function printAsImage() {
   const btn = document.getElementById('printBtn');
   btn.textContent = '⏳ Please wait…';
   btn.disabled = true;
   setStatus('Capturing pages, please wait…');
 
-  // Force light mode for capture
   const wasDark = document.body.classList.contains('dark-mode');
   if (wasDark) document.body.classList.remove('dark-mode');
 
-  // Hide UI chrome without reflowing layout
   const ab = document.querySelector('.action-bar');
   const nt = document.querySelector('.notice');
   if (ab) ab.style.visibility = 'hidden';
@@ -625,34 +623,22 @@ function printAsImage() {
     document.getElementById('page2')
   ];
 
-  // --- Determine target width ---
-  // On mobile, page1/page2 are full viewport width.
-  // We want to render at a fixed "desktop-like" width so the
-  // two-column layout is preserved in the capture.
-  // We temporarily set each page to 1050px wide, capture, then restore.
-  const RENDER_W = 1050; // logical px — matches max-width on desktop
-
-  // Letter page at 96dpi = 816 × 1056 logical px
-  // We render at 2× so canvas pixels = 2100 × (auto)
-  // Then we fit to Letter width in the iframe.
+  const RENDER_W = 1050;
   const LETTER_W_PX = 816;
   const LETTER_H_PX = 1056;
 
-  // Save original styles
   const origStyles = pages.map(p => ({
     width: p.style.width,
     maxWidth: p.style.maxWidth,
     minWidth: p.style.minWidth
   }));
 
-  // Lock each page to RENDER_W so layout matches desktop
   pages.forEach(p => {
     p.style.width = RENDER_W + 'px';
     p.style.maxWidth = RENDER_W + 'px';
     p.style.minWidth = RENDER_W + 'px';
   });
 
-  // Give browser a frame to reflow at the new width
   setTimeout(() => {
     const promises = pages.map(page =>
       html2canvas(page, {
@@ -686,26 +672,20 @@ function printAsImage() {
       let pagesHTML = '';
 
       canvases.forEach(canvas => {
-        // canvas is 2× — logical render size
-        const logicalW = canvas.width / 2;   // = RENDER_W
+        const logicalW = canvas.width / 2;
         const logicalH = canvas.height / 2;
-
-        // Scale image to fit Letter width exactly
         const scale = LETTER_W_PX / logicalW;
         const imgDisplayW = LETTER_W_PX;
         const imgDisplayH = logicalH * scale;
-
         const dataURL = canvas.toDataURL('image/png');
 
         if (imgDisplayH <= LETTER_H_PX) {
-          // Fits on one letter page — center vertically optional
           pagesHTML += `
             <div class="print-page">
               <img src="${dataURL}"
                    style="width:${imgDisplayW}px;height:${imgDisplayH}px;display:block;" />
             </div>`;
         } else {
-          // Taller than one page — slice
           const numSlices = Math.ceil(imgDisplayH / LETTER_H_PX);
           for (let i = 0; i < numSlices; i++) {
             const offsetY = -(i * LETTER_H_PX);
@@ -726,7 +706,7 @@ function printAsImage() {
         }
       });
 
-      // Inject into hidden iframe and print
+      // Build and print iframe
       const iframe = document.createElement('iframe');
       iframe.style.cssText = 'position:fixed;top:-99999px;left:-99999px;width:1px;height:1px;border:none;';
       document.body.appendChild(iframe);
@@ -764,18 +744,18 @@ function printAsImage() {
       </head><body>${pagesHTML}</body></html>`);
       doc.close();
 
-      iframe.onload = () => {
+      // Single timeout — wait for iframe to render, then print
+      setTimeout(() => {
+        setStatus('');
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
         setTimeout(() => {
-          iframe.contentWindow.focus();
-          iframe.contentWindow.print();
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-            btn.textContent = '📄 PDF';
-            btn.disabled = false;
-            setStatus('');
-          }, 3000);
-        }, 800);
-      };
+          document.body.removeChild(iframe);
+          btn.textContent = '📄 PDF';
+          btn.disabled = false;
+          setStatus('');
+        }, 3000);
+      }, 1500);
 
     }).catch(err => {
       console.error('Capture error:', err);
@@ -793,7 +773,7 @@ function printAsImage() {
       setTimeout(() => setStatus(''), 4000);
     });
 
-  }, 200); // reflow settle time
+  }, 200);
 }
 
 // ===== iPHONE SAVE =====
@@ -829,11 +809,18 @@ function saveForIPhone() {
         img.alt = `Form page ${idx+1}`;
         wrapper.appendChild(lbl); wrapper.appendChild(img); container.appendChild(wrapper);
         completed++;
-        if (completed === pages.length) { setStatus('Long-press each image to save to Photos.'); if (wasDark) document.body.classList.add('dark-mode'); }
+        if (completed === pages.length) {
+          setStatus('Long-press each image to save to Photos.');
+          if (wasDark) document.body.classList.add('dark-mode');
+        }
       });
     }, idx * 100);
   });
-  closeBtn.onclick = () => { setStatus(''); if (wasDark) document.body.classList.add('dark-mode'); document.body.removeChild(overlay); };
+  closeBtn.onclick = () => {
+    setStatus('');
+    if (wasDark) document.body.classList.add('dark-mode');
+    document.body.removeChild(overlay);
+  };
 }
 
 // ===== ANDROID SAVE =====
@@ -857,7 +844,11 @@ function saveForAndroid() {
         link.href = canvas.toDataURL('image/jpeg', 0.88);
         link.click();
         completed++;
-        if (completed === pages.length) { setStatus('Images saved to Downloads.'); setTimeout(() => setStatus(''), 4000); if (wasDark) document.body.classList.add('dark-mode'); }
+        if (completed === pages.length) {
+          setStatus('Images saved to Downloads.');
+          setTimeout(() => setStatus(''), 4000);
+          if (wasDark) document.body.classList.add('dark-mode');
+        }
       });
     }, idx * 100);
   });
