@@ -302,6 +302,7 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
     display: block !important;
   }
 
+  /* Remove ALL forced page breaks — let content flow */
   .form-page {
     display: block !important;
     width: 100% !important;
@@ -311,14 +312,12 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
     background: #fff !important;
     box-shadow: none !important;
     overflow: visible !important;
-    page-break-after: always !important;
-    break-after: page !important;
-    page-break-inside: avoid !important;
-  }
-
-  .form-page:last-child {
     page-break-after: auto !important;
     break-after: auto !important;
+    page-break-before: auto !important;
+    break-before: auto !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
   }
 
   /* PAGE 1 */
@@ -351,7 +350,11 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
     gap: 4px 14px !important;
   }
   #page1 .section { margin-bottom: 5px !important; }
-  #page1 .section-title { font-size: 9px !important; margin-bottom: 3px !important; padding-bottom: 2px !important; }
+  #page1 .section-title {
+    font-size: 9px !important;
+    margin-bottom: 3px !important;
+    padding-bottom: 2px !important;
+  }
   #page1 .section-row {
     font-size: 8.5px !important;
     margin-bottom: 1.5px !important;
@@ -395,7 +398,7 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
     background: #4B5563 !important;
     color: #fff !important;
     font-size: 8px !important;
-    padding: 2px 2px !important;
+    padding: 2px !important;
     border: 1px solid #333 !important;
   }
   #page1 table.mat-table td {
@@ -426,11 +429,7 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
     width: 100% !important;
   }
 
-  /* PAGE 2 */
-  #page2 {
-    page-break-before: always !important;
-    break-before: page !important;
-  }
+  /* PAGE 2 — no forced page-break-before, just flows after page1 */
   #page2 * {
     color: #1F2937 !important;
     background: transparent !important;
