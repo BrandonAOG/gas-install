@@ -668,14 +668,13 @@ function printAsImage() {
       if (nt) nt.style.visibility = '';
       if (wasDark) document.body.classList.add('dark-mode');
 
-      // Build iframe pages
+      // Build iframe pages — physical units (inches)
       let pagesHTML = '';
 
       canvases.forEach(canvas => {
         const logicalW = canvas.width / 2;
         const logicalH = canvas.height / 2;
         const scale = LETTER_W_PX / logicalW;
-        const imgDisplayW = LETTER_W_PX;
         const imgDisplayH = logicalH * scale;
         const dataURL = canvas.toDataURL('image/png');
 
@@ -683,22 +682,23 @@ function printAsImage() {
           pagesHTML += `
             <div class="print-page">
               <img src="${dataURL}"
-                   style="width:${imgDisplayW}px;height:${imgDisplayH}px;display:block;" />
+                   style="width:8.5in;height:${(imgDisplayH / 96).toFixed(4)}in;display:block;" />
             </div>`;
         } else {
           const numSlices = Math.ceil(imgDisplayH / LETTER_H_PX);
           for (let i = 0; i < numSlices; i++) {
-            const offsetY = -(i * LETTER_H_PX);
+            const offsetIn = ((i * LETTER_H_PX) / 96 * -1).toFixed(4);
+            const imgHeightIn = (imgDisplayH / 96).toFixed(4);
             pagesHTML += `
               <div class="print-page">
                 <div class="clip">
                   <img src="${dataURL}"
                        style="
                          position:absolute;
-                         top:${offsetY}px;
+                         top:${offsetIn}in;
                          left:0;
-                         width:${imgDisplayW}px;
-                         height:${imgDisplayH}px;
+                         width:8.5in;
+                         height:${imgHeightIn}in;
                        " />
                 </div>
               </div>`;
@@ -706,7 +706,7 @@ function printAsImage() {
         }
       });
 
-      // Build and print iframe
+      // Build and print iframe — physical units (inches)
       const iframe = document.createElement('iframe');
       iframe.style.cssText = 'position:fixed;top:-99999px;left:-99999px;width:1px;height:1px;border:none;';
       document.body.appendChild(iframe);
@@ -717,11 +717,11 @@ function printAsImage() {
         <meta charset="UTF-8">
         <style>
           * { margin:0; padding:0; box-sizing:border-box; }
-          @page { size:${LETTER_W_PX}px ${LETTER_H_PX}px; margin:0; }
+          @page { size:8.5in 11in; margin:0; }
           body { margin:0; padding:0; background:#fff; }
           .print-page {
-            width:${LETTER_W_PX}px;
-            height:${LETTER_H_PX}px;
+            width:8.5in;
+            height:11in;
             overflow:hidden;
             page-break-after:always;
             break-after:page;
@@ -735,8 +735,8 @@ function printAsImage() {
           .clip {
             position:absolute;
             top:0; left:0;
-            width:${LETTER_W_PX}px;
-            height:${LETTER_H_PX}px;
+            width:8.5in;
+            height:11in;
             overflow:hidden;
           }
           img { display:block; }
@@ -744,7 +744,6 @@ function printAsImage() {
       </head><body>${pagesHTML}</body></html>`);
       doc.close();
 
-      // Single timeout — wait for iframe to render, then print
       setTimeout(() => {
         setStatus('');
         iframe.contentWindow.focus();
