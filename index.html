@@ -4,527 +4,520 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Always On Generators – Gas Installation Checklist</title>
+
 <style>
-/* ══ TOKENS ══ */
 :root {
-  --cyan:#D97706;
-  --bg:#F5F5F5;--panel:#FFFFFF;
-  --border:rgba(217,119,6,0.25);--border-bright:rgba(217,119,6,0.5);
-  --text:#1F2937;--text-muted:#6B7280;--text-dim:#9CA3AF;
-  --tbl-header-bg:#2C3E50;--tbl-header-fg:#FFFFFF;
-  --tbl-subhead-bg:#4A5568;--tbl-subhead-fg:#FFFFFF;
-  --tbl-row-odd:#FFFFFF;--tbl-row-even:#F7F8FA;
-  --tbl-border:#D1D5DB;--tbl-label-fg:#1F2937;
-  --radius:8px;
+  --cyan: #D97706;
+  --cyan-dim: #B45309;
+  --cyan-dark: #92400E;
+  --amber: #D97706;
+  --bg: #FFFFFF;
+  --bg3: #F8F8F8;
+  --bg4: #F0F0F0;
+  --panel: #FFFFFF;
+  --border: rgba(217,119,6,0.25);
+  --border-bright: rgba(217,119,6,0.5);
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --text-dim: #9CA3AF;
+  --glow: 0 0 8px rgba(217,119,6,0.3), 0 0 20px rgba(217,119,6,0.1);
+  --icon-color-primary: #D97706;
 }
+
 body.dark-mode {
-  --bg:#0A0E27;--panel:#0F1535;
-  --border:rgba(0,255,200,0.08);--border-bright:rgba(0,255,200,0.25);
-  --text:#E0F7FF;--text-muted:#7DD3FC;--text-dim:#38BDF8;
-  --cyan:#00FFC8;
-  --tbl-header-bg:#0F2D52;--tbl-header-fg:#00FFC8;
-  --tbl-subhead-bg:#1A3A6F;--tbl-subhead-fg:#7DD3FC;
-  --tbl-row-odd:rgba(15,21,53,0.9);--tbl-row-even:rgba(26,40,71,0.6);
-  --tbl-border:rgba(0,255,200,0.18);--tbl-label-fg:#E0F7FF;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{width:100%;overflow-x:hidden;}
-body{
-  font-family:Arial,sans-serif;
-  background:var(--bg);color:var(--text);
-  min-height:100vh;-webkit-text-size-adjust:100%;
-  transition:background 0.3s,color 0.3s;
-}
-body.dark-mode{
-  background:linear-gradient(135deg,#0A0E27,#0F1535,#0A1628,#0F1535,#0A0E27);
-  background-attachment:fixed;
+  --bg: #0A0E27;
+  --bg3: #1A2847;
+  --bg4: #243458;
+  --panel: #0F1535;
+  --border: rgba(0,255,200,0.08);
+  --border-bright: rgba(0,255,200,0.25);
+  --text: #E0F7FF;
+  --text-muted: #7DD3FC;
+  --text-dim: #38BDF8;
+  --glow: 0 0 8px rgba(0,255,200,0.3), 0 0 20px rgba(0,255,200,0.1);
+  --cyan: #00FFC8;
+  --cyan-dim: #06B6D4;
+  --icon-color-primary: #00FFC8;
 }
 
-/* ══ ACTION BAR ══ */
-.action-bar{
-  position:sticky;top:0;z-index:1000;
-  background:var(--panel);padding:10px 12px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;flex-wrap:wrap;
-  border-bottom:2px solid var(--border-bright);
-  box-shadow:0 2px 12px rgba(0,0,0,0.15);
-}
-body.dark-mode .action-bar{
-  background:rgba(15,21,53,0.97);
-  border-bottom-color:rgba(0,255,200,0.3);
-}
-.bar-left{display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex:1;}
-.bar-right{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-.btn{
-  padding:9px 14px;font-size:12px;font-weight:700;
-  letter-spacing:0.4px;border:1.5px solid var(--border-bright);
-  background:var(--panel);border-radius:6px;cursor:pointer;
-  color:var(--cyan);font-family:Arial,sans-serif;text-transform:uppercase;
-  transition:all 0.15s;-webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;white-space:nowrap;
-  min-height:40px;display:flex;align-items:center;gap:4px;
-}
-.btn:active{transform:scale(0.96);opacity:0.85;}
-body.dark-mode .btn{background:rgba(0,255,200,0.06);border-color:rgba(0,255,200,0.3);}
-.theme-btn{
-  width:40px;height:40px;border-radius:6px;
-  border:1.5px solid var(--border-bright);background:var(--panel);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all 0.3s;-webkit-tap-highlight-color:transparent;flex-shrink:0;
-}
-body.dark-mode .theme-btn{background:rgba(0,255,200,0.06);border-color:rgba(0,255,200,0.3);}
-.theme-icon{
-  width:20px;height:20px;position:absolute;
-  stroke:var(--cyan);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-  fill:none;transition:opacity 0.3s,transform 0.3s;
-}
-.theme-icon-moon{opacity:0;}
-body.dark-mode .theme-icon-sun{opacity:0;transform:rotate(-90deg);}
-body.dark-mode .theme-icon-moon{opacity:1;}
-#save-status{
-  width:100%;text-align:center;font-size:11px;
-  color:var(--text-muted);min-height:14px;padding:0 4px;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { width: 100%; height: 100%; overflow-x: hidden; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0;
+  padding-bottom: env(safe-area-inset-bottom, 24px);
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
 }
 
-/* ══ CONTENT ══ */
-.content{
-  max-width:900px;margin:0 auto;
-  padding:12px 12px 40px;
-  display:flex;flex-direction:column;gap:16px;
+body.dark-mode {
+  background: linear-gradient(135deg, #0A0E27 0%, #0F1535 25%, #0A1628 50%, #0F1535 75%, #0A0E27 100%);
+  background-attachment: fixed;
 }
 
-/* ══ CARD ══ */
-.card{
-  background:var(--panel);border-radius:var(--radius);
-  border:1px solid var(--border);
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);overflow:hidden;
+/* ===== STICKY ACTION BAR ===== */
+.action-bar {
+  position: sticky; top: 0; z-index: 1000; width: 100%;
+  background: var(--panel); padding: 12px 16px;
+  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+  border-bottom: 1px solid var(--border-bright);
+  transition: all 0.3s ease; max-width: 1050px; box-sizing: border-box;
 }
-body.dark-mode .card{
-  background:rgba(15,21,53,0.95);
-  box-shadow:0 2px 16px rgba(0,0,0,0.4);
-}
-.card-header{
-  background:var(--tbl-header-bg);color:var(--tbl-header-fg);
-  padding:10px 14px;font-weight:700;font-size:13px;
-  letter-spacing:0.5px;display:flex;align-items:center;gap:8px;
-}
-.card-body{padding:14px;}
+@media (max-width: 768px) { .action-bar { padding: 10px 12px; gap: 8px; } }
 
-/* ══ FORM HEADER ══ */
-.form-header{
-  display:flex;align-items:center;gap:12px;
-  padding:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;
-}
-.logo-img{
-  width:44px;height:44px;border-radius:50%;object-fit:cover;
-  flex-shrink:0;border:2px solid var(--border-bright);
-}
-.company-name{
-  font-weight:900;font-size:16px;
-  font-family:'Arial Black',sans-serif;line-height:1.1;
-}
-.company-name span{color:#D97706;}
-body.dark-mode .company-name span{color:#00FFC8;}
-.form-title{
-  font-weight:700;font-size:13px;color:var(--text-muted);
-  margin-top:2px;letter-spacing:0.5px;text-transform:uppercase;
+body.dark-mode .action-bar {
+  background: linear-gradient(90deg, rgba(15,21,53,0.9) 0%, rgba(26,40,71,0.8) 50%, rgba(15,21,53,0.9) 100%);
+  border-bottom-color: rgba(0,255,200,0.25);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 20px rgba(0,255,200,0.08);
 }
 
-/* ══ FIELD GRID ══ */
-.field-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px 16px;padding:14px;border-bottom:1px solid var(--border);
+.btn {
+  padding: 9px 18px; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;
+  border: 1px solid rgba(217,119,6,0.4); background: rgba(217,119,6,0.05);
+  border-radius: 0; cursor: pointer; transition: all 0.15s ease;
+  font-family: Arial, sans-serif; color: var(--cyan); text-transform: uppercase;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  white-space: nowrap; flex-shrink: 0;
 }
-@media(max-width:480px){.field-grid{grid-template-columns:1fr;}}
-.field-item{display:flex;flex-direction:column;gap:4px;}
-.field-label{
-  font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:0.5px;color:var(--text-muted);
+@media (max-width: 640px) { .btn { padding: 8px 14px; font-size: 10px; } }
+body.dark-mode .btn {
+  background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.25);
+  color: #00FFC8; text-shadow: 0 0 4px rgba(0,255,200,0.3);
 }
-.field-input{
-  width:100%;border:none;border-bottom:2px solid var(--border);
-  padding:6px 4px;font-size:13px;background:transparent;color:var(--text);
-  font-family:Arial,sans-serif;outline:none;transition:border-color 0.2s;
-  -webkit-appearance:none;
-}
-.field-input:focus{border-bottom-color:var(--cyan);}
-body.dark-mode .field-input{border-bottom-color:rgba(0,255,200,0.2);color:#E0F7FF;}
-.field-input::placeholder{color:var(--text-dim);}
+.btn:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow); transform: translateY(-1px); }
+body.dark-mode .btn:hover { background: rgba(0,255,200,0.12); border-color: #00FFC8; box-shadow: 0 0 12px rgba(0,255,200,0.25); }
+.btn:active { transform: translateY(0); }
 
-/* ══ SECTION GRID ══ */
-.section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:600px){.section-grid{grid-template-columns:1fr;}}
-.section-title{
-  font-size:11px;font-weight:700;text-transform:uppercase;
-  letter-spacing:0.8px;color:var(--cyan);
-  padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:8px;
+.theme-toggle-btn {
+  position: relative; width: 36px; height: 36px; padding: 6px;
+  border: 1px solid rgba(217,119,6,0.4); background: rgba(217,119,6,0.05);
+  border-radius: 4px; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; color: var(--cyan); transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; flex-shrink: 0;
 }
+body.dark-mode .theme-toggle-btn {
+  background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.2); color: #00FFC8;
+}
+.theme-toggle-btn:hover { border-color: var(--cyan); transform: scale(1.08); }
+.theme-icon {
+  width: 18px; height: 18px; transition: all 0.3s ease; position: absolute;
+  fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  stroke: var(--icon-color-primary) !important;
+}
+.theme-icon.theme-icon-moon { opacity: 0; }
+body.dark-mode .theme-icon { opacity: 0; transform: rotate(-180deg); }
+body.dark-mode .theme-icon.theme-icon-moon { opacity: 1; transform: rotate(0deg); }
 
-/* ══ CHECK ITEMS ══ */
-.check-list{display:flex;flex-direction:column;gap:6px;}
-.check-item{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;padding:6px 10px;background:var(--bg);
-  border-radius:6px;font-size:12px;min-height:36px;flex-wrap:wrap;
+#save-status {
+  color: var(--text-muted); font-size: 11px; min-height: 16px;
+  text-align: center; transition: color 0.3s ease;
+  width: 100%; font-family: Arial, sans-serif;
 }
-body.dark-mode .check-item{background:rgba(255,255,255,0.04);}
-.check-label{font-weight:500;flex:1;min-width:0;}
-.check-label.bold-label{font-weight:700;}
-.yn-group{display:flex;gap:6px;flex-shrink:0;}
-.yn-btn{
-  padding:4px 10px;font-size:11px;font-weight:700;
-  border-radius:20px;border:1.5px solid #ccc;
-  background:transparent;cursor:pointer;transition:all 0.15s;
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-  color:var(--text);font-family:Arial,sans-serif;
-  min-width:36px;min-height:28px;
-}
-.yn-btn.yes-btn.active{background:#059669;border-color:#059669;color:#fff;}
-.yn-btn.no-btn.active{background:#DC2626;border-color:#DC2626;color:#fff;}
-body.dark-mode .yn-btn{border-color:rgba(0,255,200,0.3);color:#E0F7FF;}
-.inline-field{
-  border:none;border-bottom:1.5px solid var(--border);
-  background:transparent;color:var(--text);
-  font-size:12px;font-family:Arial,sans-serif;
-  padding:2px 4px;outline:none;min-width:60px;max-width:140px;flex:1;
-}
-body.dark-mode .inline-field{color:#E0F7FF;border-bottom-color:rgba(0,255,200,0.3);}
+body.dark-mode #save-status { color: #7DD3FC; }
 
-/* ══ REGULATOR GRID ══ */
-.reg-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:10px;padding:12px;
-}
-.reg-item{display:flex;flex-direction:column;gap:4px;}
-.reg-label{
-  font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:0.4px;color:var(--text-muted);
-}
-.reg-input{
-  border:none;border-bottom:2px solid var(--border);
-  background:transparent;color:var(--text);
-  font-size:13px;padding:4px 2px;outline:none;
-  font-family:Arial,sans-serif;transition:border-color 0.2s;width:100%;
-}
-.reg-input:focus{border-bottom-color:var(--cyan);}
-body.dark-mode .reg-input{border-bottom-color:rgba(0,255,200,0.2);color:#E0F7FF;}
-
-/* ══ TEXTAREA ══ */
-.note-area{
-  width:100%;resize:vertical;
-  border:1.5px solid var(--border);border-radius:6px;
-  padding:10px;font-size:13px;font-family:Arial,sans-serif;line-height:1.5;
-  color:var(--text);background:var(--panel);outline:none;
-  transition:border-color 0.2s;-webkit-appearance:none;
-}
-.note-area:focus{border-color:var(--cyan);}
-body.dark-mode .note-area{
-  background:rgba(10,14,39,0.6);border-color:rgba(0,255,200,0.2);color:#E0F7FF;
+.page-wrapper {
+  width: 100%; max-width: 1050px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 0; padding: 0;
 }
 
-/* ══ MATERIAL TABLES ══ */
-.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.table-scroll::-webkit-scrollbar{height:4px;}
-.table-scroll::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:2px;}
-table.mat-table{
-  border-collapse:collapse;width:100%;min-width:320px;
-  font-family:Arial,sans-serif;
+.form-page {
+  width: 100%; max-width: 1050px; background: var(--panel);
+  padding: 24px; box-sizing: border-box; transition: all 0.3s ease;
+  font-family: Arial, sans-serif; display: flex; flex-direction: column;
 }
+@media (max-width: 768px) { .form-page { padding: 16px; } }
+@media (max-width: 480px) { .form-page { padding: 12px; } }
+body.dark-mode .form-page {
+  background: linear-gradient(135deg, rgba(15,21,53,0.95) 0%, rgba(10,14,39,0.98) 100%);
+}
+
+/* ===== INPUTS ===== */
+input[type="text"], textarea {
+  font-family: Arial, sans-serif; font-size: 12px; color: var(--text);
+  background: var(--panel); border: none;
+  border-bottom: 1px solid rgba(217,119,6,0.25);
+  padding: 2px 4px; outline: none;
+  transition: all 0.2s; -webkit-appearance: none; appearance: none;
+  caret-color: var(--cyan); max-width: 100%;
+}
+input[type="text"]:focus, textarea:focus {
+  border-bottom-color: var(--cyan); background: rgba(217,119,6,0.04);
+  box-shadow: 0 2px 0 0 rgba(217,119,6,0.3);
+}
+body.dark-mode input[type="text"], body.dark-mode textarea {
+  background: rgba(10,14,39,0.6); border-bottom-color: rgba(0,255,200,0.2);
+  color: #E0F7FF; caret-color: #00FFC8;
+}
+body.dark-mode input[type="text"]:focus, body.dark-mode textarea:focus {
+  border-bottom-color: #00FFC8; background: rgba(26,40,71,0.8);
+  box-shadow: 0 0 8px rgba(0,255,200,0.2);
+}
+input::placeholder, textarea::placeholder { color: var(--text-dim) !important; opacity: 1; }
+
+input[type="checkbox"] {
+  width: 14px; height: 14px; cursor: pointer; vertical-align: middle;
+  margin: 2px 4px 2px 0; accent-color: var(--cyan); flex-shrink: 0;
+}
+@media (max-width: 480px) { input[type="checkbox"] { width: 12px; height: 12px; margin: 1px 3px 1px 0; } }
+body.dark-mode input[type="checkbox"] { accent-color: #00FFC8; }
+
+/* ===== MULTILINE TEXTAREA ===== */
+textarea.multiline {
+  width: 100%; resize: none;
+  border: 1px solid rgba(217,119,6,0.25);
+  border-radius: 3px; padding: 6px 8px;
+  font-size: 12px; font-family: Arial, sans-serif;
+  line-height: 1.5; color: var(--text);
+  background: var(--panel); outline: none;
+  overflow: hidden; display: block;
+}
+textarea.multiline:focus {
+  border-color: var(--cyan); background: rgba(217,119,6,0.04);
+  box-shadow: 0 0 0 2px rgba(217,119,6,0.15);
+}
+body.dark-mode textarea.multiline {
+  background: rgba(10,14,39,0.6); border-color: rgba(0,255,200,0.2); color: #E0F7FF;
+}
+body.dark-mode textarea.multiline:focus {
+  border-color: #00FFC8; background: rgba(26,40,71,0.8);
+  box-shadow: 0 0 8px rgba(0,255,200,0.2);
+}
+
+/* ===== YES/NO CHECKBOX ===== */
+.yn-checkbox-wrap {
+  display: inline-flex; align-items: center; gap: 3px; cursor: pointer;
+  padding: 2px 6px 2px 3px; border-radius: 3px; font-size: 11px; font-weight: bold;
+  border: 1px solid transparent; transition: background 0.15s, border-color 0.15s;
+  vertical-align: middle; user-select: none; white-space: nowrap; flex-shrink: 0;
+  font-family: Arial, sans-serif;
+}
+@media (max-width: 480px) { .yn-checkbox-wrap { font-size: 10px; padding: 1px 4px 1px 2px; } }
+.yn-checkbox-wrap.yn-yes { border-color: #bbb; }
+.yn-checkbox-wrap.yn-no  { border-color: #bbb; }
+.yn-checkbox-wrap.yn-yes.checked { background: #059669; border-color: #047857; color: #fff; }
+.yn-checkbox-wrap.yn-no.checked  { background: #DC2626; border-color: #b91c1c; color: #fff; }
+.yn-checkbox-wrap.yn-opt { border-color: #bbb; }
+.yn-checkbox-wrap.yn-opt.checked { background: #D97706; border-color: #b45309; color: #fff; }
+body.dark-mode .yn-checkbox-wrap { border-color: rgba(0,255,200,0.3); }
+body.dark-mode .yn-checkbox-wrap.checked { border-color: rgba(0,255,200,0.5); }
+
+/* ===== PAGE 1 LAYOUT ===== */
+.page1-header { text-align: center; margin-bottom: 10px; }
+.logo-area {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px; justify-content: center; flex-wrap: wrap;
+}
+.logo-text {
+  font-weight: 900; font-size: 18px; font-family: Arial Black, sans-serif;
+  color: var(--text); line-height: 1.2;
+}
+.logo-text span { color: #D97706; }
+.checklist-title {
+  font-weight: bold; font-size: 18px;
+  border-top: 2px solid var(--text); padding-top: 8px;
+  margin-bottom: 10px; color: var(--text); font-family: Arial, sans-serif;
+}
+
+.top-fields {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3px 20px; margin-bottom: 8px;
+}
+@media (max-width: 600px) { .top-fields { grid-template-columns: 1fr; } }
+
+.field-row {
+  display: flex; align-items: flex-end; gap: 6px;
+  font-size: 12px; margin-bottom: 1px; flex-wrap: wrap;
+}
+.field-row label { font-weight: bold; white-space: nowrap; font-size: 12px; flex-shrink: 0; }
+.field-row input[type="text"] { flex: 1; min-width: 80px; }
+
+.inline-input {
+  border: none; border-bottom: 1px solid var(--text);
+  padding: 1px 3px; font-size: 12px;
+  background: transparent; color: var(--text);
+}
+.inline-input.short  { width: 80px; }
+.inline-input.xshort { width: 60px; }
+body.dark-mode .inline-input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
+
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 16px; margin-bottom: 8px;
+}
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+.section { margin-bottom: 8px; }
+.section-title {
+  font-weight: bold; font-size: 12px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border-bright);
+  padding-bottom: 2px; margin-bottom: 4px; color: var(--text);
+}
+body.dark-mode .section-title { border-bottom-color: rgba(0,255,200,0.3); }
+.section-row {
+  font-size: 12px; margin-bottom: 2px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 3px;
+}
+
+hr.section-hr { border: none; border-top: 1px solid rgba(217,119,6,0.2); margin: 6px 0; }
+body.dark-mode hr.section-hr { border-top-color: rgba(0,255,200,0.15); }
+
+.full-line-input {
+  width: 100%; border: none; border-bottom: 1px solid var(--text);
+  background: transparent; color: var(--text); font-size: 12px; padding: 1px 2px;
+}
+body.dark-mode .full-line-input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
+
+/* ===== REGULATORS ROW ===== */
+.reg-row {
+  font-size: 11px; font-weight: bold;
+  display: flex; flex-wrap: wrap; gap: 4px 12px;
+  align-items: flex-end; margin-bottom: 8px; padding: 4px 0;
+  border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;
+}
+.reg-field { display: flex; align-items: flex-end; gap: 3px; white-space: nowrap; }
+.reg-field input {
+  width: 38px; border: none; border-bottom: 1px solid var(--text);
+  background: transparent; color: var(--text); font-size: 11px; padding: 1px 2px;
+}
+body.dark-mode .reg-field input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
+body.dark-mode .reg-row { border-color: rgba(0,255,200,0.2); }
+
+/* ===== PAGE 1 TABLE SPLIT ===== */
+.tables-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 12px; width: 100%;
+}
+@media (max-width: 700px) { .tables-split { grid-template-columns: 1fr; } }
+.tables-col { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+
+/* ===== PAGE 2 LAYOUT ===== */
+.page2-tables-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 12px; width: 100%; margin-bottom: 12px;
+}
+@media (max-width: 700px) { .page2-tables-split { grid-template-columns: 1fr; } }
+
+/* ===== MATERIAL TABLE ===== */
+.grid-section { margin-bottom: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table.mat-table {
+  border-collapse: collapse; width: 100%; table-layout: fixed;
+  font-size: 11px; font-family: Arial, sans-serif;
+}
+table.mat-table col.col-label { width: auto; }
+table.mat-table col.col-data  { width: 38px; }
+
 table.mat-table th,
-table.mat-table td{
-  border:1px solid var(--tbl-border);
-  padding:6px 4px;text-align:center;font-size:12px;vertical-align:middle;
+table.mat-table td {
+  border: 1px solid #555; padding: 2px 2px;
+  text-align: center; font-family: Arial, sans-serif; overflow: hidden;
 }
-table.mat-table thead tr th{
-  background:var(--tbl-header-bg);color:var(--tbl-header-fg);
-  font-weight:700;font-size:11px;white-space:nowrap;padding:8px 6px;
+table.mat-table th {
+  background: #4B5563; color: #FFFFFF;
+  font-weight: bold; font-size: 16px; white-space: nowrap;
 }
-table.mat-table thead tr th:first-child{text-align:left;padding-left:10px;}
-table.mat-table tbody tr:nth-child(odd) td{background:var(--tbl-row-odd);}
-table.mat-table tbody tr:nth-child(even) td{background:var(--tbl-row-even);}
-table.mat-table td.row-label{
-  text-align:left;font-weight:600;font-size:12px;
-  color:var(--tbl-label-fg);padding-left:10px;
-  white-space:nowrap;min-width:140px;
+body.dark-mode table.mat-table th { background: #1E3A5F; color: #00FFC8; }
+body.dark-mode table.mat-table td {
+  border-color: rgba(0,255,200,0.2);
+  background: rgba(15,21,53,0.6); color: #E0F7FF;
 }
-table.mat-table td.row-label.section-header{
-  background:var(--tbl-subhead-bg)!important;
-  color:var(--tbl-subhead-fg)!important;
-  text-align:center;font-weight:700;font-size:11px;
-  letter-spacing:0.3px;padding:5px;
+table.mat-table td.row-label {
+  text-align: left; font-weight: bold; background: #fafafa;
+  font-size: 11px; word-break: break-word; white-space: normal;
 }
-table.mat-table td input[type="text"]{
-  width:100%;border:none;text-align:center;
-  font-size:12px;font-weight:600;padding:2px 0;
-  background:transparent;color:var(--tbl-label-fg);
-  font-family:Arial,sans-serif;outline:none;
-  min-width:32px;max-width:52px;caret-color:var(--cyan);
+body.dark-mode table.mat-table td.row-label { background: rgba(36,52,88,0.6); color: #E0F7FF; }
+table.mat-table td.row-label.section-header {
+  background: #4B5563; color: #fff;
+  text-align: center; font-size: 16px; font-weight: bold;
 }
-table.mat-table td input[type="text"]:focus{
-  background:rgba(217,119,6,0.08);border-radius:3px;
+body.dark-mode table.mat-table td.row-label.section-header { background: #1E3A5F; color: #00FFC8; }
+table.mat-table td input[type="text"] {
+  width: 100%; border: none; text-align: center;
+  font-size: 11px; padding: 1px 1px; background: transparent;
+  color: var(--text); font-family: Arial, sans-serif; min-width: 0; max-width: 100%;
 }
-body.dark-mode table.mat-table td input[type="text"]:focus{
-  background:rgba(0,255,200,0.08);
+body.dark-mode table.mat-table td input[type="text"] { color: #E0F7FF; }
+
+/* ===== OTHER / NOTES ===== */
+.other-section { width: 100%; margin-top: auto; padding-top: 4px; }
+.other-title {
+  font-weight: bold; font-size: 16px;
+  background: #4B5563; color: #fff;
+  padding: 4px 8px; margin-bottom: 6px;
+  border: 1px solid #555; font-family: Arial, sans-serif;
+}
+body.dark-mode .other-title { background: #1E3A5F; color: #00FFC8; border-color: rgba(0,255,200,0.2); }
+
+/* ===== MISCUES TEXTAREA ===== */
+.miscues-textarea {
+  width: 100%; resize: none;
+  border: 1px solid rgba(217,119,6,0.25);
+  border-radius: 3px; padding: 6px 8px;
+  font-size: 12px; font-family: Arial, sans-serif;
+  line-height: 1.6; color: var(--text);
+  background: var(--panel); outline: none;
+  display: block; min-height: 80px;
+}
+.miscues-textarea:focus {
+  border-color: var(--cyan); background: rgba(217,119,6,0.04);
+  box-shadow: 0 0 0 2px rgba(217,119,6,0.15);
+}
+body.dark-mode .miscues-textarea {
+  background: rgba(10,14,39,0.6); border-color: rgba(0,255,200,0.2); color: #E0F7FF;
+}
+body.dark-mode .miscues-textarea:focus {
+  border-color: #00FFC8; background: rgba(26,40,71,0.8);
+  box-shadow: 0 0 8px rgba(0,255,200,0.2);
 }
 
-/* ══════════════════════════════════
-   PRINT STYLES — Safari Compatible
-══════════════════════════════════ */
+/* ===== NOTICE ===== */
+.notice { text-align: center; font-size: 11px; color: var(--text-muted); padding: 10px 16px 6px; }
+
+/* ===== PRINT ===== */
 @media print {
+  /* Force light mode for all print output */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-  /* Safari needs @page with explicit size — no zoom property */
+  .action-bar  { display: none !important; }
+  .notice      { display: none !important; }
+  #save-status { display: none !important; }
+
+  body {
+    background: #ffffff !important;
+    color: #1F2937 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Strip all dark-mode overrides from body */
+  body.dark-mode {
+    background: #ffffff !important;
+    color: #1F2937 !important;
+  }
+
+  /* Page wrapper */
+  .page-wrapper {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Each form-page = one printed page */
+  .form-page {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 12pt 14pt !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #1F2937 !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+  /* First page has no page-break before it */
+  .form-page:first-child,
+  #page1 {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+
+  /* Dark-mode class on form-page — strip it */
+  body.dark-mode .form-page {
+    background: #ffffff !important;
+    color: #1F2937 !important;
+  }
+
+  /* @page */
   @page {
-    size:8.5in 11in;
-    margin:0.3in 0.3in 0.3in 0.3in;
-  }
-  @page :first { margin:0.3in; }
-
-  /* Reset everything for print */
-  html,body{
-    width:100%!important;
-    max-width:100%!important;
-    margin:0!important;padding:0!important;
-    background:#fff!important;
-    color:#000!important;
-    font-size:9pt!important;
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
-  body.dark-mode{background:#fff!important;}
-
-  /* Hide screen-only elements */
-  .action-bar,
-  #save-status,
-  .notice{display:none!important;}
-
-  /* Content wrapper — no padding, no gap */
-  .content{
-    max-width:100%!important;
-    width:100%!important;
-    padding:0!important;
-    gap:0!important;
-    display:block!important;
+    size: 8.5in 11in;
+    margin: 0.3in 0.3in 0.25in 0.3in;
   }
 
-  /* ── PAGE 1 wrapper ── */
-  /* Everything up to #nipples-card is page 1 */
-  .print-page-1{
-    display:block;
-    width:100%;
-  }
+  /* ── Typography scale-down ── */
+  .logo-text          { font-size: 13pt !important; }
+  .checklist-title    { font-size: 12pt !important; border-top-color: #1F2937 !important; color: #1F2937 !important; }
+  .section-title      { font-size: 8pt !important;  color: #1F2937 !important; border-bottom-color: rgba(217,119,6,0.4) !important; }
+  .section-row        { font-size: 8pt !important;  margin-bottom: 1pt !important; gap: 2pt !important; }
+  .field-row          { font-size: 8pt !important;  margin-bottom: 1pt !important; }
+  .field-row label    { font-size: 8pt !important; }
+  .reg-row            { font-size: 7.5pt !important; padding: 2pt 0 !important; margin-bottom: 4pt !important; border-color: #ccc !important; }
+  .reg-field          { gap: 2pt !important; }
+  .reg-field label    { font-size: 7.5pt !important; }
+  .reg-field input    { font-size: 7.5pt !important; border-bottom-color: #999 !important; color: #1F2937 !important; background: transparent !important; }
 
-  /* ── PAGE 2 starts here ── */
-  #nipples-card{
-    page-break-before:always!important;
-    break-before:page!important;
-    display:block;width:100%;
-  }
+  /* Inputs */
+  input[type="text"]  { color: #1F2937 !important; background: transparent !important; border-bottom-color: #999 !important; font-size: 8pt !important; }
+  textarea            { color: #1F2937 !important; background: #fff !important; border-color: #bbb !important; font-size: 8pt !important; }
+  .inline-input       { color: #1F2937 !important; border-bottom-color: #999 !important; font-size: 8pt !important; background: transparent !important; }
+  .full-line-input    { color: #1F2937 !important; border-bottom-color: #999 !important; font-size: 8pt !important; background: transparent !important; }
 
-  /* Cards */
-  .card{
-    border:1px solid #bbb!important;
-    border-radius:0!important;
-    box-shadow:none!important;
-    overflow:visible!important;
-    margin-bottom:4pt!important;
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
+  /* Checkboxes & yn-wraps */
+  .yn-checkbox-wrap   { font-size: 7.5pt !important; padding: 1pt 4pt 1pt 2pt !important; }
+  .yn-checkbox-wrap.yn-yes.checked { background: #059669 !important; border-color: #047857 !important; color: #fff !important; }
+  .yn-checkbox-wrap.yn-no.checked  { background: #DC2626 !important; border-color: #b91c1c !important; color: #fff !important; }
+  .yn-checkbox-wrap.yn-opt.checked { background: #D97706 !important; border-color: #b45309 !important; color: #fff !important; }
+  input[type="checkbox"] { width: 10pt !important; height: 10pt !important; accent-color: #D97706 !important; }
 
-  /* Card header */
-  .card-header{
-    background:#2C3E50!important;
-    color:#fff!important;
-    padding:4pt 8pt!important;
-    font-size:9pt!important;
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
+  /* Section spacing */
+  .section            { margin-bottom: 4pt !important; }
+  hr.section-hr       { margin: 3pt 0 !important; border-top-color: rgba(217,119,6,0.3) !important; }
+  .logo-area          { margin-bottom: 6pt !important; }
+  .page1-header       { margin-bottom: 6pt !important; }
 
-  .card-body{padding:5pt 6pt!important;}
+  /* Top fields grid */
+  .top-fields         { gap: 1pt 14pt !important; margin-bottom: 4pt !important; grid-template-columns: 1fr 1fr !important; }
 
-  /* Form header */
-  .form-header{padding:5pt 6pt!important;}
-  .logo-img{width:28pt!important;height:28pt!important;}
-  .company-name{font-size:11pt!important;}
-  .form-title{font-size:8pt!important;}
+  /* Two-col always 2 cols in print */
+  .two-col            { grid-template-columns: 1fr 1fr !important; gap: 0 12pt !important; margin-bottom: 4pt !important; }
 
-  /* Field grid */
-  .field-grid{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:3pt 10pt!important;
-    padding:5pt 6pt!important;
-    border-bottom:1px solid #ccc!important;
-  }
-  .field-label{font-size:7pt!important;}
-  .field-input{
-    font-size:9pt!important;
-    border-bottom:1px solid #999!important;
-    color:#000!important;padding:2pt 2pt!important;
-  }
+  /* Table split always 2 cols */
+  .tables-split       { grid-template-columns: 1fr 1fr !important; gap: 0 8pt !important; }
+  .page2-tables-split { grid-template-columns: 1fr 1fr !important; gap: 0 8pt !important; margin-bottom: 6pt !important; }
+  .grid-section       { margin-bottom: 4pt !important; overflow: visible !important; }
 
-  /* Section grid — always 2 col in print */
-  .section-grid{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:8pt!important;
-  }
-  .section-title{
-    font-size:7pt!important;
-    margin-bottom:3pt!important;
-    padding-bottom:2pt!important;
-  }
-
-  /* Check items */
-  .check-list{gap:1pt!important;}
-  .check-item{
-    padding:2pt 5pt!important;
-    min-height:0!important;
-    border-radius:0!important;
-    background:#fff!important;
-    font-size:8pt!important;
-  }
-  .inline-field{
-    font-size:8pt!important;
-    border-bottom:1px solid #999!important;
-    color:#000!important;
-  }
-  .yn-btn{
-    padding:1pt 5pt!important;
-    font-size:7pt!important;
-    min-height:14pt!important;
-    min-width:22pt!important;
-    border-radius:10pt!important;
-  }
-  .yn-btn.yes-btn.active{
-    background:#059669!important;border-color:#059669!important;color:#fff!important;
-    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
-  }
-  .yn-btn.no-btn.active{
-    background:#DC2626!important;border-color:#DC2626!important;color:#fff!important;
-    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
-  }
-
-  /* Regulators */
-  .reg-grid{
-    display:grid!important;
-    grid-template-columns:repeat(6,1fr)!important;
-    gap:4pt 6pt!important;
-    padding:5pt 6pt!important;
-  }
-  .reg-label{font-size:7pt!important;}
-  .reg-input{
-    font-size:9pt!important;
-    border-bottom:1px solid #999!important;
-    color:#000!important;
-  }
-
-  /* Miscues textarea */
-  .note-area{
-    font-size:8pt!important;
-    border:1px solid #bbb!important;
-    color:#000!important;background:#fff!important;
-    resize:none!important;
-    min-height:40pt!important;
-    padding:4pt!important;
-  }
-
-  /* Tables — no scroll, shrink to fit */
-  .table-scroll{
-    overflow:visible!important;
-    width:100%!important;
-  }
-  table.mat-table{
-    width:100%!important;
-    min-width:0!important;
-    font-size:7.5pt!important;
-    table-layout:fixed!important;
-  }
-  table.mat-table col:first-child{width:auto!important;}
+  /* Tables */
+  table.mat-table     { font-size: 7pt !important; }
   table.mat-table th,
-  table.mat-table td{
-    padding:2pt 2pt!important;
-    font-size:7.5pt!important;
-    border:0.5pt solid #ccc!important;
-  }
-  table.mat-table thead tr th{
-    background:#2C3E50!important;
-    color:#fff!important;
-    font-size:7pt!important;
-    padding:3pt 2pt!important;
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
-  table.mat-table thead tr th:first-child{
-    padding-left:4pt!important;
-  }
-  table.mat-table td.row-label{
-    font-size:7pt!important;
-    padding-left:3pt!important;
-    min-width:0!important;
-    white-space:normal!important;
-    word-break:break-word;
-  }
-  table.mat-table td.row-label.section-header{
-    background:#4A5568!important;
-    color:#fff!important;
-    font-size:7pt!important;
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
-  table.mat-table tbody tr:nth-child(odd) td{
-    background:#fff!important;
-    -webkit-print-color-adjust:exact!important;
-  }
-  table.mat-table tbody tr:nth-child(even) td{
-    background:#f5f5f5!important;
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
-  table.mat-table td input[type="text"]{
-    font-size:7pt!important;
-    color:#000!important;
-    min-width:0!important;
-    max-width:100%!important;
-    width:100%!important;
-  }
+  table.mat-table td  { padding: 1pt 2pt !important; border-color: #555 !important; font-size: 7pt !important; }
+  table.mat-table th  { background: #4B5563 !important; color: #ffffff !important; font-size: 8pt !important; }
+  table.mat-table td.row-label            { background: #fafafa !important; color: #1F2937 !important; font-size: 7pt !important; }
+  table.mat-table td.row-label.section-header { background: #4B5563 !important; color: #ffffff !important; font-size: 8pt !important; }
+  table.mat-table td input[type="text"]   { font-size: 7pt !important; color: #1F2937 !important; }
+  table.mat-table tbody tr:nth-child(even) td { background: #f5f5f5 !important; }
 
-  /* Tables card — 4 tables side by side in 2x2 */
-  .tables-split-card .card-body{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:4pt!important;
-    padding:4pt!important;
-  }
-  .tables-split-card .card-body > .table-scroll{
-    width:100%!important;
-  }
+  /* col widths in print */
+  table.mat-table col.col-data { width: 28pt !important; }
 
-  /* Nipples card — 2 tables side by side */
-  #nipples-split{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:6pt!important;
-  }
-  #nipples-split .table-scroll{
-    overflow:visible!important;
-    width:100%!important;
-  }
+  /* Miscues */
+  .miscues-textarea   { min-height: 40pt !important; font-size: 8pt !important; background: #fff !important; color: #1F2937 !important; border-color: #bbb !important; }
 
-  /* Other notes */
-  .other-notes-card{
-    page-break-inside:avoid;break-inside:avoid;
-  }
+  /* Other/Notes */
+  .other-title        { background: #4B5563 !important; color: #ffffff !important; font-size: 10pt !important; padding: 3pt 6pt !important; border-color: #555 !important; }
+  .other-section      { padding-top: 2pt !important; }
+  textarea.multiline  { min-height: 70pt !important; font-size: 8pt !important; background: #fff !important; color: #1F2937 !important; border-color: #bbb !important; }
 
-  /* Force all text black in print */
-  .card *{color:#000!important;}
-  .card-header,
-  .card-header *,
-  table.mat-table thead th,
-  table.mat-table td.row-label.section-header{
-    color:#fff!important;
-  }
+  /* Logo image */
+  .logo-area img      { width: 28pt !important; height: 28pt !important; }
 }
 </style>
 </head>
@@ -532,434 +525,695 @@ body.dark-mode table.mat-table td input[type="text"]:focus{
 
 <!-- ACTION BAR -->
 <div class="action-bar">
-  <div class="bar-left">
-    <button class="btn" onclick="window.location.href='https://brandonaog.github.io/AOG-hub/'">🏠</button>
-    <button class="btn" onclick="window.print()">📄 Print</button>
-    <button class="btn" onclick="clearForm()">🗑 Clear</button>
-    <button class="btn" onclick="saveForIPhone()">📱 iPhone</button>
-    <button class="btn" onclick="saveForAndroid()">🤖 Android</button>
-  </div>
-  <div class="bar-right">
-    <div style="position:relative;width:40px;height:40px;">
-      <button class="theme-btn" id="theme-btn">
-        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:100%;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <button class="btn" onclick="window.location.href='https://brandonaog.github.io/AOG-hub/'">🏠 HOME</button>
+      <button class="btn" id="printBtn" onclick="printAsImage()">📄 PDF</button>
+      <button class="btn" onclick="clearForm()">🗑 CLEAR</button>
+      <button class="btn" onclick="saveForIPhone()">📱 iPhone</button>
+      <button class="btn" onclick="saveForAndroid()">🤖 Android</button>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <svg class="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
-        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24">
+        <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
     </div>
+    <div id="save-status"></div>
   </div>
 </div>
 
-<div id="save-status" style="text-align:center;padding:4px;font-size:11px;color:var(--text-muted);min-height:20px;"></div>
+<div class="page-wrapper" id="page-wrapper">
 
-<!-- ══ MAIN CONTENT ══ -->
-<div class="content">
+  <!-- ══════════════ PAGE 1 ══════════════ -->
+  <div class="form-page" id="page1">
 
-  <!-- ░░ PAGE 1 ░░ -->
-  <div class="print-page-1">
-
-    <!-- HEADER -->
-    <div class="card">
-      <div class="form-header">
-        <img class="logo-img"
-          src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
-          alt="AOG">
-        <div>
-          <div class="company-name">ALWAYS<span>ON</span> GENERATORS</div>
-          <div class="form-title">Gas Installation Checklist</div>
+    <div class="page1-header">
+      <div class="logo-area">
+        <img src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
+             alt="Logo" style="width:36px;height:36px;display:block;border-radius:50%;object-fit:cover;flex-shrink:0;">
+        <div class="logo-text">ALWAYS<span>ON</span><br>
+          <span style="color:#111;font-size:10px;font-family:Arial,sans-serif;letter-spacing:1px;">GENERATORS</span>
         </div>
       </div>
-      <div class="field-grid">
-        <div class="field-item">
-          <div class="field-label">Customer Name</div>
-          <input class="field-input" type="text" id="f-customer" placeholder="Full name">
-        </div>
-        <div class="field-item">
-          <div class="field-label">Date</div>
-          <input class="field-input" type="date" id="f-date">
-        </div>
-        <div class="field-item">
-          <div class="field-label">Address</div>
-          <input class="field-input" type="text" id="f-address" placeholder="Job address">
-        </div>
-        <div class="field-item">
-          <div class="field-label">Gas Truck</div>
-          <input class="field-input" type="text" id="f-truck" placeholder="Truck #">
-        </div>
-        <div class="field-item">
-          <div class="field-label">Job #</div>
-          <input class="field-input" type="text" id="f-job" placeholder="Job number">
-        </div>
-        <div class="field-item">
-          <div class="field-label">Team Members</div>
-          <input class="field-input" type="text" id="f-team" placeholder="Names">
-        </div>
-      </div>
+      <div class="checklist-title">GAS INSTALLATION CHECKLIST</div>
     </div>
 
-    <!-- GAS + WALK THROUGH -->
-    <div class="card">
-      <div class="card-header">⛽ Gas &amp; Walk Through</div>
-      <div class="card-body">
-        <div class="section-grid">
-          <!-- GAS -->
-          <div>
-            <div class="section-title">Gas</div>
-            <div class="check-list">
-              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Natural Gas</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="nat-gas">Y</button><button class="yn-btn no-btn" data-group="nat-gas">N</button></div></div>
-              <div class="check-item"><span class="check-label">LP Tank Install</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="lp-install">Y</button><button class="yn-btn no-btn" data-group="lp-install">N</button></div></div>
-              <div class="check-item"><span class="check-label">LP Tank Size</span><input class="inline-field" type="text" placeholder="Gal." style="max-width:50px;"><div class="yn-group" style="margin-left:4px;"><button class="yn-btn yes-btn" data-group="ag-ug">AG</button><button class="yn-btn no-btn" data-group="ag-ug">UG</button></div></div>
-              <div class="check-item"><span class="check-label">Tank Serial #</span><input class="inline-field" type="text" placeholder="Serial"></div>
-              <div class="check-item"><span class="check-label">Existing Gas</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="exist-gas">Y</button><button class="yn-btn no-btn" data-group="exist-gas">N</button></div></div>
-              <div class="check-item"><span class="check-label">Surface Mount (ft)</span><input class="inline-field" type="text" placeholder="0"></div>
-              <div class="check-item"><span class="check-label">Underground (ft)</span><input class="inline-field" type="text" placeholder="0"></div>
-              <div class="check-item"><span class="check-label">Attic CSST (ft)</span><input class="inline-field" type="text" placeholder="0"></div>
-              <div class="check-item"><span class="check-label">Needs Completed</span><input class="inline-field" type="text" placeholder="Notes"></div>
-            </div>
-          </div>
-          <!-- WALK THROUGH -->
-          <div>
-            <div class="section-title">Walk Through</div>
-            <div class="check-list">
-              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Gas Affidavit Form</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="affidavit">Y</button><button class="yn-btn no-btn" data-group="affidavit">N</button></div></div>
-              <div class="check-item"><span class="check-label">Leak Check</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="leak">Y</button><button class="yn-btn no-btn" data-group="leak">N</button></div></div>
-              <div class="check-item"><span class="check-label">Sediment Trap</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="sediment">Y</button><button class="yn-btn no-btn" data-group="sediment">N</button></div></div>
-              <div class="check-item"><span class="check-label">Shutoff Valves</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="shutoff">Y</button><button class="yn-btn no-btn" data-group="shutoff">N</button></div></div>
-              <div class="check-item"><span class="check-label">Flex Whip (No Kinks)</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="flexwhip">Y</button><button class="yn-btn no-btn" data-group="flexwhip">N</button></div></div>
-              <div class="check-item"><span class="check-label">Pressure Check</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="pressure">Y</button><button class="yn-btn no-btn" data-group="pressure">N</button></div></div>
-              <div class="check-item"><span class="check-label">Line Purged</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="purged">Y</button><button class="yn-btn no-btn" data-group="purged">N</button></div></div>
-              <div class="check-item"><span class="check-label">Painted Threads</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="painted">Y</button><button class="yn-btn no-btn" data-group="painted">N</button></div></div>
-              <div class="check-item"><span class="check-label">1st Stage Connection</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="stage1">Y</button><button class="yn-btn no-btn" data-group="stage1">N</button></div></div>
-              <div class="check-item"><span class="check-label">Regulators to Code</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="regs">Y</button><button class="yn-btn no-btn" data-group="regs">N</button></div></div>
-            </div>
-          </div>
+    <!-- Top fields -->
+    <div class="top-fields">
+      <div class="field-row"><label>Customer Name:</label><input type="text" id="f-customer" placeholder="Full name"></div>
+      <div class="field-row"><label>Date:</label><input type="text" id="f-date" placeholder="MM/DD/YYYY"></div>
+      <div class="field-row"><label>Address:</label><input type="text" id="f-address" placeholder="Job address"></div>
+      <div class="field-row"><label>Gas Truck:</label><input type="text" id="f-truck" placeholder="Truck #"></div>
+      <div class="field-row"><label>Job:</label><input type="text" id="f-job" placeholder="Job number"></div>
+      <div class="field-row"><label>Team Member Names:</label><input type="text" id="f-team" placeholder="Names"></div>
+      <div class="field-row" style="grid-column:1/-1;"><input type="text" style="width:100%;max-width:320px;" placeholder="Additional team members"></div>
+    </div>
+
+    <!-- Info 2-col -->
+    <div class="two-col">
+      <!-- LEFT -->
+      <div>
+        <div class="section">
+          <div class="section-title">GAS</div>
+          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row">Natural Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">LP Tank Installation: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">LP Tank Size: <input class="inline-input" style="width:36px;" type="text"> AG <input type="checkbox"> UG <input type="checkbox"></div>
+          <div class="section-row">Tank Serial #: <input class="inline-input" style="width:110px;" type="text"></div>
+          <div class="section-row">Existing Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Surface Mounted Length: <input class="inline-input" style="width:44px;" type="text"></div>
+          <div class="section-row">Underground Length: <input class="inline-input" style="width:44px;" type="text"></div>
+          <div class="section-row">Attic CSST Length: <input class="inline-input" style="width:44px;" type="text"></div>
+          <div class="section-row">Needs Completed: <input class="inline-input" style="width:120px;" type="text"></div>
+          <div class="section-row"><input type="text" class="full-line-input" placeholder="Additional notes"></div>
+        </div>
+        <hr class="section-hr">
+        <div class="section">
+          <div class="section-title">CLEAN UP</div>
+          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row" style="font-weight:bold;">EVERYTHING CLEAN: <input type="checkbox"> YES</div>
+          <div class="section-row">Ready for H/O Training: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Why Not: <input class="inline-input" style="width:120px;" type="text"></div>
+        </div>
+        <hr class="section-hr">
+        <div class="section">
+          <div class="section-title" style="text-transform:none;">Any Miscues or Delays:</div>
+          <textarea class="miscues-textarea" rows="4" placeholder="Enter any miscues or delays here…"></textarea>
         </div>
       </div>
-    </div>
-
-    <!-- CLEAN UP + INSPECTIONS -->
-    <div class="card">
-      <div class="card-header">🔍 Clean Up &amp; Inspections</div>
-      <div class="card-body">
-        <div class="section-grid">
-          <!-- CLEAN UP -->
-          <div>
-            <div class="section-title">Clean Up</div>
-            <div class="check-list">
-              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label bold-label">Everything Clean</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="clean">Y</button><button class="yn-btn no-btn" data-group="clean">N</button></div></div>
-              <div class="check-item"><span class="check-label">Ready for H/O Training</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="hoready">Y</button><button class="yn-btn no-btn" data-group="hoready">N</button></div></div>
-              <div class="check-item"><span class="check-label">Why Not</span><input class="inline-field" type="text" placeholder="Reason"></div>
-            </div>
-          </div>
-          <!-- INSPECTIONS -->
-          <div>
-            <div class="section-title">Inspections</div>
-            <div class="check-list">
-              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
-              <div class="check-item"><span class="check-label">Inspected</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="insp">Y</button><button class="yn-btn no-btn" data-group="insp">N</button></div></div>
-              <div class="check-item"><span class="check-label">FIRE Inspector</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="fire">Y</button><button class="yn-btn no-btn" data-group="fire">N</button></div></div>
-              <div class="check-item"><span class="check-label">County</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="county">Y</button><button class="yn-btn no-btn" data-group="county">N</button></div></div>
-              <div class="check-item"><span class="check-label">Gas Rough</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="gasrough">Y</button><button class="yn-btn no-btn" data-group="gasrough">N</button></div></div>
-              <div class="check-item"><span class="check-label">Tank</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="tank">Y</button><button class="yn-btn no-btn" data-group="tank">N</button></div></div>
-              <div class="check-item"><span class="check-label">Underground Gas</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="uggas">Y</button><button class="yn-btn no-btn" data-group="uggas">N</button></div></div>
-              <div class="check-item"><span class="check-label bold-label">Final Gas Passed</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="fingas">Y</button><button class="yn-btn no-btn" data-group="fingas">N</button></div></div>
-            </div>
-          </div>
+      <!-- RIGHT -->
+      <div>
+        <div class="section">
+          <div class="section-title">WALK THROUGH</div>
+          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row">Gas Affidavit Form: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Leak Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Sediment Trap (Liq. Cooled Only): <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Verification on Shutoff Valves: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Flex Whip Connected (No Kinks): <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Pressure Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Purged Line (IF Gas Ready): <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Painted Threads/Fittings: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">1st Stage Connection: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Regulator(s) Installed to Code: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        </div>
+        <hr class="section-hr">
+        <div class="section">
+          <div class="section-title">INSPECTION(S)</div>
+          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row">Inspected: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">FIRE Inspector: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">County: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Gas Rough: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Tank: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row">Underground Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+          <div class="section-row" style="font-weight:bold;">Final Gas Passed: <input type="checkbox"> YES <input type="checkbox"> NO</div>
         </div>
       </div>
+    </div><!-- end two-col -->
+
+    <!-- Regulators strip -->
+    <div class="reg-row">
+      <div class="reg-field"><label>REGULATORS 1<sup>ST</sup> STAGE:</label><input type="text"></div>
+      <div class="reg-field"><label>NORGAS:</label><input type="text"></div>
+      <div class="reg-field"><label>2<sup>ND</sup> STAGE STRAIGHT:</label><input type="text"></div>
+      <div class="reg-field"><label>2<sup>ND</sup> STAGE BACK MOUNT:</label><input type="text"></div>
+      <div class="reg-field"><label>2PSI:</label><input type="text"></div>
+      <div class="reg-field"><label>Pietro:</label><input type="text"></div>
     </div>
 
-    <!-- MISCUES -->
-    <div class="card">
-      <div class="card-header">⚠️ Miscues / Delays</div>
-      <div class="card-body">
-        <textarea class="note-area" rows="3" placeholder="Enter any miscues or delays…"></textarea>
-      </div>
-    </div>
-
-    <!-- REGULATORS -->
-    <div class="card">
-      <div class="card-header">🔧 Regulators</div>
-      <div class="reg-grid">
-        <div class="reg-item"><div class="reg-label">1st Stage</div><input class="reg-input" type="text" placeholder="—"></div>
-        <div class="reg-item"><div class="reg-label">Norgas</div><input class="reg-input" type="text" placeholder="—"></div>
-        <div class="reg-item"><div class="reg-label">2nd Stg Straight</div><input class="reg-input" type="text" placeholder="—"></div>
-        <div class="reg-item"><div class="reg-label">2nd Stg Back</div><input class="reg-input" type="text" placeholder="—"></div>
-        <div class="reg-item"><div class="reg-label">2 PSI</div><input class="reg-input" type="text" placeholder="—"></div>
-        <div class="reg-item"><div class="reg-label">Pietro</div><input class="reg-input" type="text" placeholder="—"></div>
-      </div>
-    </div>
-
-    <!-- MATERIAL TABLES PAGE 1 — 2x2 grid -->
-    <div class="card tables-split-card">
-      <div class="card-header">📦 Materials — Pipe, Poly, Risers &amp; Whips</div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
-
-        <div class="table-scroll">
-          <table class="mat-table">
-            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
-            <thead><tr><th>Galv. Pipe &amp; Fittings</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+    <!-- Page 1 table split -->
+    <div class="tables-split">
+      <!-- LEFT: Rigid Pipe + Galv Fittings -->
+      <div class="tables-col">
+        <div class="grid-section">
+          <table class="mat-table" id="pipe-table">
+            <colgroup>
+              <col class="col-label">
+              <col class="col-data"><col class="col-data"><col class="col-data">
+              <col class="col-data"><col class="col-data">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Galv. Pipe &amp; Fittings</th>
+                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+              </tr>
+            </thead>
             <tbody id="pipe-body"></tbody>
           </table>
         </div>
-
-        <div class="table-scroll">
-          <table class="mat-table">
-            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
-            <thead><tr><th>Poly Fittings</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+      </div>
+      <!-- RIGHT: Poly + Risers + Whips -->
+      <div class="tables-col">
+        <div class="grid-section">
+          <table class="mat-table" id="poly-table">
+            <colgroup>
+              <col class="col-label">
+              <col class="col-data"><col class="col-data"><col class="col-data">
+              <col class="col-data"><col class="col-data">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Poly Fittings</th>
+                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+              </tr>
+            </thead>
             <tbody id="poly-body"></tbody>
           </table>
         </div>
-
-        <div class="table-scroll">
-          <table class="mat-table">
-            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
-            <thead><tr><th>Risers</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+        <div class="grid-section">
+          <table class="mat-table" id="risers-table">
+            <colgroup>
+              <col class="col-label">
+              <col class="col-data"><col class="col-data"><col class="col-data">
+              <col class="col-data"><col class="col-data">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Risers</th>
+                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+              </tr>
+            </thead>
             <tbody id="risers-body"></tbody>
           </table>
         </div>
-
-        <div class="table-scroll">
-          <table class="mat-table">
-            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
-            <thead><tr><th>Appliance Whips</th><th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th></tr></thead>
+        <div class="grid-section">
+          <table class="mat-table" id="whips-table">
+            <colgroup>
+              <col class="col-label">
+              <col class="col-data"><col class="col-data"><col class="col-data">
+              <col class="col-data"><col class="col-data">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Appliance Whips</th>
+                <th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th>
+              </tr>
+            </thead>
             <tbody id="whips-body"></tbody>
           </table>
         </div>
-
       </div>
     </div>
 
-  </div><!-- /print-page-1 -->
+  </div><!-- end page1 -->
 
-  <!-- ░░ PAGE 2 ░░ -->
-  <div class="card" id="nipples-card">
-    <div class="card-header">📦 Materials — Galv. Nipples &amp; Misc.</div>
-    <div class="card-body">
-      <div id="nipples-split" style="display:flex;flex-direction:column;gap:14px;">
-        <div class="table-scroll">
-          <table class="mat-table">
-            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
-            <thead><tr><th>Galv. Nipples &amp; Misc.</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+  <!-- ══════════════ PAGE 2 ══════════════ -->
+  <div class="form-page" id="page2">
+
+    <div class="page2-tables-split">
+      <!-- LEFT half -->
+      <div class="tables-col">
+        <div class="grid-section">
+          <table class="mat-table" id="nipples-left-table">
+            <colgroup>
+              <col class="col-label">
+              <col class="col-data"><col class="col-data"><col class="col-data">
+              <col class="col-data"><col class="col-data">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Galv. Nipples &amp; Misc.</th>
+                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+              </tr>
+            </thead>
             <tbody id="nipples-left-body"></tbody>
           </table>
         </div>
-        <div class="table-scroll">
-          <table class="mat-table">
-            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
-            <thead><tr><th>Galv. Nipples &amp; Misc. (cont.)</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+      </div>
+      <!-- RIGHT half -->
+      <div class="tables-col">
+        <div class="grid-section">
+          <table class="mat-table" id="nipples-right-table">
+            <colgroup>
+              <col class="col-label">
+              <col class="col-data"><col class="col-data"><col class="col-data">
+              <col class="col-data"><col class="col-data">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Galv. Nipples &amp; Misc.</th>
+                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+              </tr>
+            </thead>
             <tbody id="nipples-right-body"></tbody>
           </table>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- OTHER NOTES -->
-  <div class="card other-notes-card">
-    <div class="card-header">📝 Other / Notes</div>
-    <div class="card-body">
-      <textarea class="note-area" rows="6" placeholder="Enter other notes…"></textarea>
+    <!-- OTHER / NOTES — full width bottom -->
+    <div class="other-section">
+      <div class="other-title">OTHER / NOTES</div>
+      <textarea
+        class="multiline"
+        rows="4"
+        placeholder="Enter other notes here…"
+        style="width:100%;resize:none;min-height:90px;"
+      ></textarea>
     </div>
-  </div>
 
-</div><!-- /content -->
+  </div><!-- end page2 -->
 
-<p class="notice" style="text-align:center;font-size:11px;color:var(--text-muted);padding:8px 16px 24px;">
-  📱 iPhone: Share → Print &nbsp;|&nbsp; 🤖 Android: ⋮ → Print
-</p>
+</div><!-- end page-wrapper -->
+
+<p class="notice">📱 iPhone: press &amp; hold images to save &nbsp;|&nbsp; 🤖 Android: images download to gallery</p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/* ── THEME ── */
-const THEME_KEY='aog_gas_theme';
-function applyTheme(t){
-  document.body.classList.toggle('dark-mode',t==='dark');
-  try{localStorage.setItem(THEME_KEY,t);}catch(e){}
+
+// ===== THEME =====
+const THEME_KEY = 'aog_gas_theme';
+function getInitialTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved) return saved;
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+  return 'light';
 }
-function toggleTheme(){applyTheme(document.body.classList.contains('dark-mode')?'light':'dark');}
-(function(){
-  const s=localStorage.getItem(THEME_KEY);
-  applyTheme(s||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
-  document.getElementById('theme-btn').addEventListener('click',toggleTheme);
-})();
+function applyTheme(t) {
+  if (t === 'dark') document.body.classList.add('dark-mode');
+  else document.body.classList.remove('dark-mode');
+  try { localStorage.setItem(THEME_KEY, t); } catch(e) {}
+}
+function toggleTheme() {
+  applyTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
+}
+function setupThemeToggle() {
+  const btn = document.getElementById('theme-toggle-btn');
+  if (btn) btn.addEventListener('click', toggleTheme);
+}
+applyTheme(getInitialTheme());
 
-/* ── YES/NO BUTTONS ── */
-document.addEventListener('click',function(e){
-  const btn=e.target.closest('.yn-btn');
-  if(!btn||!btn.dataset.group)return;
-  document.querySelectorAll(`[data-group="${btn.dataset.group}"]`).forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  autoSave();
-});
-
-/* ── TABLE BUILDER ── */
-function addRow(tbody,label,cols,isHeader){
-  const tr=document.createElement('tr');
-  const td=document.createElement('td');
-  td.className=isHeader?'row-label section-header':'row-label';
-  td.textContent=label;
-  if(isHeader){td.colSpan=cols+1;}
-  tr.appendChild(td);
-  if(!isHeader){
-    for(let i=0;i<cols;i++){
-      const c=document.createElement('td');
-      const inp=document.createElement('input');
-      inp.type='text';inp.maxLength=6;
-      inp.addEventListener('input',autoSave);
-      c.appendChild(inp);tr.appendChild(c);
+// ===== BUILD TABLE HELPERS =====
+function addRow(tbody, labelText, numCols, isHeader) {
+  const tr  = document.createElement('tr');
+  const lbl = document.createElement('td');
+  lbl.className = isHeader ? 'row-label section-header' : 'row-label';
+  lbl.textContent = labelText;
+  if (isHeader) { lbl.colSpan = numCols + 1; }
+  tr.appendChild(lbl);
+  if (!isHeader) {
+    for (let i = 0; i < numCols; i++) {
+      const td  = document.createElement('td');
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 7;
+      td.appendChild(inp); tr.appendChild(td);
     }
   }
   tbody.appendChild(tr);
 }
 
-/* Build tables */
-(()=>{
-  const pb=document.getElementById('pipe-body');
-  addRow(pb,'Rigid Pipe (Footage)',5);
-  addRow(pb,'Galv. Fittings',5,true);
-  ['Galv. 45s','Galv. 90s','Couplings','Caps','Sq. Plugs','Tees','Union','Misc. (Each)']
-    .forEach(r=>addRow(pb,r,5));
+// ── PAGE 1: Galv. Pipe (footage) then Galv. Fittings in same table ──
+(function() {
+  const tbody = document.getElementById('pipe-body');
+  const n = 5;
+  addRow(tbody, 'Rigid Pipe (Footage)',  n, false);
+  addRow(tbody, 'Galv. Fittings',        n, true);
+  ['Galv. 45\'s','Galv. 90\'s','Galv. Couplings','Galv. Caps',
+   'Galv. Sq. Plugs','Galv. Tee\'s','Galv. Union','Misc. (Each)']
+  .forEach(r => addRow(tbody, r, n, false));
 })();
-(()=>{
-  const pb=document.getElementById('poly-body');
+
+(function() {
+  const tbody = document.getElementById('poly-body');
+  const n = 5;
   ['UG Poly (Per FT)','Fusion Coupler','Tee','90 Elbow','Reducer Coupler']
-    .forEach(r=>addRow(pb,r,5));
-})();
-(()=>{
-  const rb=document.getElementById('risers-body');
-  ['Gas Riser 30"V×24"H','Transition'].forEach(r=>addRow(rb,r,5));
-})();
-(()=>{
-  const wb=document.getElementById('whips-body');
-  ['12 Inch','18 Inch','48 Inch','60 Inch'].forEach(r=>addRow(wb,r,5));
+  .forEach(r => addRow(tbody, r, n, false));
 })();
 
-const NIPPLE_ROWS=[
-  {label:'CLOSE STD Nipple',h:true},
-  {label:'1½" Nipple'},{label:'2" Nipple'},{label:'2½" Nipple'},
-  {label:'3" Nipple'},{label:'3½" Nipple'},{label:'4" Nipple'},
-  {label:'4½" Nipple'},{label:'5" Nipple'},{label:'5½" Nipple'},
-  {label:'6" Nipple'},{label:'7" Nipple'},{label:'8" Nipple'},
-  {label:'9" Nipple'},{label:'10" Nipple'},{label:'12" Nipple'},
-  {label:'Yellow Met. Tape (FT)'},{label:'3/16 Galv. Cable (FT)'},
-  {label:'Galv. 45s'},{label:'3/16 C-Bolt Clamp'},
-  {label:'Tank Anchor 48"'},{label:'17lb Anode Bags'},{label:'9lb Anode Bags'},
-  {label:'¾" Galv. 2-Hole Strap'},{label:'½" Galv. 2-Hole Strap'},
-  {label:'¾" CSST (Per FT)'},{label:'½" Shut Off'},{label:'¾" Shut Off'},
-  {label:'¾" SXS 80 PVC 90'},{label:'30 PSI Test Gauge'},
-  {label:'CSST Fitting'},{label:'1"×¾" Reducing Male PVC'},
-  {label:'CSST Union Fitting'},{label:'20" POL × POL'},{label:'12" POL × POL'},
-  {label:'Rigid Pipe Strut Clamp'},{label:'Galv. Minis'},
-  {label:'Galv. Strut Deep (FT)'},{label:'Galv. Strut Shallow (FT)'}
+(function() {
+  const tbody = document.getElementById('risers-body');
+  const n = 5;
+  ['Gas Riser (30"V×24"H)','Transition']
+  .forEach(r => addRow(tbody, r, n, false));
+})();
+
+(function() {
+  const tbody = document.getElementById('whips-body');
+  const n = 5;
+  ['12 Inch','18 Inch','48 Inch','60 Inch']
+  .forEach(r => addRow(tbody, r, n, false));
+})();
+
+// ── PAGE 2: Nipples split ──
+const ALL_NIPPLE_ROWS = [
+  { label: 'CLOSE STD Galv. Nipple', isHeader: true },
+  { label: '1½" Nipple' }, { label: '2" Nipple' },  { label: '2½" Nipple' },
+  { label: '3" Nipple' },  { label: '3½" Nipple' }, { label: '4" Nipple' },
+  { label: '4½" Nipple' }, { label: '5" Nipple' },  { label: '5½" Nipple' },
+  { label: '6" Nipple' },  { label: '7" Nipple' },  { label: '8" Nipple' },
+  { label: '9" Nipple' },  { label: '10" Nipple' }, { label: '12" Nipple' },
+  { label: 'Yellow Met. Tape (Per FT)' },
+  { label: '3/16 Galv. Cable (Per FT)' },
+  { label: "Galv. 45's" },
+  { label: '3/16 C-Bolt Clamp' },
+  { label: 'Tank Anchor – 48"' },
+  { label: '17lb Anode Bags' },
+  { label: '9lb Anode Bags' },
+  { label: '¾" Galv. 2-Hole Straps' },
+  { label: '½" Galv. 2-Hole Straps' },
+  { label: '¾" CCST (Per FT)' },
+  { label: '½" Shut Off' },
+  { label: '¾" Shut Off' },
+  { label: '¾" SXS 80 PVC 90 Elbow' },
+  { label: '30 PSI Test Gauge' },
+  { label: 'CSST Fitting' },
+  { label: '1"×¾" Reducing Male PVC' },
+  { label: 'CCST Union Fitting' },
+  { label: '20" POL × POL' },
+  { label: '12" POL × POL' },
+  { label: 'Rigid Pipe Strut Clamp' },
+  { label: 'Galv. Minis' },
+  { label: 'Galv. Strut – Deep (FT)' },
+  { label: 'Galv. Strut – Shallow (FT)' }
 ];
-const mid=Math.ceil(NIPPLE_ROWS.length/2);
-(()=>{
-  const lb=document.getElementById('nipples-left-body');
-  NIPPLE_ROWS.slice(0,mid).forEach(r=>addRow(lb,r.label,5,r.h||false));
+
+const mid = Math.ceil(ALL_NIPPLE_ROWS.length / 2);
+(function() {
+  const tbody = document.getElementById('nipples-left-body');
+  ALL_NIPPLE_ROWS.slice(0, mid).forEach(r => addRow(tbody, r.label, 5, r.isHeader || false));
 })();
-(()=>{
-  const rb=document.getElementById('nipples-right-body');
-  NIPPLE_ROWS.slice(mid).forEach(r=>addRow(rb,r.label,5,r.h||false));
+(function() {
+  const tbody = document.getElementById('nipples-right-body');
+  ALL_NIPPLE_ROWS.slice(mid).forEach(r => addRow(tbody, r.label, 5, r.isHeader || false));
 })();
 
-/* ── AUTO SAVE ── */
-const SAVE_KEY='aog_gas_v2';
-let saveTimer=null;
-function autoSave(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{
-    const data={};
-    document.querySelectorAll('.yn-btn.active').forEach(btn=>{
-      data['yn_'+btn.dataset.group+'_'+(btn.classList.contains('yes-btn')?'y':'n')]=true;
+// ===== YES/NO COLORS =====
+function applyYNColors() {
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    if (cb.parentElement && cb.parentElement.classList.contains('yn-checkbox-wrap')) return;
+    let next = cb.nextSibling;
+    while (next && next.nodeType === 3 && next.textContent.trim() === '') next = next.nextSibling;
+    if (!next || next.nodeType !== 3) return;
+    const label = next.textContent.trim();
+    if (!label) return;
+    const upper = label.toUpperCase();
+    const cls   = upper === 'YES' ? 'yn-yes' : upper === 'NO' ? 'yn-no' : 'yn-opt';
+    const wrap  = document.createElement('span');
+    wrap.className = 'yn-checkbox-wrap ' + cls;
+    cb.parentNode.insertBefore(wrap, cb);
+    wrap.appendChild(cb);
+    wrap.appendChild(document.createTextNode(' ' + label));
+    next.remove();
+    const sync = () => wrap.classList.toggle('checked', cb.checked);
+    cb.addEventListener('change', sync);
+    wrap.addEventListener('click', e => {
+      if (e.target !== cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
     });
-    document.querySelectorAll('input[type="text"],input[type="date"],textarea').forEach((el,i)=>{
-      data['inp_'+i]=el.value;
-    });
-    try{localStorage.setItem(SAVE_KEY,JSON.stringify(data));}catch(e){}
-    setStatus('Saved ✓');
-    setTimeout(()=>setStatus(''),2000);
-  },1200);
+    sync();
+  });
 }
-document.querySelectorAll('input,textarea').forEach(el=>{
-  el.addEventListener('input',autoSave);
-  el.addEventListener('change',autoSave);
+document.addEventListener('DOMContentLoaded', () => { applyYNColors(); setupThemeToggle(); });
+if (document.readyState !== 'loading') setTimeout(() => { applyYNColors(); setupThemeToggle(); }, 50);
+
+// ===== AUTO-SAVE to localStorage =====
+const SAVE_KEY = 'aog_gas_v3';
+let saveTimer = null;
+
+function collectState() {
+  const data = { inputs: {}, checkboxes: {} };
+  document.querySelectorAll('input[type="text"], textarea').forEach((el, i) => {
+    data.inputs['i' + i] = el.value;
+  });
+  document.querySelectorAll('input[type="checkbox"]').forEach((el, i) => {
+    data.checkboxes['c' + i] = el.checked;
+  });
+  return data;
+}
+
+function restoreState(data) {
+  if (!data) return;
+  document.querySelectorAll('input[type="text"], textarea').forEach((el, i) => {
+    if (data.inputs && data.inputs['i' + i] !== undefined) el.value = data.inputs['i' + i];
+  });
+  document.querySelectorAll('input[type="checkbox"]').forEach((el, i) => {
+    if (data.checkboxes && data.checkboxes['c' + i] !== undefined) {
+      el.checked = data.checkboxes['c' + i];
+      const w = el.parentElement;
+      if (w && w.classList.contains('yn-checkbox-wrap')) {
+        w.classList.toggle('checked', el.checked);
+      }
+    }
+  });
+}
+
+function autoSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(collectState())); } catch(e) {}
+    setStatus('Saved ✓');
+    setTimeout(() => setStatus(''), 2000);
+  }, 1200);
+}
+
+// Attach auto-save listeners
+document.addEventListener('input',  e => { if (e.target.matches('input[type="text"], textarea')) autoSave(); });
+document.addEventListener('change', e => { if (e.target.matches('input[type="checkbox"]')) autoSave(); });
+
+// Restore on load
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const saved = localStorage.getItem(SAVE_KEY);
+    if (saved) restoreState(JSON.parse(saved));
+  } catch(e) {}
 });
 
-/* ── CLEAR ── */
-function clearForm(){
-  if(!confirm('Clear all fields?'))return;
-  document.querySelectorAll('input[type="text"],input[type="date"],textarea').forEach(el=>el.value='');
-  document.querySelectorAll('.yn-btn').forEach(b=>b.classList.remove('active'));
-  try{localStorage.removeItem(SAVE_KEY);}catch(e){}
+// ===== CLEAR =====
+function clearForm() {
+  if (!confirm('Clear all fields? This cannot be undone.')) return;
+  document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+    el.checked = false;
+    const w = el.parentElement;
+    if (w && w.classList.contains('yn-checkbox-wrap')) w.classList.remove('checked');
+  });
+  try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
 }
 
-/* ── STATUS ── */
-function setStatus(msg){
-  const el=document.getElementById('save-status');
-  if(el)el.textContent=msg;
+// ===== PRINT AS IMAGE (forces light mode capture) =====
+function printAsImage() {
+  const btn = document.getElementById('printBtn');
+  btn.textContent = '⏳ Please wait…'; btn.disabled = true;
+  setStatus('Capturing pages, please wait…');
+
+  // Always capture in light mode
+  const wasDark = document.body.classList.contains('dark-mode');
+  document.body.classList.remove('dark-mode');
+
+  const ab = document.querySelector('.action-bar');
+  const nt = document.querySelector('.notice');
+  const ss = document.getElementById('save-status');
+  if (ab) ab.style.visibility = 'hidden';
+  if (nt) nt.style.visibility = 'hidden';
+  if (ss) ss.style.visibility = 'hidden';
+
+  const pages       = [document.getElementById('page1'), document.getElementById('page2')];
+  const RENDER_W    = 1050;
+  const LETTER_W_PX = 816;
+  const LETTER_H_PX = 1056;
+
+  const origStyles = pages.map(p => ({
+    width: p.style.width, maxWidth: p.style.maxWidth, minWidth: p.style.minWidth
+  }));
+  pages.forEach(p => {
+    p.style.width    = RENDER_W + 'px';
+    p.style.maxWidth = RENDER_W + 'px';
+    p.style.minWidth = RENDER_W + 'px';
+  });
+
+  setTimeout(() => {
+    Promise.all(pages.map(page =>
+      html2canvas(page, {
+        scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
+        width: RENDER_W, height: page.scrollHeight,
+        windowWidth: RENDER_W, scrollX: 0, scrollY: 0
+      })
+    )).then(canvases => {
+
+      pages.forEach((p, i) => {
+        p.style.width    = origStyles[i].width;
+        p.style.maxWidth = origStyles[i].maxWidth;
+        p.style.minWidth = origStyles[i].minWidth;
+      });
+      if (ab) ab.style.visibility = '';
+      if (nt) nt.style.visibility = '';
+      if (ss) ss.style.visibility = '';
+      // Restore dark mode if it was on
+      if (wasDark) document.body.classList.add('dark-mode');
+
+      let pagesHTML = '';
+      canvases.forEach(canvas => {
+        const logicalW    = canvas.width  / 2;
+        const logicalH    = canvas.height / 2;
+        const scale       = LETTER_W_PX / logicalW;
+        const imgDisplayH = logicalH * scale;
+        const dataURL     = canvas.toDataURL('image/png');
+
+        if (imgDisplayH <= LETTER_H_PX) {
+          pagesHTML += `<div class="print-page"><img src="${dataURL}"
+            style="width:8.5in;height:${(imgDisplayH/96).toFixed(4)}in;display:block;" /></div>`;
+        } else {
+          const numSlices = Math.ceil(imgDisplayH / LETTER_H_PX);
+          for (let i = 0; i < numSlices; i++) {
+            const offsetIn    = ((i * LETTER_H_PX) / 96 * -1).toFixed(4);
+            const imgHeightIn = (imgDisplayH / 96).toFixed(4);
+            pagesHTML += `<div class="print-page"><div class="clip">
+              <img src="${dataURL}"
+                style="position:absolute;top:${offsetIn}in;left:0;width:8.5in;height:${imgHeightIn}in;" />
+              </div></div>`;
+          }
+        }
+      });
+
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;top:-99999px;left:-99999px;width:1px;height:1px;border:none;';
+      document.body.appendChild(iframe);
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+        <style>
+          *{margin:0;padding:0;box-sizing:border-box;}
+          @page{size:8.5in 11in;margin:0;}
+          body{margin:0;padding:0;background:#fff;}
+          .print-page{
+            width:8.5in;height:11in;overflow:hidden;
+            page-break-after:always;break-after:page;
+            position:relative;background:#fff;
+          }
+          .print-page:last-child{page-break-after:avoid;break-after:avoid;}
+          .clip{position:absolute;top:0;left:0;width:8.5in;height:11in;overflow:hidden;}
+          img{display:block;}
+        </style>
+      </head><body>${pagesHTML}</body></html>`);
+      doc.close();
+
+      setTimeout(() => {
+        setStatus('');
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          btn.textContent = '📄 PDF'; btn.disabled = false; setStatus('');
+        }, 3000);
+      }, 1500);
+
+    }).catch(err => {
+      console.error(err);
+      pages.forEach((p, i) => {
+        p.style.width    = origStyles[i].width;
+        p.style.maxWidth = origStyles[i].maxWidth;
+        p.style.minWidth = origStyles[i].minWidth;
+      });
+      if (ab) ab.style.visibility = '';
+      if (nt) nt.style.visibility = '';
+      if (ss) ss.style.visibility = '';
+      if (wasDark) document.body.classList.add('dark-mode');
+      btn.textContent = '📄 PDF'; btn.disabled = false;
+      setStatus('Capture failed — please try again.');
+      setTimeout(() => setStatus(''), 4000);
+    });
+  }, 200);
 }
 
-/* ── iPHONE SAVE ── */
-function saveForIPhone(){
-  setStatus('Rendering…');
-  const wasDark=document.body.classList.contains('dark-mode');
-  if(wasDark)document.body.classList.remove('dark-mode');
-  const overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;';
-  const closeBtn=document.createElement('button');
-  closeBtn.style.cssText='background:#DC2626;color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;position:sticky;top:0;z-index:10;';
-  closeBtn.textContent='✕ Close';
-  closeBtn.onclick=()=>{if(wasDark)document.body.classList.add('dark-mode');document.body.removeChild(overlay);setStatus('');};
-  overlay.appendChild(closeBtn);
-  document.body.appendChild(overlay);
-  html2canvas(document.querySelector('.content'),{scale:2,useCORS:true,backgroundColor:'#fff',logging:false})
-  .then(canvas=>{
-    const lbl=document.createElement('div');
-    lbl.style.cssText='color:#ccc;font-size:12px;text-align:center;';
-    lbl.textContent='Long-press image → Save to Photos';
-    const img=document.createElement('img');
-    img.src=canvas.toDataURL('image/jpeg',0.88);
-    img.style.cssText='max-width:100%;border:2px solid #555;border-radius:6px;';
-    overlay.appendChild(lbl);overlay.appendChild(img);
-    setStatus('Long-press to save');
-    if(wasDark)document.body.classList.add('dark-mode');
+// ===== iPHONE SAVE (light mode capture) =====
+function saveForIPhone() {
+  setStatus('Rendering pages, please wait…');
+  const pages   = document.querySelectorAll('.form-page');
+  const wasDark = document.body.classList.contains('dark-mode');
+  document.body.classList.remove('dark-mode');
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;';
+  const closeBtn = document.createElement('button');
+  closeBtn.style.cssText = 'position:sticky;top:0;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:bold;z-index:10000;margin-bottom:12px;';
+  closeBtn.textContent = '✕ Close';
+  const container = document.createElement('div');
+  container.style.cssText = 'display:flex;flex-direction:column;gap:12px;width:100%;max-width:600px;';
+  overlay.appendChild(closeBtn); overlay.appendChild(container); document.body.appendChild(overlay);
+
+  const RENDER_W = 1050;
+  let completed  = 0;
+
+  pages.forEach((page, idx) => {
+    const oW = page.style.width, oM = page.style.maxWidth, om = page.style.minWidth;
+    page.style.width = RENDER_W+'px'; page.style.maxWidth = RENDER_W+'px'; page.style.minWidth = RENDER_W+'px';
+    setTimeout(() => {
+      html2canvas(page, {
+        scale:2, useCORS:true, backgroundColor:'#fff', logging:false,
+        width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W
+      }).then(canvas => {
+        page.style.width = oW; page.style.maxWidth = oM; page.style.minWidth = om;
+        const wrapper = document.createElement('div'); wrapper.style.cssText = 'text-align:center;';
+        const lbl = document.createElement('div');
+        lbl.style.cssText = 'color:#ccc;font-size:11px;margin-bottom:6px;';
+        lbl.textContent = `Page ${idx+1} — long-press image to save`;
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/jpeg', 0.92);
+        img.style.cssText = 'max-width:100%;border:2px solid #555;border-radius:4px;display:block;margin:0 auto;';
+        img.alt = `Form page ${idx+1}`;
+        wrapper.appendChild(lbl); wrapper.appendChild(img); container.appendChild(wrapper);
+        completed++;
+        if (completed === pages.length) {
+          setStatus('Long-press each image to save to Photos.');
+          if (wasDark) document.body.classList.add('dark-mode');
+        }
+      });
+    }, idx * 100);
+  });
+
+  closeBtn.onclick = () => {
+    setStatus('');
+    if (wasDark) document.body.classList.add('dark-mode');
+    document.body.removeChild(overlay);
+  };
+}
+
+// ===== ANDROID SAVE (light mode capture) =====
+function saveForAndroid() {
+  setStatus('Rendering pages, please wait…');
+  const pages   = document.querySelectorAll('.form-page');
+  const wasDark = document.body.classList.contains('dark-mode');
+  document.body.classList.remove('dark-mode');
+
+  const RENDER_W = 1050;
+  let completed  = 0;
+
+  pages.forEach((page, idx) => {
+    const oW = page.style.width, oM = page.style.maxWidth, om = page.style.minWidth;
+    page.style.width = RENDER_W+'px'; page.style.maxWidth = RENDER_W+'px'; page.style.minWidth = RENDER_W+'px';
+    setTimeout(() => {
+      html2canvas(page, {
+        scale:2, useCORS:true, backgroundColor:'#fff', logging:false,
+        width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W
+      }).then(canvas => {
+        page.style.width = oW; page.style.maxWidth = oM; page.style.minWidth = om;
+        const link = document.createElement('a');
+        link.download = pages.length === 1
+          ? 'AOG_Gas_Install.jpg'
+          : `AOG_Gas_Install_Page${idx+1}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 0.92);
+        link.click();
+        completed++;
+        if (completed === pages.length) {
+          setStatus('Images saved to Downloads.');
+          setTimeout(() => setStatus(''), 4000);
+          if (wasDark) document.body.classList.add('dark-mode');
+        }
+      });
+    }, idx * 100);
   });
 }
 
-/* ── ANDROID SAVE ── */
-function saveForAndroid(){
-  setStatus('Rendering…');
-  const wasDark=document.body.classList.contains('dark-mode');
-  if(wasDark)document.body.classList.remove('dark-mode');
-  html2canvas(document.querySelector('.content'),{scale:2,useCORS:true,backgroundColor:'#fff',logging:false})
-  .then(canvas=>{
-    const a=document.createElement('a');
-    a.download='AOG_Gas_Install.jpg';
-    a.href=canvas.toDataURL('image/jpeg',0.88);
-    a.click();
-    setStatus('Saved ✓');
-    setTimeout(()=>setStatus(''),3000);
-    if(wasDark)document.body.classList.add('dark-mode');
-  });
+function setStatus(msg) {
+  const el = document.getElementById('save-status');
+  if (el) el.textContent = msg;
 }
 </script>
 </body>
