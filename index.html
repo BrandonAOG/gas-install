@@ -4,294 +4,427 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Always On Generators – Gas Installation Checklist</title>
-
 <style>
+/* ── TOKENS ── */
 :root {
-  --cyan: #D97706;
-  --cyan-dim: #B45309;
-  --cyan-dark: #92400E;
-  --amber: #D97706;
-  --bg: #FFFFFF;
-  --bg3: #F8F8F8;
-  --bg4: #F0F0F0;
-  --panel: #FFFFFF;
-  --border: rgba(217,119,6,0.25);
-  --border-bright: rgba(217,119,6,0.5);
-  --text: #1F2937;
-  --text-muted: #6B7280;
-  --text-dim: #9CA3AF;
-  --glow: 0 0 8px rgba(217,119,6,0.3), 0 0 20px rgba(217,119,6,0.1);
-  --icon-color-primary: #D97706;
+  --cyan:#D97706;--cyan-dim:#B45309;--cyan-dark:#92400E;
+  --bg:#FFFFFF;--bg3:#F8F8F8;--bg4:#F0F0F0;--panel:#FFFFFF;
+  --border:rgba(217,119,6,0.25);--border-bright:rgba(217,119,6,0.5);
+  --text:#1F2937;--text-muted:#6B7280;--text-dim:#9CA3AF;
+  --glow:0 0 8px rgba(217,119,6,0.3),0 0 20px rgba(217,119,6,0.1);
+  --icon-color-primary:#D97706;
+  --tbl-header-bg:#2C3E50;--tbl-header-fg:#FFFFFF;
+  --tbl-subhead-bg:#4A5568;--tbl-subhead-fg:#FFFFFF;
+  --tbl-row-odd:#FFFFFF;--tbl-row-even:#F7F8FA;--tbl-row-hover:#EEF2FF;
+  --tbl-border:#D1D5DB;--tbl-label-fg:#1F2937;--tbl-input-fg:#1F2937;
+  --tbl-radius:4px;
 }
-
 body.dark-mode {
-  --bg: #0A0E27;
-  --bg3: #1A2847;
-  --bg4: #243458;
-  --panel: #0F1535;
-  --border: rgba(0,255,200,0.08);
-  --border-bright: rgba(0,255,200,0.25);
-  --text: #E0F7FF;
-  --text-muted: #7DD3FC;
-  --text-dim: #38BDF8;
-  --glow: 0 0 8px rgba(0,255,200,0.3), 0 0 20px rgba(0,255,200,0.1);
-  --cyan: #00FFC8;
-  --cyan-dim: #06B6D4;
-  --icon-color-primary: #00FFC8;
+  --bg:#0A0E27;--bg3:#1A2847;--bg4:#243458;--panel:#0F1535;
+  --border:rgba(0,255,200,0.08);--border-bright:rgba(0,255,200,0.25);
+  --text:#E0F7FF;--text-muted:#7DD3FC;--text-dim:#38BDF8;
+  --glow:0 0 8px rgba(0,255,200,0.3),0 0 20px rgba(0,255,200,0.1);
+  --cyan:#00FFC8;--cyan-dim:#06B6D4;--icon-color-primary:#00FFC8;
+  --tbl-header-bg:#0F2D52;--tbl-header-fg:#00FFC8;
+  --tbl-subhead-bg:#1A3A6F;--tbl-subhead-fg:#7DD3FC;
+  --tbl-row-odd:rgba(15,21,53,0.7);--tbl-row-even:rgba(26,40,71,0.5);
+  --tbl-row-hover:rgba(0,255,200,0.07);
+  --tbl-border:rgba(0,255,200,0.18);--tbl-label-fg:#E0F7FF;--tbl-input-fg:#E0F7FF;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { width: 100%; height: 100%; overflow-x: hidden; }
-
-body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  width: 100%;
-  max-width: 1050px;
-  margin: 0 auto;
-  padding: 0;
-  padding-bottom: env(safe-area-inset-bottom, 24px);
-  -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  min-height: 100vh;
+*{box-sizing:border-box;margin:0;padding:0;}
+html{width:100%;overflow-x:hidden;}
+body{
+  font-family:Arial,sans-serif;
+  background:var(--bg);color:var(--text);
+  width:100%;max-width:1050px;margin:0 auto;
+  padding-bottom:env(safe-area-inset-bottom,24px);
+  -webkit-text-size-adjust:100%;overflow-x:hidden;
+  transition:background-color 0.3s,color 0.3s;min-height:100vh;
+}
+body.dark-mode{
+  background:linear-gradient(135deg,#0A0E27 0%,#0F1535 25%,#0A1628 50%,#0F1535 75%,#0A0E27 100%);
+  background-attachment:fixed;
 }
 
-body.dark-mode {
-  background: linear-gradient(135deg, #0A0E27 0%, #0F1535 25%, #0A1628 50%, #0F1535 75%, #0A0E27 100%);
-  background-attachment: fixed;
+/* ── ACTION BAR ── */
+.action-bar{
+  position:sticky;top:0;z-index:1000;width:100%;
+  background:var(--panel);padding:10px 16px;
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  box-shadow:0 4px 18px rgba(0,0,0,0.3);
+  border-bottom:1px solid var(--border-bright);
+}
+body.dark-mode .action-bar{
+  background:linear-gradient(90deg,rgba(15,21,53,0.9),rgba(26,40,71,0.8),rgba(15,21,53,0.9));
+  border-bottom-color:rgba(0,255,200,0.25);
+}
+.btn{
+  padding:8px 16px;font-size:11px;font-weight:bold;letter-spacing:0.5px;
+  border:1px solid rgba(217,119,6,0.4);background:rgba(217,119,6,0.05);
+  border-radius:0;cursor:pointer;transition:all 0.15s;
+  font-family:Arial,sans-serif;color:var(--cyan);text-transform:uppercase;
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  white-space:nowrap;flex-shrink:0;
+}
+body.dark-mode .btn{background:rgba(0,255,200,0.08);border-color:rgba(0,255,200,0.25);color:#00FFC8;}
+.btn:hover{border-color:var(--cyan);box-shadow:var(--glow);transform:translateY(-1px);}
+.theme-toggle-btn{
+  position:relative;width:34px;height:34px;padding:6px;
+  border:1px solid rgba(217,119,6,0.4);background:rgba(217,119,6,0.05);
+  border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--cyan);transition:all 0.3s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;flex-shrink:0;
+}
+body.dark-mode .theme-toggle-btn{background:rgba(0,255,200,0.08);border-color:rgba(0,255,200,0.2);color:#00FFC8;}
+.theme-icon{
+  width:18px;height:18px;transition:all 0.3s;position:absolute;
+  fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  stroke:var(--icon-color-primary)!important;
+}
+.theme-icon.theme-icon-moon{opacity:0;}
+body.dark-mode .theme-icon{opacity:0;transform:rotate(-180deg);}
+body.dark-mode .theme-icon.theme-icon-moon{opacity:1;transform:rotate(0deg);}
+#save-status{color:var(--text-muted);font-size:11px;min-height:16px;text-align:center;width:100%;}
+
+.page-wrapper{width:100%;display:flex;flex-direction:column;}
+
+.form-page{
+  width:100%;background:var(--panel);
+  padding:16px 20px;box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+body.dark-mode .form-page{
+  background:linear-gradient(135deg,rgba(15,21,53,0.95),rgba(10,14,39,0.98));
 }
 
-/* ===== STICKY ACTION BAR ===== */
-.action-bar {
-  position: sticky; top: 0; z-index: 1000; width: 100%;
-  background: var(--panel); padding: 12px 16px;
-  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.3);
-  border-bottom: 1px solid var(--border-bright);
-  transition: all 0.3s ease; max-width: 1050px; box-sizing: border-box;
+/* ── INPUTS ── */
+input[type="text"],textarea{
+  font-family:Arial,sans-serif;font-size:11px;color:var(--text);
+  background:var(--panel);border:none;
+  border-bottom:1px solid rgba(217,119,6,0.25);
+  padding:2px 3px;outline:none;transition:all 0.2s;
+  -webkit-appearance:none;appearance:none;
+  caret-color:var(--cyan);max-width:100%;
 }
-@media (max-width: 768px) { .action-bar { padding: 10px 12px; gap: 8px; } }
+input[type="text"]:focus,textarea:focus{
+  border-bottom-color:var(--cyan);background:rgba(217,119,6,0.04);
+}
+body.dark-mode input[type="text"],body.dark-mode textarea{
+  background:rgba(10,14,39,0.6);border-bottom-color:rgba(0,255,200,0.2);color:#E0F7FF;
+}
+input::placeholder,textarea::placeholder{color:var(--text-dim)!important;opacity:1;}
+input[type="checkbox"]{
+  width:13px;height:13px;cursor:pointer;vertical-align:middle;
+  margin:2px 3px 2px 0;accent-color:var(--cyan);flex-shrink:0;
+}
+body.dark-mode input[type="checkbox"]{accent-color:#00FFC8;}
+textarea.multiline{
+  width:100%;resize:none;
+  border:1px solid rgba(217,119,6,0.25);border-radius:3px;
+  padding:5px 7px;font-size:11px;font-family:Arial,sans-serif;
+  line-height:1.5;color:var(--text);background:var(--panel);outline:none;
+}
+textarea.multiline:focus{border-color:var(--cyan);}
+body.dark-mode textarea.multiline{background:rgba(10,14,39,0.6);border-color:rgba(0,255,200,0.2);color:#E0F7FF;}
 
-body.dark-mode .action-bar {
-  background: linear-gradient(90deg, rgba(15,21,53,0.9) 0%, rgba(26,40,71,0.8) 50%, rgba(15,21,53,0.9) 100%);
-  border-bottom-color: rgba(0,255,200,0.25);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 20px rgba(0,255,200,0.08);
+/* ── YES/NO WRAPPERS ── */
+.yn-checkbox-wrap{
+  display:inline-flex;align-items:center;gap:3px;cursor:pointer;
+  padding:1px 5px 1px 3px;border-radius:3px;font-size:10px;font-weight:bold;
+  border:1px solid transparent;transition:background 0.15s,border-color 0.15s;
+  vertical-align:middle;user-select:none;white-space:nowrap;flex-shrink:0;
+}
+.yn-checkbox-wrap.yn-yes{border-color:#bbb;}
+.yn-checkbox-wrap.yn-no{border-color:#bbb;}
+.yn-checkbox-wrap.yn-yes.checked{background:#059669;border-color:#047857;color:#fff;}
+.yn-checkbox-wrap.yn-no.checked{background:#DC2626;border-color:#b91c1c;color:#fff;}
+.yn-checkbox-wrap.yn-opt{border-color:#bbb;}
+.yn-checkbox-wrap.yn-opt.checked{background:#D97706;border-color:#b45309;color:#fff;}
+body.dark-mode .yn-checkbox-wrap{border-color:rgba(0,255,200,0.3);}
+body.dark-mode .yn-checkbox-wrap.checked{border-color:rgba(0,255,200,0.5);}
+
+/* ── PAGE 1 HEADER ── */
+.page1-header{text-align:center;margin-bottom:6px;}
+.logo-area{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:6px;justify-content:center;flex-wrap:wrap;
+}
+.logo-text{font-weight:900;font-size:15px;font-family:Arial Black,sans-serif;color:var(--text);line-height:1.2;}
+.logo-text span{color:#D97706;}
+.checklist-title{font-weight:bold;font-size:15px;border-top:2px solid var(--text);padding-top:5px;margin-bottom:6px;}
+
+.top-fields{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;margin-bottom:5px;}
+.field-row{display:flex;align-items:flex-end;gap:5px;font-size:11px;margin-bottom:1px;flex-wrap:wrap;}
+.field-row label{font-weight:bold;white-space:nowrap;font-size:11px;flex-shrink:0;}
+.field-row input[type="text"]{flex:1;min-width:60px;}
+
+.inline-input{
+  border:none;border-bottom:1px solid var(--text);
+  padding:1px 3px;font-size:11px;background:transparent;color:var(--text);
+}
+.inline-input.xshort{width:55px;}
+body.dark-mode .inline-input{color:#E0F7FF;border-bottom-color:rgba(0,255,200,0.4);}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;margin-bottom:5px;}
+.section{margin-bottom:5px;}
+.section-title{
+  font-weight:bold;font-size:11px;text-transform:uppercase;
+  border-bottom:1px solid var(--border-bright);
+  padding-bottom:2px;margin-bottom:2px;
+}
+.section-row{font-size:11px;margin-bottom:1px;display:flex;align-items:center;flex-wrap:wrap;gap:2px;}
+hr.section-hr{border:none;border-top:1px solid rgba(217,119,6,0.2);margin:3px 0;}
+body.dark-mode hr.section-hr{border-top-color:rgba(0,255,200,0.15);}
+.full-line-input{
+  width:100%;border:none;border-bottom:1px solid var(--text);
+  background:transparent;color:var(--text);font-size:11px;padding:1px 2px;
+}
+body.dark-mode .full-line-input{color:#E0F7FF;border-bottom-color:rgba(0,255,200,0.4);}
+
+.reg-row{
+  font-size:10px;font-weight:bold;
+  display:flex;flex-wrap:wrap;gap:4px 10px;
+  align-items:flex-end;margin-bottom:5px;padding:3px 0;
+  border-top:1px solid #ccc;border-bottom:1px solid #ccc;
+}
+.reg-field{display:flex;align-items:flex-end;gap:3px;white-space:nowrap;}
+.reg-field input{width:34px;border:none;border-bottom:1px solid var(--text);background:transparent;color:var(--text);font-size:10px;padding:1px 2px;}
+body.dark-mode .reg-field input{color:#E0F7FF;border-bottom-color:rgba(0,255,200,0.4);}
+body.dark-mode .reg-row{border-color:rgba(0,255,200,0.2);}
+
+.miscues-textarea{
+  width:100%;resize:none;
+  border:1px solid rgba(217,119,6,0.25);border-radius:3px;
+  padding:4px 6px;font-size:11px;font-family:Arial,sans-serif;
+  line-height:1.4;color:var(--text);background:var(--panel);outline:none;
+}
+body.dark-mode .miscues-textarea{background:rgba(10,14,39,0.6);border-color:rgba(0,255,200,0.2);color:#E0F7FF;}
+
+/* ── SPLIT LAYOUT ── */
+.tables-split,.page2-tables-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0 8px;width:100%;align-items:start;
+}
+.tables-col{display:flex;flex-direction:column;gap:5px;min-width:0;}
+
+/* ── MATERIAL TABLE ── */
+.grid-section{width:100%;overflow:hidden;}
+table.mat-table{
+  border-collapse:collapse;width:100%;table-layout:fixed;
+  font-family:Arial,sans-serif;
+  border-radius:var(--tbl-radius);overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,0.14),0 0 0 1px var(--tbl-border);
+}
+table.mat-table col.col-label{width:115px;}
+table.mat-table col.col-data{width:32px;}
+table.mat-table th,
+table.mat-table td{
+  border:1px solid var(--tbl-border);
+  padding:2px 2px;text-align:center;
+  font-family:Arial,sans-serif;
+  overflow:hidden;vertical-align:middle;line-height:1.15;
+}
+table.mat-table thead tr th{
+  background:var(--tbl-header-bg);color:var(--tbl-header-fg);
+  font-weight:700;font-size:11px;letter-spacing:0.2px;
+  white-space:nowrap;border-color:var(--tbl-header-bg);padding:3px 3px;
+}
+table.mat-table thead tr th:first-child{text-align:left;padding-left:6px;}
+table.mat-table thead tr th:not(:first-child){font-size:10px;font-weight:600;}
+table.mat-table tbody tr:nth-child(odd)  td{background:var(--tbl-row-odd);}
+table.mat-table tbody tr:nth-child(even) td{background:var(--tbl-row-even);}
+table.mat-table tbody tr:hover           td{background:var(--tbl-row-hover);}
+table.mat-table td.row-label{
+  text-align:left;font-weight:600;
+  font-size:11px;color:var(--tbl-label-fg);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  padding-left:5px;background:inherit;
+}
+table.mat-table td.row-label.section-header{
+  background:var(--tbl-subhead-bg)!important;
+  color:var(--tbl-subhead-fg)!important;
+  text-align:center;font-size:11px;font-weight:700;
+  letter-spacing:0.3px;padding:2px 4px;
+  border-color:var(--tbl-subhead-bg);
+}
+table.mat-table td input[type="text"]{
+  width:100%;border:none;text-align:center;
+  font-size:11px;font-weight:600;padding:1px 0;
+  background:transparent;color:var(--tbl-input-fg);
+  font-family:Arial,sans-serif;min-width:0;outline:none;
+  caret-color:var(--cyan);
+}
+table.mat-table td input[type="text"]:focus{background:rgba(217,119,6,0.07);border-radius:2px;}
+body.dark-mode table.mat-table td input[type="text"]:focus{background:rgba(0,255,200,0.07);}
+
+.other-section{width:100%;margin-top:6px;}
+.other-title{
+  font-weight:700;font-size:11px;
+  background:var(--tbl-header-bg);color:var(--tbl-header-fg);
+  padding:4px 8px;border:1px solid var(--tbl-border);border-bottom:none;
+  border-radius:var(--tbl-radius) var(--tbl-radius) 0 0;
+}
+.other-section textarea.multiline{
+  border-top:none;border-radius:0 0 var(--tbl-radius) var(--tbl-radius);
+  border-color:var(--tbl-border);
 }
 
-.btn {
-  padding: 9px 18px; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;
-  border: 1px solid rgba(217,119,6,0.4); background: rgba(217,119,6,0.05);
-  border-radius: 0; cursor: pointer; transition: all 0.15s ease;
-  font-family: Arial, sans-serif; color: var(--cyan); text-transform: uppercase;
-  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-  white-space: nowrap; flex-shrink: 0;
+.page-divider{
+  width:100%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--border-bright),transparent);
 }
-@media (max-width: 640px) { .btn { padding: 8px 14px; font-size: 10px; } }
-body.dark-mode .btn { background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.25); color: #00FFC8; text-shadow: 0 0 4px rgba(0,255,200,0.3); }
-.btn:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow); transform: translateY(-1px); }
-body.dark-mode .btn:hover { background: rgba(0,255,200,0.12); border-color: #00FFC8; box-shadow: 0 0 12px rgba(0,255,200,0.25); }
-.btn:active { transform: translateY(0); }
+body.dark-mode .page-divider{background:linear-gradient(90deg,transparent,rgba(0,255,200,0.3),transparent);}
+.notice{text-align:center;font-size:11px;color:var(--text-muted);padding:8px 16px 6px;}
 
-.theme-toggle-btn {
-  position: relative; width: 36px; height: 36px; padding: 6px;
-  border: 1px solid rgba(217,119,6,0.4); background: rgba(217,119,6,0.05);
-  border-radius: 4px; cursor: pointer; display: flex; align-items: center;
-  justify-content: center; color: var(--cyan); transition: all 0.3s ease;
-  -webkit-tap-highlight-color: transparent; touch-action: manipulation; flex-shrink: 0;
-}
-body.dark-mode .theme-toggle-btn { background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.2); color: #00FFC8; }
-.theme-toggle-btn:hover { border-color: var(--cyan); transform: scale(1.08); }
-.theme-icon { width: 18px; height: 18px; transition: all 0.3s ease; position: absolute; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke: var(--icon-color-primary) !important; }
-.theme-icon.theme-icon-moon { opacity: 0; }
-body.dark-mode .theme-icon { opacity: 0; transform: rotate(-180deg); }
-body.dark-mode .theme-icon.theme-icon-moon { opacity: 1; transform: rotate(0deg); }
-
-#save-status { color: var(--text-muted); font-size: 11px; min-height: 16px; text-align: center; transition: color 0.3s ease; width: 100%; font-family: Arial, sans-serif; }
-body.dark-mode #save-status { color: #7DD3FC; }
-
-.page-wrapper { width: 100%; max-width: 1050px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; padding: 0; }
-
-.form-page {
-  width: 100%; max-width: 1050px; background: var(--panel);
-  padding: 24px; box-sizing: border-box; transition: all 0.3s ease;
-  font-family: Arial, sans-serif; display: flex; flex-direction: column;
-}
-@media (max-width: 768px) { .form-page { padding: 16px; } }
-@media (max-width: 480px) { .form-page { padding: 12px; } }
-body.dark-mode .form-page {
-  background: linear-gradient(135deg, rgba(15,21,53,0.95) 0%, rgba(10,14,39,0.98) 100%);
-}
-
-/* ===== INPUTS ===== */
-input[type="text"], textarea {
-  font-family: Arial, sans-serif; font-size: 11px; color: var(--text);
-  background: var(--panel); border: none; border-bottom: 1px solid rgba(217,119,6,0.25);
-  padding: 2px 4px; outline: none;
-  transition: all 0.2s; -webkit-appearance: none; appearance: none;
-  caret-color: var(--cyan); max-width: 100%;
-}
-input[type="text"]:focus, textarea:focus {
-  border-bottom-color: var(--cyan); background: rgba(217,119,6,0.04);
-  box-shadow: 0 2px 0 0 rgba(217,119,6,0.3);
-}
-body.dark-mode input[type="text"], body.dark-mode textarea {
-  background: rgba(10,14,39,0.6); border-bottom-color: rgba(0,255,200,0.2);
-  color: #E0F7FF; caret-color: #00FFC8;
-}
-body.dark-mode input[type="text"]:focus, body.dark-mode textarea:focus {
-  border-bottom-color: #00FFC8; background: rgba(26,40,71,0.8);
-  box-shadow: 0 0 8px rgba(0,255,200,0.2);
-}
-input::placeholder, textarea::placeholder { color: var(--text-dim) !important; opacity: 1; }
-
-input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; vertical-align: middle; margin: 2px 4px 2px 0; accent-color: var(--cyan); flex-shrink: 0; }
-@media (max-width: 480px) { input[type="checkbox"] { width: 12px; height: 12px; margin: 1px 3px 1px 0; } }
-body.dark-mode input[type="checkbox"] { accent-color: #00FFC8; }
-
-textarea { resize: vertical; border: 1px solid rgba(217,119,6,0.2); padding: 6px; min-height: 36px; font-family: Arial, sans-serif; width: 100%; }
-body.dark-mode textarea { border-color: rgba(0,255,200,0.15); }
-
-/* ===== YES/NO CHECKBOX ===== */
-.yn-checkbox-wrap {
-  display: inline-flex; align-items: center; gap: 3px; cursor: pointer;
-  padding: 2px 6px 2px 3px; border-radius: 3px; font-size: 10px; font-weight: bold;
-  border: 1px solid transparent; transition: background 0.15s, border-color 0.15s;
-  vertical-align: middle; user-select: none; white-space: nowrap; flex-shrink: 0; font-family: Arial, sans-serif;
-}
-@media (max-width: 480px) { .yn-checkbox-wrap { font-size: 9px; padding: 1px 4px 1px 2px; } }
-.yn-checkbox-wrap.yn-yes { border-color: #bbb; }
-.yn-checkbox-wrap.yn-no { border-color: #bbb; }
-.yn-checkbox-wrap.yn-yes.checked { background: #059669; border-color: #047857; color: #fff; }
-.yn-checkbox-wrap.yn-no.checked { background: #DC2626; border-color: #b91c1c; color: #fff; }
-.yn-checkbox-wrap.yn-yes.checked input, .yn-checkbox-wrap.yn-no.checked input { accent-color: #fff; }
-.yn-checkbox-wrap.yn-opt { border-color: #bbb; }
-.yn-checkbox-wrap.yn-opt.checked { background: #D97706; border-color: #b45309; color: #fff; }
-body.dark-mode .yn-checkbox-wrap { border-color: rgba(0,255,200,0.3); }
-body.dark-mode .yn-checkbox-wrap.checked { border-color: rgba(0,255,200,0.5); }
-
-/* ===== PAGE 1 LAYOUT ===== */
-.page1-header { text-align: center; margin-bottom: 14px; }
-.logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; justify-content: center; flex-wrap: wrap; }
-.logo-text { font-weight: 900; font-size: 18px; font-family: Arial Black, sans-serif; color: var(--text); line-height: 1.2; }
-.logo-text span { color: #D97706; }
-.checklist-title { font-weight: bold; font-size: 18px; border-top: 2px solid var(--text); padding-top: 10px; margin-bottom: 16px; color: var(--text); font-family: Arial, sans-serif; }
-
-.top-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; margin-bottom: 12px; }
-@media (max-width: 600px) { .top-fields { grid-template-columns: 1fr; } }
-
-.field-row { display: flex; align-items: flex-end; gap: 6px; font-size: 11px; margin-bottom: 2px; flex-wrap: wrap; }
-.field-row label { font-weight: bold; white-space: nowrap; font-size: 11px; flex-shrink: 0; }
-.field-row input[type="text"] { flex: 1; min-width: 80px; }
-@media (max-width: 480px) { .field-row { font-size: 10px; } .field-row label { font-size: 10px; } }
-
-.inline-input { border: none; border-bottom: 1px solid var(--text); padding: 1px 3px; font-size: 11px; background: transparent; color: var(--text); }
-.inline-input.short { width: 80px; }
-.inline-input.xshort { width: 60px; }
-body.dark-mode .inline-input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
-
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
-@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
-
-.section { margin-bottom: 10px; }
-.section-title { font-weight: bold; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border-bright); padding-bottom: 3px; margin-bottom: 6px; color: var(--text); }
-body.dark-mode .section-title { border-bottom-color: rgba(0,255,200,0.3); }
-.section-row { font-size: 11px; margin-bottom: 3px; display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
-.section-row label { margin-right: 4px; }
-.section-row b { margin-right: 2px; }
-@media (max-width: 480px) { .section-row { font-size: 10px; } }
-
-hr.section-hr { border: none; border-top: 1px solid rgba(217,119,6,0.2); margin: 8px 0; }
-body.dark-mode hr.section-hr { border-top-color: rgba(0,255,200,0.15); }
-
-.full-line-input { width: 100%; border: none; border-bottom: 1px solid var(--text); background: transparent; color: var(--text); font-size: 11px; padding: 1px 2px; }
-body.dark-mode .full-line-input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
-
-/* ===== REGULATORS ROW ===== */
-.reg-row {
-  font-size: 11px; font-weight: bold; display: flex; flex-wrap: wrap; gap: 6px 16px;
-  align-items: flex-end; margin-bottom: 10px; padding: 6px 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;
-}
-.reg-field { display: flex; align-items: flex-end; gap: 4px; white-space: nowrap; }
-.reg-field input { width: 40px; border: none; border-bottom: 1px solid var(--text); background: transparent; color: var(--text); font-size: 11px; padding: 1px 2px; }
-body.dark-mode .reg-field input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
-body.dark-mode .reg-row { border-color: rgba(0,255,200,0.2); }
-
-/* ===== MATERIAL TABLE ===== */
-.grid-section { margin-bottom: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-table.mat-table {
-  border-collapse: collapse; width: 100%; min-width: 100%;
-  table-layout: auto; font-size: 10px; font-family: Arial, sans-serif;
-}
-@media (max-width: 480px) { table.mat-table { font-size: 9px; } }
-
-table.mat-table th, table.mat-table td {
-  border: 1px solid #555; padding: 3px 3px; text-align: center;
-  min-height: 20px; word-break: break-word; font-family: Arial, sans-serif;
-}
-table.mat-table th {
-  background: #4B5563; color: #FFFFFF; font-weight: bold; font-size: 9px;
-}
-body.dark-mode table.mat-table th { background: #1E3A5F; color: #00FFC8; }
-body.dark-mode table.mat-table td { border-color: rgba(0,255,200,0.2); background: rgba(15,21,53,0.6); color: #E0F7FF; }
-
-table.mat-table td.row-label {
-  text-align: left; font-weight: bold; background: #fafafa;
-  font-size: 9px; min-width: 120px; font-family: Arial, sans-serif;
-}
-body.dark-mode table.mat-table td.row-label { background: rgba(36,52,88,0.6); color: #E0F7FF; }
-table.mat-table td.row-label.section-header {
-  background: #4B5563; color: #fff; text-align: center; font-size: 9px;
-}
-body.dark-mode table.mat-table td.row-label.section-header { background: #1E3A5F; color: #00FFC8; }
-
-table.mat-table td input[type="text"] {
-  width: 100%; height: 100%; border: none; border-bottom: none;
-  text-align: center; font-size: 9px; padding: 1px; background: transparent; color: var(--text); font-family: Arial, sans-serif;
-}
-body.dark-mode table.mat-table td input[type="text"] { color: #E0F7FF; }
-
-/* ===== OTHER SECTION (page 2 bottom) ===== */
-.other-section { margin-top: 10px; }
-.other-section label { font-weight: bold; font-size: 11px; }
-.other-lines { margin-top: 6px; display: flex; flex-direction: column; gap: 8px; }
-.other-line { border-bottom: 1px solid #555; height: 22px; width: 100%; }
-body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
-
-/* ===== NOTICE ===== */
-.notice { text-align: center; font-size: 11px; color: var(--text-muted); padding: 10px 16px 6px; }
-
-/* ===== PRINT ===== */
+/* ══════════════════════════════════════════
+   PRINT STYLES
+══════════════════════════════════════════ */
 @media print {
-  body * { visibility: hidden; }
-  .action-bar { display: none !important; }
-  .notice { display: none !important; }
+
+  @page {
+    size: letter portrait;
+    margin: 0.3in 0.3in;
+  }
+
+  .action-bar,
+  .notice,
+  .page-divider { display:none !important; }
+
+  html {
+    zoom: 0.88;
+  }
+
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-size: 11px !important;
+  }
+
+  body.dark-mode { background:#fff !important; }
+  .page-wrapper { display:block !important; }
+
+  /* Page 1 — force break AFTER */
+  #page1 {
+    display: block !important;
+    background: #fff !important;
+    padding: 8px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  /* Page 2 — force break BEFORE */
+  #page2 {
+    display: block !important;
+    background: #fff !important;
+    padding: 8px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Keep tables together */
+  .tables-split,
+  .page2-tables-split,
+  .tables-col,
+  .grid-section,
+  table.mat-table,
+  .two-col,
+  .reg-row {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Colours */
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+
+  table.mat-table thead tr th {
+    background: #2C3E50 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  table.mat-table td.row-label.section-header {
+    background: #4A5568 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  table.mat-table tbody tr:nth-child(odd)  td { background: #ffffff !important; }
+  table.mat-table tbody tr:nth-child(even) td { background: #f7f8fa !important; }
+
+  body * { color: #000 !important; }
+  table.mat-table thead tr th,
+  table.mat-table td.row-label.section-header,
+  .other-title,
+  #page2-banner { color: #ffffff !important; }
+
+  .other-title,
+  #page2-banner {
+    background: #2C3E50 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  input[type="text"] {
+    color: #000 !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #999 !important;
+  }
+  textarea {
+    color: #000 !important;
+    background: transparent !important;
+    border: 1px solid #ccc !important;
+  }
+
+  /* Tighten spacing in print */
+  .section { margin-bottom: 4px !important; }
+  .section-row { margin-bottom: 1px !important; }
+  .two-col { gap: 0 12px !important; margin-bottom: 4px !important; }
+  .reg-row { margin-bottom: 4px !important; padding: 2px 0 !important; }
+  .tables-col { gap: 4px !important; }
+  .page1-header { margin-bottom: 4px !important; }
+  .top-fields { margin-bottom: 4px !important; gap: 1px 14px !important; }
+  .miscues-textarea { min-height: 40px !important; }
 }
 </style>
 </head>
 <body>
 
-<!-- ACTION BAR -->
+<!-- ══ ACTION BAR ══ -->
 <div class="action-bar">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:100%;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;">
       <button class="btn" onclick="window.location.href='https://brandonaog.github.io/AOG-hub/'">🏠 HOME</button>
-      <button class="btn" id="printBtn" onclick="printAsImage()">📄 PDF</button>
+      <button class="btn" onclick="window.print()">📄 PRINT / PDF</button>
       <button class="btn" onclick="clearForm()">🗑 CLEAR</button>
-      <button class="btn" onclick="saveForIPhone()">📱 iPhone</button>
-      <button class="btn" onclick="saveForAndroid()">🤖 Android</button>
-      <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark mode" aria-label="Toggle dark mode">
-        <svg class="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button class="btn" onclick="saveForIPhone()">📱 iPHONE</button>
+      <button class="btn" onclick="saveForAndroid()">🤖 ANDROID</button>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark mode">
+        <svg class="theme-icon" width="18" height="18" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5"/>
           <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
           <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
           <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
-        <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
@@ -300,560 +433,458 @@ body.dark-mode .other-line { border-bottom-color: rgba(0,255,200,0.3); }
   </div>
 </div>
 
+<!-- ══ PAGE WRAPPER ══ -->
 <div class="page-wrapper" id="page-wrapper">
 
-  <!-- PAGE 1 -->
-  <div class="form-page" id="page1">
-    <div class="page1-header">
-      <div class="logo-area">
-        <img src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
-             alt="Logo" style="width:40px;height:40px;display:block;border-radius:50%;object-fit:cover;flex-shrink:0;">
-        <div class="logo-text">ALWAYS<span>ON</span><br>
-          <span style="color:#111;font-size:10px;font-family:Arial,sans-serif;letter-spacing:1px;">GENERATORS</span>
-        </div>
-      </div>
-      <div class="checklist-title">GAS INSTALLATION CHECKLIST</div>
-    </div>
+<!-- ════════════ PAGE 1 ════════════ -->
+<div class="form-page" id="page1">
 
-    <div class="top-fields">
-      <div class="field-row"><label>Customer Name:</label><input type="text"></div>
-      <div class="field-row"><label>Date:</label><input type="text"></div>
-      <div class="field-row"><label>Address:</label><input type="text"></div>
-      <div class="field-row"><label>Gas Truck:</label><input type="text"></div>
-      <div class="field-row"><label>Job:</label><input type="text"></div>
-      <div class="field-row"><label>Team Member Names:</label><input type="text"></div>
-      <div class="field-row" style="grid-column:1/-1;"><label></label><input type="text" style="width:100%;max-width:300px;"></div>
-    </div>
-
-    <div class="two-col">
-      <div>
-        <div class="section">
-          <div class="section-title">GAS</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text">&nbsp;&nbsp;<b>Double Checked By:</b><input class="inline-input xshort" type="text"></div>
-          <div class="section-row">Natural Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Liquid Propane Tank Installation: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Liquid Propane Tank Size: <input class="inline-input" style="width:40px;" type="text"> AG <input type="checkbox"> UG <input type="checkbox"></div>
-          <div class="section-row">Tank Serial Number: <input class="inline-input" style="width:120px;" type="text"></div>
-          <div class="section-row">Existing Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Surface Mounted Length: <input class="inline-input" style="width:50px;" type="text"></div>
-          <div class="section-row">Underground Length: <input class="inline-input" style="width:50px;" type="text"></div>
-          <div class="section-row">Attic CSST Length: <input class="inline-input" style="width:50px;" type="text"></div>
-          <div class="section-row">Needs Completed: <input class="inline-input" style="width:140px;" type="text"></div>
-          <div class="section-row" style="margin-top:2px;"><input type="text" class="full-line-input"></div>
-        </div>
-        <hr class="section-hr">
-        <div class="section">
-          <div class="section-title">CLEAN UP</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text">&nbsp;&nbsp;<b>Double Checked By:</b><input class="inline-input xshort" type="text"></div>
-          <div class="section-row" style="font-weight:bold;">EVERYTHING PICKED UP AND CLEAN: <input type="checkbox"> YES</div>
-          <div class="section-row">Ready for H/O Training: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Why Not: <input class="inline-input" style="width:130px;" type="text"></div>
-        </div>
-        <hr class="section-hr">
-        <div class="section">
-          <div class="section-title" style="text-transform:none;font-size:11px;">Any Miscues or Delays during the job:</div>
-          <div class="section-row"><input type="text" class="full-line-input"></div>
-          <div class="section-row"><input type="text" class="full-line-input"></div>
-          <div class="section-row"><input type="text" class="full-line-input"></div>
-          <div class="section-row"><input type="text" class="full-line-input"></div>
-        </div>
-      </div>
-      <div>
-        <div class="section">
-          <div class="section-title">WALK THROUGH</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text">&nbsp;&nbsp;<b>Double Checked By:</b><input class="inline-input xshort" type="text"></div>
-          <div class="section-row">Gas Affidavit Form: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Leak Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Sediment Trap (Liquid Cooled Only): <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Verification on Shutoff Valves: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Generator Flex Whip Properly Connected (No Kinks): <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Pressure Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Purged Line (IF Gas Ready): <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Painted Threads/Fittings: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">1st Stage Connection: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Regulator(s) Properly Installed to Code Standards: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-        </div>
-        <hr class="section-hr">
-        <div class="section">
-          <div class="section-title">INSPECTION(S)</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text">&nbsp;&nbsp;<b>Double Checked By:</b><input class="inline-input xshort" type="text"></div>
-          <div class="section-row">Inspected: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">FIRE Inspector: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">County: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Gas Rough: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Tank: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Underground Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row" style="font-weight:bold;">Final Gas Passed: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-        </div>
+  <div class="page1-header">
+    <div class="logo-area">
+      <img src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
+           alt="Logo" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+      <div class="logo-text">ALWAYS<span>ON</span><br>
+        <span style="color:#111;font-size:9px;letter-spacing:1px;">GENERATORS</span>
       </div>
     </div>
+    <div class="checklist-title">GAS INSTALLATION CHECKLIST</div>
+  </div>
 
-    <div class="reg-row">
-      <div class="reg-field"><label>REGULATORS: 1<sup>ST</sup> STAGE:</label><input type="text"></div>
-      <div class="reg-field"><label>NORGAS:</label><input type="text"></div>
-      <div class="reg-field"><label>2<sup>ND</sup> STAGE STRAIGHT:</label><input type="text"></div>
-      <div class="reg-field"><label>2<sup>ND</sup> STAGE BACK MOUNT:</label><input type="text"></div>
-      <div class="reg-field"><label>2PSI:</label><input type="text"></div>
-      <div class="reg-field"><label>Pietro:</label><input type="text"></div>
-    </div>
+  <!-- Top fields -->
+  <div class="top-fields">
+    <div class="field-row"><label>Customer Name:</label><input type="text" id="f-customer"></div>
+    <div class="field-row"><label>Date:</label><input type="text" id="f-date"></div>
+    <div class="field-row"><label>Address:</label><input type="text" id="f-address"></div>
+    <div class="field-row"><label>Gas Truck:</label><input type="text" id="f-truck"></div>
+    <div class="field-row"><label>Job:</label><input type="text" id="f-job"></div>
+    <div class="field-row"><label>Team Members:</label><input type="text" id="f-team"></div>
+  </div>
 
-    <div class="grid-section">
-      <table class="mat-table" id="pipe-table">
-        <thead>
-          <tr>
-            <th style="min-width:140px;text-align:left;">Galvanized Pipe (Footage)</th>
-            <th>2"</th><th>1-1/4"</th><th>1"</th><th>¾"</th><th>½"</th>
-          </tr>
-        </thead>
-        <tbody id="pipe-body"></tbody>
-      </table>
+  <!-- Two-col sections -->
+  <div class="two-col">
+    <!-- LEFT -->
+    <div>
+      <div class="section">
+        <div class="section-title">GAS</div>
+        <div class="section-row"><b>Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
+        <div class="section-row">Natural Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">LP Tank Install: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">LP Tank Size: <input class="inline-input" style="width:32px;" type="text"> AG <input type="checkbox"> UG <input type="checkbox"></div>
+        <div class="section-row">Tank Serial #: <input class="inline-input" style="width:100px;" type="text"></div>
+        <div class="section-row">Existing Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Surface Mount Length: <input class="inline-input" style="width:38px;" type="text"></div>
+        <div class="section-row">Underground Length: <input class="inline-input" style="width:38px;" type="text"></div>
+        <div class="section-row">Attic CSST Length: <input class="inline-input" style="width:38px;" type="text"></div>
+        <div class="section-row">Needs Completed: <input class="inline-input" style="width:100px;" type="text"></div>
+        <div class="section-row"><input type="text" class="full-line-input"></div>
+      </div>
+      <hr class="section-hr">
+      <div class="section">
+        <div class="section-title">CLEAN UP</div>
+        <div class="section-row"><b>Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
+        <div class="section-row"><b>EVERYTHING CLEAN:</b> <input type="checkbox"> YES</div>
+        <div class="section-row">Ready for H/O Training: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Why Not: <input class="inline-input" style="width:110px;" type="text"></div>
+      </div>
+      <hr class="section-hr">
+      <div class="section">
+        <div class="section-title" style="text-transform:none;">Miscues / Delays:</div>
+        <textarea class="miscues-textarea" rows="4" placeholder="Enter any miscues or delays…"></textarea>
+      </div>
     </div>
-  </div><!-- end page1 -->
+    <!-- RIGHT -->
+    <div>
+      <div class="section">
+        <div class="section-title">WALK THROUGH</div>
+        <div class="section-row"><b>Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
+        <div class="section-row">Gas Affidavit Form: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Leak Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Sediment Trap (Liq. Cooled): <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Shutoff Valves Verified: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Flex Whip (No Kinks): <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Pressure Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Line Purged (If Gas Ready): <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Painted Threads/Fittings: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">1st Stage Connection: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Regulators to Code: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+      </div>
+      <hr class="section-hr">
+      <div class="section">
+        <div class="section-title">INSPECTIONS</div>
+        <div class="section-row"><b>Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
+        <div class="section-row">Inspected: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">FIRE Inspector: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">County: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Gas Rough: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Tank: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row">Underground Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
+        <div class="section-row"><b>Final Gas Passed:</b> <input type="checkbox"> YES <input type="checkbox"> NO</div>
+      </div>
+    </div>
+  </div><!-- /two-col -->
 
-  <!-- PAGE 2 -->
-  <div class="form-page" id="page2">
-    <div class="grid-section">
-      <table class="mat-table" id="galv-nipples-table">
-        <thead>
-          <tr>
-            <th style="min-width:140px;text-align:left;">Galvanized Nipples</th>
-            <th>2"</th><th>1-1/4"</th><th>1"</th><th>¾"</th><th>½"</th>
-          </tr>
-        </thead>
-        <tbody id="galv-nipples-body"></tbody>
-      </table>
+  <!-- Regulators -->
+  <div class="reg-row">
+    <div class="reg-field"><label>1ST STAGE:</label><input type="text"></div>
+    <div class="reg-field"><label>NORGAS:</label><input type="text"></div>
+    <div class="reg-field"><label>2ND STG STRAIGHT:</label><input type="text"></div>
+    <div class="reg-field"><label>2ND STG BACK:</label><input type="text"></div>
+    <div class="reg-field"><label>2PSI:</label><input type="text"></div>
+    <div class="reg-field"><label>PIETRO:</label><input type="text"></div>
+  </div>
+
+  <!-- Tables split -->
+  <div class="tables-split">
+    <div class="tables-col">
+      <div class="grid-section">
+        <table class="mat-table" id="pipe-table">
+          <colgroup>
+            <col class="col-label">
+            <col class="col-data"><col class="col-data"><col class="col-data">
+            <col class="col-data"><col class="col-data">
+          </colgroup>
+          <thead><tr>
+            <th>Galv. Pipe &amp; Fittings</th>
+            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+          </tr></thead>
+          <tbody id="pipe-body"></tbody>
+        </table>
+      </div>
     </div>
-    <div class="grid-section">
-      <table class="mat-table" id="poly-table">
-        <thead>
-          <tr>
-            <th style="min-width:140px;text-align:left;">POLY FITTINGS</th>
-            <th>2"</th><th>1-1/4"</th><th>1"</th><th>3/4"</th><th>1/2"</th>
-          </tr>
-        </thead>
-        <tbody id="poly-body"></tbody>
-      </table>
-    </div>
-    <div class="grid-section">
-      <table class="mat-table" id="risers-table">
-        <thead>
-          <tr>
-            <th style="min-width:140px;text-align:left;">RISERS</th>
-            <th>2"</th><th>1-1/4"</th><th>1"</th><th>¾"</th><th>½"</th>
-          </tr>
-        </thead>
-        <tbody id="risers-body"></tbody>
-      </table>
-    </div>
-    <div class="grid-section">
-      <table class="mat-table" id="whips-table">
-        <thead>
-          <tr>
-            <th style="min-width:140px;text-align:left;">Appliance Whips</th>
+    <div class="tables-col">
+      <div class="grid-section">
+        <table class="mat-table" id="poly-table">
+          <colgroup>
+            <col class="col-label">
+            <col class="col-data"><col class="col-data"><col class="col-data">
+            <col class="col-data"><col class="col-data">
+          </colgroup>
+          <thead><tr>
+            <th>Poly Fittings</th>
+            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+          </tr></thead>
+          <tbody id="poly-body"></tbody>
+        </table>
+      </div>
+      <div class="grid-section">
+        <table class="mat-table" id="risers-table">
+          <colgroup>
+            <col class="col-label">
+            <col class="col-data"><col class="col-data"><col class="col-data">
+            <col class="col-data"><col class="col-data">
+          </colgroup>
+          <thead><tr>
+            <th>Risers</th>
+            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+          </tr></thead>
+          <tbody id="risers-body"></tbody>
+        </table>
+      </div>
+      <div class="grid-section">
+        <table class="mat-table" id="whips-table">
+          <colgroup>
+            <col class="col-label">
+            <col class="col-data"><col class="col-data"><col class="col-data">
+            <col class="col-data"><col class="col-data">
+          </colgroup>
+          <thead><tr>
+            <th>Appliance Whips</th>
             <th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th>
-          </tr>
-        </thead>
-        <tbody id="whips-body"></tbody>
-      </table>
-    </div>
-    <div class="other-section">
-      <label>OTHER:</label>
-      <div class="other-lines">
-        <div class="other-line"></div>
-        <div class="other-line"></div>
-        <div class="other-line"></div>
+          </tr></thead>
+          <tbody id="whips-body"></tbody>
+        </table>
       </div>
     </div>
-  </div><!-- end page2 -->
+  </div>
 
-</div><!-- end page-wrapper -->
+</div><!-- /page1 -->
 
-<p class="notice">📱 iPhone: press &amp; hold images to save &nbsp;|&nbsp; 🤖 Android: images download to gallery</p>
+<div class="page-divider"></div>
+
+<!-- ════════════ PAGE 2 ════════════ -->
+<div class="form-page" id="page2">
+
+  <div id="page2-banner" style="text-align:center;font-weight:bold;font-size:13px;
+    background:var(--tbl-header-bg);color:var(--tbl-header-fg);
+    padding:5px 8px;border-radius:4px;margin-bottom:8px;letter-spacing:0.5px;">
+    GAS INSTALLATION CHECKLIST — MATERIALS (cont.)
+  </div>
+
+  <div class="page2-tables-split">
+    <div class="tables-col">
+      <div class="grid-section">
+        <table class="mat-table" id="nipples-left-table">
+          <colgroup>
+            <col class="col-label">
+            <col class="col-data"><col class="col-data"><col class="col-data">
+            <col class="col-data"><col class="col-data">
+          </colgroup>
+          <thead><tr>
+            <th>Galv. Nipples &amp; Misc.</th>
+            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+          </tr></thead>
+          <tbody id="nipples-left-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tables-col">
+      <div class="grid-section">
+        <table class="mat-table" id="nipples-right-table">
+          <colgroup>
+            <col class="col-label">
+            <col class="col-data"><col class="col-data"><col class="col-data">
+            <col class="col-data"><col class="col-data">
+          </colgroup>
+          <thead><tr>
+            <th>Galv. Nipples &amp; Misc. (cont.)</th>
+            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
+          </tr></thead>
+          <tbody id="nipples-right-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="other-section">
+    <div class="other-title">OTHER / NOTES</div>
+    <textarea class="multiline" rows="6"
+      placeholder="Enter other notes here…"
+      style="width:100%;resize:none;min-height:100px;"></textarea>
+  </div>
+
+</div><!-- /page2 -->
+
+</div><!-- /page-wrapper -->
+
+<p class="notice">📱 iPhone: tap <b>Share → Print</b> for PDF &nbsp;|&nbsp; 🤖 Android: tap <b>⋮ → Print</b></p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-
-// ===== THEME =====
-const THEME_KEY = 'aog_gas_theme';
-function getInitialTheme() {
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved) return saved;
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-  return 'light';
+/* ── THEME ── */
+const THEME_KEY='aog_gas_theme';
+function getInitialTheme(){
+  const s=localStorage.getItem(THEME_KEY);
+  if(s)return s;
+  return(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
 }
-function applyTheme(theme) {
-  if (theme === 'dark') document.body.classList.add('dark-mode');
-  else document.body.classList.remove('dark-mode');
-  try { localStorage.setItem(THEME_KEY, theme); } catch(e) {}
+function applyTheme(t){
+  document.body.classList.toggle('dark-mode',t==='dark');
+  try{localStorage.setItem(THEME_KEY,t);}catch(e){}
 }
-function toggleTheme() { applyTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark'); }
-function setupThemeToggle() {
-  const btn = document.getElementById('theme-toggle-btn');
-  if (btn) btn.addEventListener('click', toggleTheme);
+function toggleTheme(){applyTheme(document.body.classList.contains('dark-mode')?'light':'dark');}
+function setupThemeToggle(){
+  const btn=document.getElementById('theme-toggle-btn');
+  if(btn)btn.addEventListener('click',toggleTheme);
 }
 applyTheme(getInitialTheme());
 
-// ===== BUILD TABLES =====
-const pipeSizes = ['2"','1-1/4"','1"','¾"','½"'];
-const fittingRows = [
-  "Galvanized 45's","Galvanized 90's","Galvanized Couplings","Galvanized Caps",
-  "Galvanized Square Plugs","Galvanized Tee's","Galvanized Union","Misc. (Each)"
-];
-const extraRows = [
-  'Yellow Metallic Tape (Per FT)','3/16 Galvanized Cable (Per FT)',"Galvanized 45's",
-  '3/16 C-Bolt Clamp','Tank Anchor – 48inch','17lb Anode Bags','9Lb Anode Bags',
-  '¾ Inch Galv. 2-Hole Straps','½ Inch Galv. 2-Hole Straps','¾ Inch CCST (Per FT)',
-  '½ Inch (Shut off','¾ Inch Shut off','¾ Inch SXS 80 PVC 90 Elbow','30 PSI Gas Test Gauge',
-  'CSST Fitting','1" x ¾" Reducing Male PVC','CCST Union Fitting','20-inch POL x POL',
-  '12-inch POL x POL','Rigid Pipe Strut Clamp','Galvanized Minis',
-  'Galvanized Strut – Deep (FT)','Galvanized Strut – Shallow (FT)'
-];
-
-function addRow(tbody, labelText, sizes, isHeader) {
-  const tr = document.createElement('tr');
-  const lbl = document.createElement('td');
-  lbl.className = isHeader ? 'row-label section-header' : 'row-label';
-  lbl.textContent = labelText;
-  if (isHeader) lbl.colSpan = sizes.length + 1;
+/* ── TABLE BUILDER ── */
+function addRow(tbody,labelText,numCols,isHeader){
+  const tr=document.createElement('tr');
+  const lbl=document.createElement('td');
+  lbl.className=isHeader?'row-label section-header':'row-label';
+  lbl.textContent=labelText;
+  if(isHeader)lbl.colSpan=numCols+1;
   tr.appendChild(lbl);
-  if (!isHeader) {
-    sizes.forEach(() => {
-      const td = document.createElement('td');
-      const inp = document.createElement('input'); inp.type = 'text';
-      td.appendChild(inp); tr.appendChild(td);
-    });
+  if(!isHeader){
+    for(let i=0;i<numCols;i++){
+      const td=document.createElement('td');
+      const inp=document.createElement('input');
+      inp.type='text';inp.maxLength=7;
+      td.appendChild(inp);tr.appendChild(td);
+    }
   }
   tbody.appendChild(tr);
 }
 
-function buildTableRows(id, rows, sizes) {
-  const tbody = document.getElementById(id);
-  rows.forEach(name => addRow(tbody, name, sizes, false));
-}
-
-(function() {
-  const tbody = document.getElementById('pipe-body');
-  addRow(tbody, 'Rigid Pipe', pipeSizes, false);
-  addRow(tbody, 'Galvanized Fittings', pipeSizes, true);
-  fittingRows.forEach(name => addRow(tbody, name, pipeSizes, false));
+/* ── PAGE 1 TABLES ── */
+(function(){
+  const b=document.getElementById('pipe-body'),n=5;
+  addRow(b,'Rigid Pipe (Footage)',n,false);
+  addRow(b,'Galv. Fittings',n,true);
+  ['Galv. 45s','Galv. 90s','Couplings','Caps','Sq. Plugs','Tees','Union','Misc. (Each)']
+  .forEach(r=>addRow(b,r,n,false));
 })();
 
-(function() {
-  const tbody = document.getElementById('galv-nipples-body');
-  const sizes = ['2"','1-1/4"','1"','¾"','½"'];
-  addRow(tbody, 'CLOSE STD Galv. STL Nipple', sizes, true);
-  [
-    '1 ½ Inch STD Galv. STL Nipple','2 Inch STD Galv. STL Nipple','2 ½ Inch STD Galv. STL Nipple',
-    '3 Inch STD Galv. STL Nipple','3 ½ Inch STD Galv. STL Nipple','4 Inch STD Galv. STL Nipple',
-    '4 ½ Inch STD Galv. STL Nipple','5 Inch STD Galv. STL Nipple','5 ½ Inch STD Galv. STL Nipple',
-    '6 Inch STD Galv. STL Nipple','7 Inch STD Galv. STL Nipple','8 Inch STD Galv. STL Nipple',
-    '9 Inch STD Galv. STL Nipple','10 Inch STD Galv. STL Nipple','12 Inch STD Galv. STL Nipple'
-  ].forEach(name => addRow(tbody, name, sizes, false));
-  extraRows.forEach(name => addRow(tbody, name, sizes, false));
+(function(){
+  const b=document.getElementById('poly-body');
+  ['UG Poly (Per FT)','Fusion Coupler','Tee','90 Elbow','Reducer Coupler']
+  .forEach(r=>addRow(b,r,5,false));
 })();
 
-buildTableRows('poly-body',
-  ['Underground Poly (Per FT)','Fusion Coupler','Tee','90 Elbow','Reducer Coupler'],
-  ['2"','1-1/4"','1"','3/4"','1/2"']);
+(function(){
+  const b=document.getElementById('risers-body');
+  ['Gas Riser 30"V×24"H','Transition']
+  .forEach(r=>addRow(b,r,5,false));
+})();
 
-buildTableRows('risers-body',
-  ['Gas Riser (30" V x 24" H)','Transition'],
-  ['2"','1-1/4"','1"','¾"','½"']);
+(function(){
+  const b=document.getElementById('whips-body');
+  ['12 Inch','18 Inch','48 Inch','60 Inch']
+  .forEach(r=>addRow(b,r,5,false));
+})();
 
-buildTableRows('whips-body',
-  ['12 Inch','18 Inch','48 Inch','60 Inch'],
-  ['½"','3/8"','5/8"','1"','¾"']);
+/* ── PAGE 2 NIPPLES ── */
+const ALL_NIPPLE_ROWS=[
+  {label:'CLOSE STD Nipple',isHeader:true},
+  {label:'1½" Nipple'},{label:'2" Nipple'},{label:'2½" Nipple'},
+  {label:'3" Nipple'},{label:'3½" Nipple'},{label:'4" Nipple'},
+  {label:'4½" Nipple'},{label:'5" Nipple'},{label:'5½" Nipple'},
+  {label:'6" Nipple'},{label:'7" Nipple'},{label:'8" Nipple'},
+  {label:'9" Nipple'},{label:'10" Nipple'},{label:'12" Nipple'},
+  {label:'Yellow Met. Tape (FT)'},
+  {label:'3/16 Galv. Cable (FT)'},
+  {label:'Galv. 45s'},
+  {label:'3/16 C-Bolt Clamp'},
+  {label:'Tank Anchor 48"'},
+  {label:'17lb Anode Bags'},
+  {label:'9lb Anode Bags'},
+  {label:'¾" Galv. 2-Hole Strap'},
+  {label:'½" Galv. 2-Hole Strap'},
+  {label:'¾" CSST (Per FT)'},
+  {label:'½" Shut Off'},
+  {label:'¾" Shut Off'},
+  {label:'¾" SXS 80 PVC 90'},
+  {label:'30 PSI Test Gauge'},
+  {label:'CSST Fitting'},
+  {label:'1"×¾" Reducing Male PVC'},
+  {label:'CSST Union Fitting'},
+  {label:'20" POL × POL'},
+  {label:'12" POL × POL'},
+  {label:'Rigid Pipe Strut Clamp'},
+  {label:'Galv. Minis'},
+  {label:'Galv. Strut Deep (FT)'},
+  {label:'Galv. Strut Shallow (FT)'}
+];
 
-// ===== YES/NO COLORS =====
-function applyYNColors() {
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    if (cb.parentElement && cb.parentElement.classList.contains('yn-checkbox-wrap')) return;
-    let nextNode = cb.nextSibling;
-    while (nextNode && nextNode.nodeType === 3 && nextNode.textContent.trim() === '') nextNode = nextNode.nextSibling;
-    let label = '', textNode = null;
-    if (nextNode && nextNode.nodeType === 3) { label = nextNode.textContent.trim(); textNode = nextNode; }
-    if (!label) return;
-    const upper = label.toUpperCase();
-    const typeClass = upper === 'YES' ? 'yn-yes' : upper === 'NO' ? 'yn-no' : 'yn-opt';
-    const wrap = document.createElement('span'); wrap.className = 'yn-checkbox-wrap ' + typeClass;
-    cb.parentNode.insertBefore(wrap, cb); wrap.appendChild(cb);
-    if (textNode) { wrap.appendChild(document.createTextNode(' ' + label)); textNode.remove(); }
-    function syncState() { wrap.classList.toggle('checked', cb.checked); }
-    cb.addEventListener('change', syncState);
-    wrap.addEventListener('click', e => { if (e.target !== cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); } });
-    syncState();
-  });
-}
+const mid=Math.ceil(ALL_NIPPLE_ROWS.length/2);
+(function(){
+  const b=document.getElementById('nipples-left-body');
+  ALL_NIPPLE_ROWS.slice(0,mid).forEach(r=>addRow(b,r.label,5,r.isHeader||false));
+})();
+(function(){
+  const b=document.getElementById('nipples-right-body');
+  ALL_NIPPLE_ROWS.slice(mid).forEach(r=>addRow(b,r.label,5,r.isHeader||false));
+})();
 
-document.addEventListener('DOMContentLoaded', () => {
-  applyYNColors(); setupThemeToggle();
-});
-if (document.readyState !== 'loading') {
-  setTimeout(() => { applyYNColors(); setupThemeToggle(); }, 50);
-}
-
-// ===== CLEAR =====
-function clearForm() {
-  if (!confirm('Clear all fields? This cannot be undone.')) return;
-  document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
-    el.checked = false;
-    const w = el.parentElement;
-    if (w && w.classList.contains('yn-checkbox-wrap')) w.classList.remove('checked');
-  });
-}
-
-// ===== PRINT AS IMAGE =====
-function printAsImage() {
-  const btn = document.getElementById('printBtn');
-  btn.textContent = '⏳ Please wait…';
-  btn.disabled = true;
-  setStatus('Capturing pages, please wait…');
-
-  const wasDark = document.body.classList.contains('dark-mode');
-  if (wasDark) document.body.classList.remove('dark-mode');
-
-  const ab = document.querySelector('.action-bar');
-  const nt = document.querySelector('.notice');
-  if (ab) ab.style.visibility = 'hidden';
-  if (nt) nt.style.visibility = 'hidden';
-
-  const pages = [
-    document.getElementById('page1'),
-    document.getElementById('page2')
-  ];
-
-  const RENDER_W = 1050;
-  const LETTER_W_PX = 816;
-  const LETTER_H_PX = 1056;
-
-  const origStyles = pages.map(p => ({
-    width: p.style.width,
-    maxWidth: p.style.maxWidth,
-    minWidth: p.style.minWidth
-  }));
-
-  pages.forEach(p => {
-    p.style.width = RENDER_W + 'px';
-    p.style.maxWidth = RENDER_W + 'px';
-    p.style.minWidth = RENDER_W + 'px';
-  });
-
-  setTimeout(() => {
-    const promises = pages.map(page =>
-      html2canvas(page, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        width: RENDER_W,
-        height: page.scrollHeight,
-        windowWidth: RENDER_W,
-        scrollX: 0,
-        scrollY: 0
-      })
-    );
-
-    Promise.all(promises).then(canvases => {
-
-      // Restore page widths
-      pages.forEach((p, i) => {
-        p.style.width = origStyles[i].width;
-        p.style.maxWidth = origStyles[i].maxWidth;
-        p.style.minWidth = origStyles[i].minWidth;
-      });
-
-      // Restore UI + theme
-      if (ab) ab.style.visibility = '';
-      if (nt) nt.style.visibility = '';
-      if (wasDark) document.body.classList.add('dark-mode');
-
-      // Build iframe pages — physical units (inches)
-      let pagesHTML = '';
-
-      canvases.forEach(canvas => {
-        const logicalW = canvas.width / 2;
-        const logicalH = canvas.height / 2;
-        const scale = LETTER_W_PX / logicalW;
-        const imgDisplayH = logicalH * scale;
-        const dataURL = canvas.toDataURL('image/png');
-
-        if (imgDisplayH <= LETTER_H_PX) {
-          pagesHTML += `
-            <div class="print-page">
-              <img src="${dataURL}"
-                   style="width:8.5in;height:${(imgDisplayH / 96).toFixed(4)}in;display:block;" />
-            </div>`;
-        } else {
-          const numSlices = Math.ceil(imgDisplayH / LETTER_H_PX);
-          for (let i = 0; i < numSlices; i++) {
-            const offsetIn = ((i * LETTER_H_PX) / 96 * -1).toFixed(4);
-            const imgHeightIn = (imgDisplayH / 96).toFixed(4);
-            pagesHTML += `
-              <div class="print-page">
-                <div class="clip">
-                  <img src="${dataURL}"
-                       style="
-                         position:absolute;
-                         top:${offsetIn}in;
-                         left:0;
-                         width:8.5in;
-                         height:${imgHeightIn}in;
-                       " />
-                </div>
-              </div>`;
-          }
-        }
-      });
-
-      // Build and print iframe — physical units (inches)
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'position:fixed;top:-99999px;left:-99999px;width:1px;height:1px;border:none;';
-      document.body.appendChild(iframe);
-
-      const doc = iframe.contentWindow.document;
-      doc.open();
-      doc.write(`<!DOCTYPE html><html><head>
-        <meta charset="UTF-8">
-        <style>
-          * { margin:0; padding:0; box-sizing:border-box; }
-          @page { size:8.5in 11in; margin:0; }
-          body { margin:0; padding:0; background:#fff; }
-          .print-page {
-            width:8.5in;
-            height:11in;
-            overflow:hidden;
-            page-break-after:always;
-            break-after:page;
-            position:relative;
-            background:#fff;
-          }
-          .print-page:last-child {
-            page-break-after:avoid;
-            break-after:avoid;
-          }
-          .clip {
-            position:absolute;
-            top:0; left:0;
-            width:8.5in;
-            height:11in;
-            overflow:hidden;
-          }
-          img { display:block; }
-        </style>
-      </head><body>${pagesHTML}</body></html>`);
-      doc.close();
-
-      setTimeout(() => {
-        setStatus('');
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-          btn.textContent = '📄 PDF';
-          btn.disabled = false;
-          setStatus('');
-        }, 3000);
-      }, 1500);
-
-    }).catch(err => {
-      console.error('Capture error:', err);
-      pages.forEach((p, i) => {
-        p.style.width = origStyles[i].width;
-        p.style.maxWidth = origStyles[i].maxWidth;
-        p.style.minWidth = origStyles[i].minWidth;
-      });
-      if (ab) ab.style.visibility = '';
-      if (nt) nt.style.visibility = '';
-      if (wasDark) document.body.classList.add('dark-mode');
-      btn.textContent = '📄 PDF';
-      btn.disabled = false;
-      setStatus('Capture failed — please try again.');
-      setTimeout(() => setStatus(''), 4000);
+/* ── YES/NO COLORS ── */
+function applyYNColors(){
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    if(cb.parentElement&&cb.parentElement.classList.contains('yn-checkbox-wrap'))return;
+    let next=cb.nextSibling;
+    while(next&&next.nodeType===3&&next.textContent.trim()==='')next=next.nextSibling;
+    if(!next||next.nodeType!==3)return;
+    const label=next.textContent.trim();
+    if(!label)return;
+    const upper=label.toUpperCase();
+    const cls=upper==='YES'?'yn-yes':upper==='NO'?'yn-no':'yn-opt';
+    const wrap=document.createElement('span');
+    wrap.className='yn-checkbox-wrap '+cls;
+    cb.parentNode.insertBefore(wrap,cb);
+    wrap.appendChild(cb);
+    wrap.appendChild(document.createTextNode(' '+label));
+    next.remove();
+    const sync=()=>wrap.classList.toggle('checked',cb.checked);
+    cb.addEventListener('change',sync);
+    wrap.addEventListener('click',e=>{
+      if(e.target!==cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'));}
     });
+    sync();
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{applyYNColors();setupThemeToggle();});
+if(document.readyState!=='loading')setTimeout(()=>{applyYNColors();setupThemeToggle();},50);
 
-  }, 200);
+/* ── CLEAR ── */
+function clearForm(){
+  if(!confirm('Clear all fields?'))return;
+  document.querySelectorAll('input[type="text"],textarea').forEach(el=>el.value='');
+  document.querySelectorAll('input[type="checkbox"]').forEach(el=>{
+    el.checked=false;
+    const w=el.parentElement;
+    if(w&&w.classList.contains('yn-checkbox-wrap'))w.classList.remove('checked');
+  });
 }
 
-// ===== iPHONE SAVE =====
-function saveForIPhone() {
-  setStatus('Rendering pages, please wait…');
-  const pages = document.querySelectorAll('.form-page');
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;';
-  const closeBtn = document.createElement('button');
-  closeBtn.style.cssText = 'position:sticky;top:0;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:bold;z-index:10000;margin-bottom:12px;';
-  closeBtn.textContent = '✕ Close';
-  const container = document.createElement('div');
-  container.style.cssText = 'display:flex;flex-direction:column;gap:12px;width:100%;max-width:600px;';
-  overlay.appendChild(closeBtn); overlay.appendChild(container); document.body.appendChild(overlay);
-  const wasDark = document.body.classList.contains('dark-mode');
-  if (wasDark) document.body.classList.remove('dark-mode');
-  let completed = 0;
-  const RENDER_W = 1050;
-  pages.forEach((page, idx) => {
-    const origW = page.style.width, origMax = page.style.maxWidth, origMin = page.style.minWidth;
-    page.style.width = RENDER_W + 'px';
-    page.style.maxWidth = RENDER_W + 'px';
-    page.style.minWidth = RENDER_W + 'px';
-    setTimeout(() => {
-      html2canvas(page, { scale:2, useCORS:true, backgroundColor:'#fff', logging:false, width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W }).then(canvas => {
-        page.style.width = origW; page.style.maxWidth = origMax; page.style.minWidth = origMin;
-        const wrapper = document.createElement('div'); wrapper.style.cssText = 'text-align:center;';
-        const lbl = document.createElement('div'); lbl.style.cssText = 'color:#ccc;font-size:11px;margin-bottom:6px;';
-        lbl.textContent = `Page ${idx+1} — long-press image to save`;
-        const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.88);
-        img.style.cssText = 'max-width:100%;border:2px solid #555;border-radius:4px;display:block;margin:0 auto;';
-        img.alt = `Form page ${idx+1}`;
-        wrapper.appendChild(lbl); wrapper.appendChild(img); container.appendChild(wrapper);
+/* ── iPHONE SAVE ── */
+function saveForIPhone(){
+  setStatus('Rendering pages…');
+  const pages=document.querySelectorAll('.form-page');
+  const wasDark=document.body.classList.contains('dark-mode');
+  if(wasDark)document.body.classList.remove('dark-mode');
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;';
+  const closeBtn=document.createElement('button');
+  closeBtn.style.cssText='position:sticky;top:0;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:bold;z-index:10000;margin-bottom:12px;';
+  closeBtn.textContent='✕ Close';
+  const container=document.createElement('div');
+  container.style.cssText='display:flex;flex-direction:column;gap:12px;width:100%;max-width:600px;';
+  overlay.appendChild(closeBtn);overlay.appendChild(container);document.body.appendChild(overlay);
+  let completed=0;
+  const RENDER_W=1050;
+  pages.forEach((page,idx)=>{
+    const oW=page.style.width,oM=page.style.maxWidth,om=page.style.minWidth;
+    page.style.width=RENDER_W+'px';page.style.maxWidth=RENDER_W+'px';page.style.minWidth=RENDER_W+'px';
+    setTimeout(()=>{
+      html2canvas(page,{scale:2,useCORS:true,backgroundColor:'#fff',logging:false,
+        width:RENDER_W,height:page.scrollHeight,windowWidth:RENDER_W})
+      .then(canvas=>{
+        page.style.width=oW;page.style.maxWidth=oM;page.style.minWidth=om;
+        const wrapper=document.createElement('div');wrapper.style.cssText='text-align:center;';
+        const lbl=document.createElement('div');
+        lbl.style.cssText='color:#ccc;font-size:11px;margin-bottom:6px;';
+        lbl.textContent=`Page ${idx+1} — long-press to save to Photos`;
+        const img=document.createElement('img');
+        img.src=canvas.toDataURL('image/jpeg',0.88);
+        img.style.cssText='max-width:100%;border:2px solid #555;border-radius:4px;display:block;margin:0 auto;';
+        wrapper.appendChild(lbl);wrapper.appendChild(img);container.appendChild(wrapper);
         completed++;
-        if (completed === pages.length) {
-          setStatus('Long-press each image to save to Photos.');
-          if (wasDark) document.body.classList.add('dark-mode');
+        if(completed===pages.length){
+          setStatus('Long-press each image to save.');
+          if(wasDark)document.body.classList.add('dark-mode');
         }
       });
-    }, idx * 100);
+    },idx*150);
   });
-  closeBtn.onclick = () => {
+  closeBtn.onclick=()=>{
     setStatus('');
-    if (wasDark) document.body.classList.add('dark-mode');
+    if(wasDark)document.body.classList.add('dark-mode');
     document.body.removeChild(overlay);
   };
 }
 
-// ===== ANDROID SAVE =====
-function saveForAndroid() {
-  setStatus('Rendering pages, please wait…');
-  const pages = document.querySelectorAll('.form-page');
-  const wasDark = document.body.classList.contains('dark-mode');
-  if (wasDark) document.body.classList.remove('dark-mode');
-  const RENDER_W = 1050;
-  let completed = 0;
-  pages.forEach((page, idx) => {
-    const origW = page.style.width, origMax = page.style.maxWidth, origMin = page.style.minWidth;
-    page.style.width = RENDER_W + 'px';
-    page.style.maxWidth = RENDER_W + 'px';
-    page.style.minWidth = RENDER_W + 'px';
-    setTimeout(() => {
-      html2canvas(page, { scale:2, useCORS:true, backgroundColor:'#fff', logging:false, width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W }).then(canvas => {
-        page.style.width = origW; page.style.maxWidth = origMax; page.style.minWidth = origMin;
-        const link = document.createElement('a');
-        link.download = pages.length === 1 ? 'AOG_Gas_Install.jpg' : `AOG_Gas_Install_Page${idx+1}.jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 0.88);
+/* ── ANDROID SAVE ── */
+function saveForAndroid(){
+  setStatus('Rendering pages…');
+  const pages=document.querySelectorAll('.form-page');
+  const wasDark=document.body.classList.contains('dark-mode');
+  if(wasDark)document.body.classList.remove('dark-mode');
+  const RENDER_W=1050;
+  let completed=0;
+  pages.forEach((page,idx)=>{
+    const oW=page.style.width,oM=page.style.maxWidth,om=page.style.minWidth;
+    page.style.width=RENDER_W+'px';page.style.maxWidth=RENDER_W+'px';page.style.minWidth=RENDER_W+'px';
+    setTimeout(()=>{
+      html2canvas(page,{scale:2,useCORS:true,backgroundColor:'#fff',logging:false,
+        width:RENDER_W,height:page.scrollHeight,windowWidth:RENDER_W})
+      .then(canvas=>{
+        page.style.width=oW;page.style.maxWidth=oM;page.style.minWidth=om;
+        const link=document.createElement('a');
+        link.download=pages.length===1?'AOG_Gas_Install.jpg':`AOG_Gas_Install_Page${idx+1}.jpg`;
+        link.href=canvas.toDataURL('image/jpeg',0.88);
         link.click();
         completed++;
-        if (completed === pages.length) {
-          setStatus('Images saved to Downloads.');
-          setTimeout(() => setStatus(''), 4000);
-          if (wasDark) document.body.classList.add('dark-mode');
+        if(completed===pages.length){
+          setStatus('Saved to Downloads.');
+          setTimeout(()=>setStatus(''),4000);
+          if(wasDark)document.body.classList.add('dark-mode');
         }
       });
-    }, idx * 100);
+    },idx*150);
   });
 }
 
-function setStatus(msg) { document.getElementById('save-status').textContent = msg; }
+function setStatus(msg){document.getElementById('save-status').textContent=msg;}
 </script>
 </body>
 </html>
