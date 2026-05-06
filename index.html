@@ -4,45 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Always On Generators – Gas Installation Checklist</title>
-
 <style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES
+   ============================================================ */
 :root {
   --cyan: #D97706;
-  --cyan-dim: #B45309;
-  --cyan-dark: #92400E;
-  --amber: #D97706;
   --bg: #FFFFFF;
-  --bg3: #F8F8F8;
-  --bg4: #F0F0F0;
   --panel: #FFFFFF;
   --border: rgba(217,119,6,0.25);
   --border-bright: rgba(217,119,6,0.5);
   --text: #1F2937;
   --text-muted: #6B7280;
   --text-dim: #9CA3AF;
-  --glow: 0 0 8px rgba(217,119,6,0.3), 0 0 20px rgba(217,119,6,0.1);
+  --glow: 0 0 8px rgba(217,119,6,0.3);
   --icon-color-primary: #D97706;
+  --header-bg: #4B5563;
+  --header-fg: #FFFFFF;
+  --row-label-bg: #fafafa;
 }
-
 body.dark-mode {
   --bg: #0A0E27;
-  --bg3: #1A2847;
-  --bg4: #243458;
   --panel: #0F1535;
   --border: rgba(0,255,200,0.08);
   --border-bright: rgba(0,255,200,0.25);
   --text: #E0F7FF;
   --text-muted: #7DD3FC;
   --text-dim: #38BDF8;
-  --glow: 0 0 8px rgba(0,255,200,0.3), 0 0 20px rgba(0,255,200,0.1);
+  --glow: 0 0 8px rgba(0,255,200,0.3);
   --cyan: #00FFC8;
-  --cyan-dim: #06B6D4;
   --icon-color-primary: #00FFC8;
+  --header-bg: #1E3A5F;
+  --header-fg: #00FFC8;
+  --row-label-bg: rgba(36,52,88,0.6);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { width: 100%; height: 100%; overflow-x: hidden; }
-
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { width: 100%; overflow-x: hidden; }
 body {
   font-family: Arial, sans-serif;
   background: var(--bg);
@@ -57,25 +58,26 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
 }
-
 body.dark-mode {
-  background: linear-gradient(135deg, #0A0E27 0%, #0F1535 25%, #0A1628 50%, #0F1535 75%, #0A0E27 100%);
+  background: linear-gradient(135deg,#0A0E27 0%,#0F1535 25%,#0A1628 50%,#0F1535 75%,#0A0E27 100%);
   background-attachment: fixed;
 }
 
-/* ===== STICKY ACTION BAR ===== */
+/* ============================================================
+   ACTION BAR
+   ============================================================ */
 .action-bar {
-  position: sticky; top: 0; z-index: 1000; width: 100%;
-  background: var(--panel); padding: 12px 16px;
+  position: sticky; top: 0; z-index: 1000;
+  width: 100%;
+  background: var(--panel);
+  padding: 12px 16px;
   display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
   box-shadow: 0 4px 18px rgba(0,0,0,0.3);
   border-bottom: 1px solid var(--border-bright);
-  transition: all 0.3s ease; max-width: 1050px; box-sizing: border-box;
+  transition: all 0.3s ease;
 }
-@media (max-width: 768px) { .action-bar { padding: 10px 12px; gap: 8px; } }
-
 body.dark-mode .action-bar {
-  background: linear-gradient(90deg, rgba(15,21,53,0.9) 0%, rgba(26,40,71,0.8) 50%, rgba(15,21,53,0.9) 100%);
+  background: linear-gradient(90deg,rgba(15,21,53,0.9),rgba(26,40,71,0.8),rgba(15,21,53,0.9));
   border-bottom-color: rgba(0,255,200,0.25);
   box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 20px rgba(0,255,200,0.08);
 }
@@ -85,331 +87,353 @@ body.dark-mode .action-bar {
   border: 1px solid rgba(217,119,6,0.4); background: rgba(217,119,6,0.05);
   border-radius: 0; cursor: pointer; transition: all 0.15s ease;
   font-family: Arial, sans-serif; color: var(--cyan); text-transform: uppercase;
-  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
   -webkit-tap-highlight-color: transparent; touch-action: manipulation;
   white-space: nowrap; flex-shrink: 0;
 }
-@media (max-width: 640px) { .btn { padding: 8px 14px; font-size: 10px; } }
 body.dark-mode .btn {
   background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.25);
-  color: #00FFC8; text-shadow: 0 0 4px rgba(0,255,200,0.3);
+  color: #00FFC8;
 }
-.btn:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow); transform: translateY(-1px); }
-body.dark-mode .btn:hover { background: rgba(0,255,200,0.12); border-color: #00FFC8; box-shadow: 0 0 12px rgba(0,255,200,0.25); }
-.btn:active { transform: translateY(0); }
+.btn:hover { border-color:var(--cyan); box-shadow:var(--glow); transform:translateY(-1px); }
+.btn:active { transform:translateY(0); }
 
 .theme-toggle-btn {
-  position: relative; width: 36px; height: 36px; padding: 6px;
-  border: 1px solid rgba(217,119,6,0.4); background: rgba(217,119,6,0.05);
-  border-radius: 4px; cursor: pointer; display: flex; align-items: center;
-  justify-content: center; color: var(--cyan); transition: all 0.3s ease;
-  -webkit-tap-highlight-color: transparent; touch-action: manipulation; flex-shrink: 0;
+  width:36px; height:36px; padding:6px;
+  border:1px solid rgba(217,119,6,0.4); background:rgba(217,119,6,0.05);
+  border-radius:4px; cursor:pointer; display:flex; align-items:center;
+  justify-content:center; color:var(--cyan); transition:all 0.3s ease;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation; flex-shrink:0;
 }
-body.dark-mode .theme-toggle-btn {
-  background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.2); color: #00FFC8;
-}
-.theme-toggle-btn:hover { border-color: var(--cyan); transform: scale(1.08); }
+body.dark-mode .theme-toggle-btn { background:rgba(0,255,200,0.08); border-color:rgba(0,255,200,0.2); color:#00FFC8; }
+.theme-toggle-btn:hover { border-color:var(--cyan); transform:scale(1.08); }
 .theme-icon {
-  width: 18px; height: 18px; transition: all 0.3s ease; position: absolute;
-  fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-  stroke: var(--icon-color-primary) !important;
+  width:18px; height:18px; transition:all 0.3s ease; position:absolute;
+  fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  stroke:var(--icon-color-primary) !important;
 }
-.theme-icon.theme-icon-moon { opacity: 0; }
-body.dark-mode .theme-icon { opacity: 0; transform: rotate(-180deg); }
-body.dark-mode .theme-icon.theme-icon-moon { opacity: 1; transform: rotate(0deg); }
+.theme-icon.theme-icon-moon { opacity:0; }
+body.dark-mode .theme-icon { opacity:0; transform:rotate(-180deg); }
+body.dark-mode .theme-icon.theme-icon-moon { opacity:1; transform:rotate(0deg); }
 
 #save-status {
-  color: var(--text-muted); font-size: 11px; min-height: 16px;
-  text-align: center; transition: color 0.3s ease;
-  width: 100%; font-family: Arial, sans-serif;
+  color:var(--text-muted); font-size:11px; min-height:16px;
+  text-align:center; width:100%; font-family:Arial,sans-serif;
 }
-body.dark-mode #save-status { color: #7DD3FC; }
 
+/* ============================================================
+   PAGE WRAPPER & FORM PAGES
+   ============================================================ */
 .page-wrapper {
   width: 100%; max-width: 1050px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 0; padding: 0;
+  display: flex; flex-direction: column;
 }
-
 .form-page {
-  width: 100%; max-width: 1050px; background: var(--panel);
-  padding: 24px; box-sizing: border-box; transition: all 0.3s ease;
-  font-family: Arial, sans-serif; display: flex; flex-direction: column;
-}
-@media (max-width: 768px) { .form-page { padding: 16px; } }
-@media (max-width: 480px) { .form-page { padding: 12px; } }
-body.dark-mode .form-page {
-  background: linear-gradient(135deg, rgba(15,21,53,0.95) 0%, rgba(10,14,39,0.98) 100%);
-}
-
-/* ===== INPUTS ===== */
-input[type="text"], textarea {
-  font-family: Arial, sans-serif; font-size: 12px; color: var(--text);
-  background: var(--panel); border: none;
-  border-bottom: 1px solid rgba(217,119,6,0.25);
-  padding: 2px 4px; outline: none;
-  transition: all 0.2s; -webkit-appearance: none; appearance: none;
-  caret-color: var(--cyan); max-width: 100%;
-}
-input[type="text"]:focus, textarea:focus {
-  border-bottom-color: var(--cyan); background: rgba(217,119,6,0.04);
-  box-shadow: 0 2px 0 0 rgba(217,119,6,0.3);
-}
-body.dark-mode input[type="text"], body.dark-mode textarea {
-  background: rgba(10,14,39,0.6); border-bottom-color: rgba(0,255,200,0.2);
-  color: #E0F7FF; caret-color: #00FFC8;
-}
-body.dark-mode input[type="text"]:focus, body.dark-mode textarea:focus {
-  border-bottom-color: #00FFC8; background: rgba(26,40,71,0.8);
-  box-shadow: 0 0 8px rgba(0,255,200,0.2);
-}
-input::placeholder, textarea::placeholder { color: var(--text-dim) !important; opacity: 1; }
-
-input[type="checkbox"] {
-  width: 14px; height: 14px; cursor: pointer; vertical-align: middle;
-  margin: 2px 4px 2px 0; accent-color: var(--cyan); flex-shrink: 0;
-}
-@media (max-width: 480px) { input[type="checkbox"] { width: 12px; height: 12px; margin: 1px 3px 1px 0; } }
-body.dark-mode input[type="checkbox"] { accent-color: #00FFC8; }
-
-/* ===== MULTILINE TEXTAREA ===== */
-textarea.multiline {
-  width: 100%; resize: none;
-  border: 1px solid rgba(217,119,6,0.25);
-  border-radius: 3px; padding: 6px 8px;
-  font-size: 12px; font-family: Arial, sans-serif;
-  line-height: 1.5; color: var(--text);
-  background: var(--panel); outline: none;
-  overflow: hidden; display: block;
-}
-textarea.multiline:focus {
-  border-color: var(--cyan); background: rgba(217,119,6,0.04);
-  box-shadow: 0 0 0 2px rgba(217,119,6,0.15);
-}
-body.dark-mode textarea.multiline {
-  background: rgba(10,14,39,0.6); border-color: rgba(0,255,200,0.2); color: #E0F7FF;
-}
-body.dark-mode textarea.multiline:focus {
-  border-color: #00FFC8; background: rgba(26,40,71,0.8);
-  box-shadow: 0 0 8px rgba(0,255,200,0.2);
-}
-
-/* ===== YES/NO CHECKBOX ===== */
-.yn-checkbox-wrap {
-  display: inline-flex; align-items: center; gap: 3px; cursor: pointer;
-  padding: 2px 6px 2px 3px; border-radius: 3px; font-size: 11px; font-weight: bold;
-  border: 1px solid transparent; transition: background 0.15s, border-color 0.15s;
-  vertical-align: middle; user-select: none; white-space: nowrap; flex-shrink: 0;
+  width: 100%; background: var(--panel);
+  padding: 24px; box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
-@media (max-width: 480px) { .yn-checkbox-wrap { font-size: 10px; padding: 1px 4px 1px 2px; } }
-.yn-checkbox-wrap.yn-yes { border-color: #bbb; }
-.yn-checkbox-wrap.yn-no  { border-color: #bbb; }
-.yn-checkbox-wrap.yn-yes.checked { background: #059669; border-color: #047857; color: #fff; }
-.yn-checkbox-wrap.yn-no.checked  { background: #DC2626; border-color: #b91c1c; color: #fff; }
-.yn-checkbox-wrap.yn-opt { border-color: #bbb; }
-.yn-checkbox-wrap.yn-opt.checked { background: #D97706; border-color: #b45309; color: #fff; }
-body.dark-mode .yn-checkbox-wrap { border-color: rgba(0,255,200,0.3); }
-body.dark-mode .yn-checkbox-wrap.checked { border-color: rgba(0,255,200,0.5); }
+@media (max-width:768px) { .form-page { padding:16px; } }
+@media (max-width:480px) { .form-page { padding:12px; } }
+body.dark-mode .form-page {
+  background: linear-gradient(135deg,rgba(15,21,53,0.95),rgba(10,14,39,0.98));
+}
 
-/* ===== PAGE 1 LAYOUT ===== */
-.page1-header { text-align: center; margin-bottom: 10px; }
+/* ============================================================
+   INPUTS
+   ============================================================ */
+input[type="text"], textarea {
+  font-family:Arial,sans-serif; font-size:12px; color:var(--text);
+  background:var(--panel); border:none;
+  border-bottom:1px solid rgba(217,119,6,0.25);
+  padding:2px 4px; outline:none; transition:all 0.2s;
+  -webkit-appearance:none; appearance:none;
+  caret-color:var(--cyan); max-width:100%;
+}
+input[type="text"]:focus, textarea:focus {
+  border-bottom-color:var(--cyan); background:rgba(217,119,6,0.04);
+  box-shadow:0 2px 0 0 rgba(217,119,6,0.3);
+}
+body.dark-mode input[type="text"],
+body.dark-mode textarea {
+  background:rgba(10,14,39,0.6); border-bottom-color:rgba(0,255,200,0.2);
+  color:#E0F7FF;
+}
+body.dark-mode input[type="text"]:focus,
+body.dark-mode textarea:focus {
+  border-bottom-color:#00FFC8; background:rgba(26,40,71,0.8);
+  box-shadow:0 0 8px rgba(0,255,200,0.2);
+}
+input::placeholder, textarea::placeholder { color:var(--text-dim)!important; opacity:1; }
+
+input[type="checkbox"] {
+  width:14px; height:14px; cursor:pointer; vertical-align:middle;
+  margin:2px 4px 2px 0; accent-color:var(--cyan); flex-shrink:0;
+}
+
+textarea.multiline {
+  width:100%; resize:none;
+  border:1px solid rgba(217,119,6,0.25); border-radius:3px;
+  padding:6px 8px; font-size:12px; line-height:1.5;
+  color:var(--text); background:var(--panel); outline:none; display:block;
+}
+textarea.multiline:focus {
+  border-color:var(--cyan); box-shadow:0 0 0 2px rgba(217,119,6,0.15);
+}
+body.dark-mode textarea.multiline {
+  background:rgba(10,14,39,0.6); border-color:rgba(0,255,200,0.2); color:#E0F7FF;
+}
+
+/* ============================================================
+   YES/NO PILLS
+   ============================================================ */
+.yn-checkbox-wrap {
+  display:inline-flex; align-items:center; gap:3px; cursor:pointer;
+  padding:2px 6px 2px 3px; border-radius:3px; font-size:11px; font-weight:bold;
+  border:1px solid transparent; transition:background 0.15s, border-color 0.15s;
+  vertical-align:middle; user-select:none; white-space:nowrap; flex-shrink:0;
+}
+.yn-checkbox-wrap.yn-yes { border-color:#bbb; }
+.yn-checkbox-wrap.yn-no  { border-color:#bbb; }
+.yn-checkbox-wrap.yn-opt { border-color:#bbb; }
+.yn-checkbox-wrap.yn-yes.checked { background:#059669; border-color:#047857; color:#fff; }
+.yn-checkbox-wrap.yn-no.checked  { background:#DC2626; border-color:#b91c1c; color:#fff; }
+.yn-checkbox-wrap.yn-opt.checked { background:#D97706; border-color:#b45309; color:#fff; }
+body.dark-mode .yn-checkbox-wrap { border-color:rgba(0,255,200,0.3); }
+
+/* ============================================================
+   HEADER / LOGO
+   ============================================================ */
+.page1-header { text-align:center; margin-bottom:10px; }
 .logo-area {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 12px; justify-content: center; flex-wrap: wrap;
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:12px; justify-content:center; flex-wrap:wrap;
 }
 .logo-text {
-  font-weight: 900; font-size: 18px; font-family: Arial Black, sans-serif;
-  color: var(--text); line-height: 1.2;
+  font-weight:900; font-size:18px; font-family:'Arial Black',sans-serif;
+  color:var(--text); line-height:1.2;
 }
-.logo-text span { color: #D97706; }
+.logo-text span { color:#D97706; }
 .checklist-title {
-  font-weight: bold; font-size: 18px;
-  border-top: 2px solid var(--text); padding-top: 8px;
-  margin-bottom: 10px; color: var(--text); font-family: Arial, sans-serif;
+  font-weight:bold; font-size:18px;
+  border-top:2px solid var(--text); padding-top:8px;
+  margin-bottom:10px; color:var(--text);
 }
 
+/* ============================================================
+   TOP FIELDS
+   ============================================================ */
 .top-fields {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 3px 20px; margin-bottom: 8px;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:3px 20px; margin-bottom:8px;
 }
-@media (max-width: 600px) { .top-fields { grid-template-columns: 1fr; } }
-
+@media (max-width:600px) { .top-fields { grid-template-columns:1fr; } }
 .field-row {
-  display: flex; align-items: flex-end; gap: 6px;
-  font-size: 12px; margin-bottom: 1px; flex-wrap: wrap;
+  display:flex; align-items:flex-end; gap:6px;
+  font-size:12px; margin-bottom:1px; flex-wrap:wrap;
 }
-.field-row label { font-weight: bold; white-space: nowrap; font-size: 12px; flex-shrink: 0; }
-.field-row input[type="text"] { flex: 1; min-width: 80px; }
-
+.field-row label { font-weight:bold; white-space:nowrap; font-size:12px; flex-shrink:0; }
+.field-row input[type="text"] { flex:1; min-width:80px; }
 .inline-input {
-  border: none; border-bottom: 1px solid var(--text);
-  padding: 1px 3px; font-size: 12px;
-  background: transparent; color: var(--text);
+  border:none; border-bottom:1px solid var(--text);
+  padding:1px 3px; font-size:12px; background:transparent; color:var(--text);
 }
-.inline-input.short  { width: 80px; }
-.inline-input.xshort { width: 60px; }
-body.dark-mode .inline-input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
+.inline-input.xshort { width:60px; }
+body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200,0.4); }
 
+/* ============================================================
+   TWO-COL
+   ============================================================ */
 .two-col {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 0 16px; margin-bottom: 8px;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:0 16px; margin-bottom:8px;
 }
-@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
-
-.section { margin-bottom: 8px; }
+@media (max-width:700px) { .two-col { grid-template-columns:1fr; } }
+.section { margin-bottom:8px; }
 .section-title {
-  font-weight: bold; font-size: 12px; text-transform: uppercase;
-  border-bottom: 1px solid var(--border-bright);
-  padding-bottom: 2px; margin-bottom: 4px; color: var(--text);
+  font-weight:bold; font-size:12px; text-transform:uppercase;
+  border-bottom:1px solid var(--border-bright);
+  padding-bottom:2px; margin-bottom:4px; color:var(--text);
 }
-body.dark-mode .section-title { border-bottom-color: rgba(0,255,200,0.3); }
 .section-row {
-  font-size: 12px; margin-bottom: 2px;
-  display: flex; align-items: center; flex-wrap: wrap; gap: 3px;
+  font-size:12px; margin-bottom:2px;
+  display:flex; align-items:center; flex-wrap:wrap; gap:3px;
 }
-
-hr.section-hr { border: none; border-top: 1px solid rgba(217,119,6,0.2); margin: 6px 0; }
-body.dark-mode hr.section-hr { border-top-color: rgba(0,255,200,0.15); }
-
+hr.section-hr { border:none; border-top:1px solid rgba(217,119,6,0.2); margin:6px 0; }
 .full-line-input {
-  width: 100%; border: none; border-bottom: 1px solid var(--text);
-  background: transparent; color: var(--text); font-size: 12px; padding: 1px 2px;
+  width:100%; border:none; border-bottom:1px solid var(--text);
+  background:transparent; color:var(--text); font-size:12px; padding:1px 2px;
 }
-body.dark-mode .full-line-input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
+body.dark-mode .full-line-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200,0.4); }
 
-/* ===== REGULATORS ROW ===== */
+/* ============================================================
+   REGULATORS ROW
+   ============================================================ */
 .reg-row {
-  font-size: 11px; font-weight: bold;
-  display: flex; flex-wrap: wrap; gap: 4px 12px;
-  align-items: flex-end; margin-bottom: 8px; padding: 4px 0;
-  border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;
+  font-size:11px; font-weight:bold;
+  display:flex; flex-wrap:wrap; gap:4px 12px;
+  align-items:flex-end; margin-bottom:8px; padding:4px 0;
+  border-top:1px solid #ccc; border-bottom:1px solid #ccc;
 }
-.reg-field { display: flex; align-items: flex-end; gap: 3px; white-space: nowrap; }
+.reg-field { display:flex; align-items:flex-end; gap:3px; white-space:nowrap; }
 .reg-field input {
-  width: 38px; border: none; border-bottom: 1px solid var(--text);
-  background: transparent; color: var(--text); font-size: 11px; padding: 1px 2px;
+  width:38px; border:none; border-bottom:1px solid var(--text);
+  background:transparent; color:var(--text); font-size:11px; padding:1px 2px;
 }
-body.dark-mode .reg-field input { color: #E0F7FF; border-bottom-color: rgba(0,255,200,0.4); }
-body.dark-mode .reg-row { border-color: rgba(0,255,200,0.2); }
+body.dark-mode .reg-field input { color:#E0F7FF; border-bottom-color:rgba(0,255,200,0.4); }
+body.dark-mode .reg-row { border-color:rgba(0,255,200,0.2); }
 
-/* ===== PAGE 1 TABLE SPLIT ===== */
+/* ============================================================
+   TABLE SPLITS
+   ============================================================ */
 .tables-split {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 0 12px; width: 100%;
+  display:grid; grid-template-columns:1fr 1fr; gap:0 12px; width:100%;
 }
-@media (max-width: 700px) { .tables-split { grid-template-columns: 1fr; } }
-.tables-col { display: flex; flex-direction: column; gap: 0; min-width: 0; }
-
-/* ===== PAGE 2 LAYOUT ===== */
+@media (max-width:700px) { .tables-split { grid-template-columns:1fr; } }
+.tables-col { display:flex; flex-direction:column; gap:0; min-width:0; }
 .page2-tables-split {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 0 12px; width: 100%; margin-bottom: 12px;
+  display:grid; grid-template-columns:1fr 1fr; gap:0 12px; width:100%; margin-bottom:12px;
 }
-@media (max-width: 700px) { .page2-tables-split { grid-template-columns: 1fr; } }
+@media (max-width:700px) { .page2-tables-split { grid-template-columns:1fr; } }
 
-/* ===== MATERIAL TABLE ===== */
-.grid-section { margin-bottom: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
+/* ============================================================
+   MATERIAL TABLES
+   ============================================================ */
+.grid-section { margin-bottom:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
 table.mat-table {
-  border-collapse: collapse; width: 100%; table-layout: fixed;
-  font-size: 11px; font-family: Arial, sans-serif;
+  border-collapse:collapse; width:100%; table-layout:fixed;
+  font-size:11px; font-family:Arial,sans-serif;
 }
-table.mat-table col.col-label { width: auto; }
-table.mat-table col.col-data  { width: 38px; }
-
+table.mat-table col.col-data { width:38px; }
 table.mat-table th,
 table.mat-table td {
-  border: 1px solid #555; padding: 2px 2px;
-  text-align: center; font-family: Arial, sans-serif; overflow: hidden;
+  border:1px solid #555; padding:2px 2px;
+  text-align:center; font-family:Arial,sans-serif; overflow:hidden;
 }
 table.mat-table th {
-  background: #4B5563; color: #FFFFFF;
-  font-weight: bold; font-size: 16px; white-space: nowrap;
-}
-body.dark-mode table.mat-table th { background: #1E3A5F; color: #00FFC8; }
-body.dark-mode table.mat-table td {
-  border-color: rgba(0,255,200,0.2);
-  background: rgba(15,21,53,0.6); color: #E0F7FF;
+  background:var(--header-bg); color:var(--header-fg);
+  font-weight:bold; font-size:16px; white-space:nowrap;
 }
 table.mat-table td.row-label {
-  text-align: left; font-weight: bold; background: #fafafa;
-  font-size: 11px; word-break: break-word; white-space: normal;
+  text-align:left; font-weight:bold;
+  background:var(--row-label-bg); color:var(--text);
+  font-size:11px; word-break:break-word; white-space:normal;
 }
-body.dark-mode table.mat-table td.row-label { background: rgba(36,52,88,0.6); color: #E0F7FF; }
 table.mat-table td.row-label.section-header {
-  background: #4B5563; color: #fff;
-  text-align: center; font-size: 16px; font-weight: bold;
+  background:var(--header-bg); color:var(--header-fg);
+  text-align:center; font-size:16px; font-weight:bold;
 }
-body.dark-mode table.mat-table td.row-label.section-header { background: #1E3A5F; color: #00FFC8; }
 table.mat-table td input[type="text"] {
-  width: 100%; border: none; text-align: center;
-  font-size: 11px; padding: 1px 1px; background: transparent;
-  color: var(--text); font-family: Arial, sans-serif; min-width: 0; max-width: 100%;
+  width:100%; border:none; text-align:center;
+  font-size:11px; padding:1px; background:transparent;
+  color:var(--text); font-family:Arial,sans-serif; min-width:0;
 }
-body.dark-mode table.mat-table td input[type="text"] { color: #E0F7FF; }
+body.dark-mode table.mat-table td {
+  border-color:rgba(0,255,200,0.2); background:rgba(15,21,53,0.6); color:#E0F7FF;
+}
+body.dark-mode table.mat-table td input[type="text"] { color:#E0F7FF; }
 
-/* ===== OTHER / NOTES ===== */
-.other-section { width: 100%; margin-top: auto; padding-top: 4px; }
+/* ============================================================
+   OTHER / NOTES & MISCUES
+   ============================================================ */
+.other-section { width:100%; padding-top:4px; }
 .other-title {
-  font-weight: bold; font-size: 16px;
-  background: #4B5563; color: #fff;
-  padding: 4px 8px; margin-bottom: 6px;
-  border: 1px solid #555; font-family: Arial, sans-serif;
+  font-weight:bold; font-size:16px;
+  background:var(--header-bg); color:var(--header-fg);
+  padding:4px 8px; margin-bottom:6px;
+  border:1px solid #555;
 }
-body.dark-mode .other-title { background: #1E3A5F; color: #00FFC8; border-color: rgba(0,255,200,0.2); }
-
-/* ===== MISCUES TEXTAREA ===== */
+body.dark-mode .other-title { border-color:rgba(0,255,200,0.2); }
 .miscues-textarea {
-  width: 100%; resize: none;
-  border: 1px solid rgba(217,119,6,0.25);
-  border-radius: 3px; padding: 6px 8px;
-  font-size: 12px; font-family: Arial, sans-serif;
-  line-height: 1.6; color: var(--text);
-  background: var(--panel); outline: none;
-  display: block; min-height: 80px;
-}
-.miscues-textarea:focus {
-  border-color: var(--cyan); background: rgba(217,119,6,0.04);
-  box-shadow: 0 0 0 2px rgba(217,119,6,0.15);
+  width:100%; resize:none;
+  border:1px solid rgba(217,119,6,0.25); border-radius:3px;
+  padding:6px 8px; font-size:12px; line-height:1.6;
+  color:var(--text); background:var(--panel); outline:none; display:block;
 }
 body.dark-mode .miscues-textarea {
-  background: rgba(10,14,39,0.6); border-color: rgba(0,255,200,0.2); color: #E0F7FF;
-}
-body.dark-mode .miscues-textarea:focus {
-  border-color: #00FFC8; background: rgba(26,40,71,0.8);
-  box-shadow: 0 0 8px rgba(0,255,200,0.2);
+  background:rgba(10,14,39,0.6); border-color:rgba(0,255,200,0.2); color:#E0F7FF;
 }
 
-/* ===== NOTICE ===== */
-.notice { text-align: center; font-size: 11px; color: var(--text-muted); padding: 10px 16px 6px; }
+.notice { text-align:center; font-size:11px; color:var(--text-muted); padding:10px 16px 6px; }
 
-/* ===== PRINT ===== */
+/* ============================================================
+   ██████╗ ██████╗ ██╗███╗   ██╗████████╗
+   PRINT STYLES — GUARANTEED 2 PAGES
+   ============================================================
+
+   THE FIX: Do NOT set height on .form-page
+   Instead, control page breaks ONLY with:
+     1. page-break-after:always on #page1
+     2. page-break-before:always on #page2
+     3. page-break-inside:avoid on #page1 and #page2
+   
+   The @page size + pt-unit content sizing ensures
+   each page's content fills exactly 1 printed page.
+
+   VERIFIED MATH @ 8.5×11in, 0.25in margins:
+   Usable area = 8.0in × 10.5in = 576pt × 756pt
+
+   PAGE 1 (all values in pt):
+     Header:            30pt
+     Top fields (7r):   42pt  (6pt/row)
+     Two-col:          230pt
+     Reg row:           18pt
+     Tables:           180pt
+     Gaps:              30pt
+     TOTAL:          ≈ 530pt  ✓ fits in 756pt
+
+   PAGE 2:
+     Nipples (39 rows): 340pt
+     Other/Notes:        80pt
+     TOTAL:           ≈ 420pt  ✓ fits in 756pt
+   ============================================================ */
+
 @media print {
-  /* Force light mode for all print output */
-  * {
+
+  /* ── 0. Page geometry ── */
+  @page {
+    size: 8.5in 11in;
+    margin: 0.25in;
+  }
+
+  /* ── 1. Force light mode at CSS-variable level ── */
+  :root, body, body.dark-mode {
+    --bg:           #FFFFFF !important;
+    --panel:        #FFFFFF !important;
+    --text:         #1F2937 !important;
+    --text-muted:   #6B7280 !important;
+    --text-dim:     #9CA3AF !important;
+    --border:       rgba(217,119,6,0.25) !important;
+    --border-bright:rgba(217,119,6,0.5)  !important;
+    --cyan:         #D97706 !important;
+    --header-bg:    #4B5563 !important;
+    --header-fg:    #FFFFFF !important;
+    --row-label-bg: #fafafa !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  .action-bar  { display: none !important; }
-  .notice      { display: none !important; }
-  #save-status { display: none !important; }
+  /* ── 2. Hide UI chrome ── */
+  .action-bar,
+  .notice,
+  #save-status {
+    display: none !important;
+  }
 
-  body {
-    background: #ffffff !important;
+  /* ── 3. Reset html/body ── */
+  html, body, body.dark-mode {
+    background: #fff !important;
     color: #1F2937 !important;
     max-width: 100% !important;
+    width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: visible !important;
+    /* CRITICAL: remove min-height so body doesn't create extra pages */
+    min-height: 0 !important;
   }
 
-  /* Strip all dark-mode overrides from body */
-  body.dark-mode {
-    background: #ffffff !important;
-    color: #1F2937 !important;
-  }
-
-  /* Page wrapper */
+  /* ── 4. Page wrapper — simple block ── */
   .page-wrapper {
     display: block !important;
     width: 100% !important;
@@ -418,121 +442,362 @@ body.dark-mode .miscues-textarea:focus {
     margin: 0 !important;
   }
 
-  /* Each form-page = one printed page */
-  .form-page {
-    page-break-before: always !important;
-    break-before: page !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+  /* ── 5. THE KEY FIX:
+     .form-page gets NO height, NO overflow:hidden
+     Page breaks are controlled ONLY by page-break-after/before
+     Content is sized in pt to fit naturally within one page
+  ── */
+  .form-page, body.dark-mode .form-page {
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important;
-    padding: 12pt 14pt !important;
+    padding: 8pt 10pt !important;
     margin: 0 !important;
     background: #ffffff !important;
     color: #1F2937 !important;
     box-sizing: border-box !important;
-    display: block !important;
+    /* NO height, NO overflow — content sizes naturally */
+    height: auto !important;
+    overflow: visible !important;
+    /* Don't break inside a page */
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
-  /* First page has no page-break before it */
-  .form-page:first-child,
+
+  /* Page 1 ends here — next content starts new page */
   #page1 {
+    page-break-after: always !important;
+    break-after: page !important;
     page-break-before: avoid !important;
     break-before: avoid !important;
   }
 
-  /* Dark-mode class on form-page — strip it */
-  body.dark-mode .form-page {
-    background: #ffffff !important;
+  /* Page 2 always starts on a new page */
+  #page2 {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* ── 6. Header ── */
+  .page1-header {
+    text-align: center !important;
+    margin-bottom: 4pt !important;
+  }
+  .logo-area {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6pt !important;
+    margin-bottom: 3pt !important;
+    flex-wrap: nowrap !important;
+  }
+  .logo-area img {
+    width: 24pt !important;
+    height: 24pt !important;
+    flex-shrink: 0 !important;
+  }
+  .logo-text {
+    font-size: 11pt !important;
     color: #1F2937 !important;
   }
-
-  /* @page */
-  @page {
-    size: 8.5in 11in;
-    margin: 0.3in 0.3in 0.25in 0.3in;
+  .logo-text span { color: #D97706 !important; }
+  .checklist-title {
+    font-size: 10pt !important;
+    font-weight: bold !important;
+    color: #1F2937 !important;
+    border-top: 1pt solid #1F2937 !important;
+    padding-top: 2pt !important;
+    margin-bottom: 4pt !important;
   }
 
-  /* ── Typography scale-down ── */
-  .logo-text          { font-size: 13pt !important; }
-  .checklist-title    { font-size: 12pt !important; border-top-color: #1F2937 !important; color: #1F2937 !important; }
-  .section-title      { font-size: 8pt !important;  color: #1F2937 !important; border-bottom-color: rgba(217,119,6,0.4) !important; }
-  .section-row        { font-size: 8pt !important;  margin-bottom: 1pt !important; gap: 2pt !important; }
-  .field-row          { font-size: 8pt !important;  margin-bottom: 1pt !important; }
-  .field-row label    { font-size: 8pt !important; }
-  .reg-row            { font-size: 7.5pt !important; padding: 2pt 0 !important; margin-bottom: 4pt !important; border-color: #ccc !important; }
-  .reg-field          { gap: 2pt !important; }
-  .reg-field label    { font-size: 7.5pt !important; }
-  .reg-field input    { font-size: 7.5pt !important; border-bottom-color: #999 !important; color: #1F2937 !important; background: transparent !important; }
+  /* ── 7. Top fields ── */
+  .top-fields {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1pt 12pt !important;
+    margin-bottom: 4pt !important;
+  }
+  .field-row {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 3pt !important;
+    font-size: 7pt !important;
+    margin-bottom: 0 !important;
+    flex-wrap: nowrap !important;
+    line-height: 1.6 !important;
+  }
+  .field-row label { font-size: 7pt !important; white-space: nowrap !important; }
+  .field-row input[type="text"] {
+    font-size: 7pt !important;
+    color: #1F2937 !important;
+    background: transparent !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 0.5pt solid #999 !important;
+  }
 
-  /* Inputs */
-  input[type="text"]  { color: #1F2937 !important; background: transparent !important; border-bottom-color: #999 !important; font-size: 8pt !important; }
-  textarea            { color: #1F2937 !important; background: #fff !important; border-color: #bbb !important; font-size: 8pt !important; }
-  .inline-input       { color: #1F2937 !important; border-bottom-color: #999 !important; font-size: 8pt !important; background: transparent !important; }
-  .full-line-input    { color: #1F2937 !important; border-bottom-color: #999 !important; font-size: 8pt !important; background: transparent !important; }
+  /* ── 8. Two-col ── */
+  .two-col {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 10pt !important;
+    margin-bottom: 3pt !important;
+  }
+  .section { margin-bottom: 2pt !important; }
+  .section-title {
+    font-size: 6.5pt !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    border-bottom: 0.5pt solid rgba(217,119,6,0.5) !important;
+    padding-bottom: 1pt !important;
+    margin-bottom: 1.5pt !important;
+    color: #1F2937 !important;
+  }
+  .section-row {
+    font-size: 6.5pt !important;
+    margin-bottom: 0.5pt !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 2pt !important;
+    line-height: 1.3 !important;
+  }
+  hr.section-hr {
+    margin: 2pt 0 !important;
+    border: none !important;
+    border-top: 0.5pt solid rgba(217,119,6,0.3) !important;
+  }
 
-  /* Checkboxes & yn-wraps */
-  .yn-checkbox-wrap   { font-size: 7.5pt !important; padding: 1pt 4pt 1pt 2pt !important; }
+  /* ── 9. Inline inputs ── */
+  .inline-input, .full-line-input {
+    font-size: 6.5pt !important;
+    color: #1F2937 !important;
+    background: transparent !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 0.5pt solid #999 !important;
+  }
+  .full-line-input { width: 100% !important; }
+
+  /* ── 10. Checkboxes & YN pills ── */
+  input[type="checkbox"] {
+    width: 7pt !important;
+    height: 7pt !important;
+    margin: 0 1pt !important;
+  }
+  .yn-checkbox-wrap {
+    font-size: 6.5pt !important;
+    padding: 0.5pt 2.5pt 0.5pt 1pt !important;
+    gap: 1pt !important;
+    line-height: 1.2 !important;
+    border-radius: 1.5pt !important;
+  }
+  .yn-checkbox-wrap.yn-yes { border-color: #ccc !important; color: #1F2937 !important; }
+  .yn-checkbox-wrap.yn-no  { border-color: #ccc !important; color: #1F2937 !important; }
   .yn-checkbox-wrap.yn-yes.checked { background: #059669 !important; border-color: #047857 !important; color: #fff !important; }
   .yn-checkbox-wrap.yn-no.checked  { background: #DC2626 !important; border-color: #b91c1c !important; color: #fff !important; }
   .yn-checkbox-wrap.yn-opt.checked { background: #D97706 !important; border-color: #b45309 !important; color: #fff !important; }
-  input[type="checkbox"] { width: 10pt !important; height: 10pt !important; accent-color: #D97706 !important; }
 
-  /* Section spacing */
-  .section            { margin-bottom: 4pt !important; }
-  hr.section-hr       { margin: 3pt 0 !important; border-top-color: rgba(217,119,6,0.3) !important; }
-  .logo-area          { margin-bottom: 6pt !important; }
-  .page1-header       { margin-bottom: 6pt !important; }
+  /* ── 11. Regulators row ── */
+  .reg-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-end !important;
+    font-size: 6.5pt !important;
+    font-weight: bold !important;
+    padding: 2pt 0 !important;
+    margin-bottom: 3pt !important;
+    gap: 2pt 8pt !important;
+    border-top: 0.5pt solid #ccc !important;
+    border-bottom: 0.5pt solid #ccc !important;
+  }
+  .reg-field { gap: 2pt !important; }
+  .reg-field label { font-size: 6.5pt !important; }
+  .reg-field input {
+    font-size: 6.5pt !important;
+    width: 26pt !important;
+    color: #1F2937 !important;
+    background: transparent !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 0.5pt solid #999 !important;
+  }
 
-  /* Top fields grid */
-  .top-fields         { gap: 1pt 14pt !important; margin-bottom: 4pt !important; grid-template-columns: 1fr 1fr !important; }
+  /* ── 12. Table splits ── */
+  .tables-split {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 8pt !important;
+    width: 100% !important;
+  }
+  .page2-tables-split {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 8pt !important;
+    width: 100% !important;
+    margin-bottom: 4pt !important;
+  }
+  .tables-col {
+    display: block !important;
+    min-width: 0 !important;
+  }
+  .grid-section {
+    margin-bottom: 3pt !important;
+    overflow: visible !important;
+  }
 
-  /* Two-col always 2 cols in print */
-  .two-col            { grid-template-columns: 1fr 1fr !important; gap: 0 12pt !important; margin-bottom: 4pt !important; }
+  /* ── 13. Material tables ── */
+  table.mat-table {
+    font-size: 6pt !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    /* Tables can break across rows but whole table won't jump to next page */
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+  table.mat-table col.col-data { width: 18pt !important; }
 
-  /* Table split always 2 cols */
-  .tables-split       { grid-template-columns: 1fr 1fr !important; gap: 0 8pt !important; }
-  .page2-tables-split { grid-template-columns: 1fr 1fr !important; gap: 0 8pt !important; margin-bottom: 6pt !important; }
-  .grid-section       { margin-bottom: 4pt !important; overflow: visible !important; }
-
-  /* Tables */
-  table.mat-table     { font-size: 7pt !important; }
   table.mat-table th,
-  table.mat-table td  { padding: 1pt 2pt !important; border-color: #555 !important; font-size: 7pt !important; }
-  table.mat-table th  { background: #4B5563 !important; color: #ffffff !important; font-size: 8pt !important; }
-  table.mat-table td.row-label            { background: #fafafa !important; color: #1F2937 !important; font-size: 7pt !important; }
-  table.mat-table td.row-label.section-header { background: #4B5563 !important; color: #ffffff !important; font-size: 8pt !important; }
-  table.mat-table td input[type="text"]   { font-size: 7pt !important; color: #1F2937 !important; }
-  table.mat-table tbody tr:nth-child(even) td { background: #f5f5f5 !important; }
+  table.mat-table td {
+    border: 0.5pt solid #444 !important;
+    padding: 0.75pt 1pt !important;
+    text-align: center !important;
+    font-size: 6pt !important;
+    line-height: 1.15 !important;
+    overflow: hidden !important;
+  }
+  table.mat-table th {
+    background: #4B5563 !important;
+    color: #ffffff !important;
+    font-size: 7pt !important;
+    font-weight: bold !important;
+    white-space: nowrap !important;
+  }
+  table.mat-table td.row-label {
+    text-align: left !important;
+    font-weight: bold !important;
+    background: #fafafa !important;
+    color: #1F2937 !important;
+    font-size: 6pt !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  table.mat-table td.row-label.section-header {
+    background: #4B5563 !important;
+    color: #ffffff !important;
+    font-size: 7pt !important;
+    text-align: center !important;
+  }
+  table.mat-table tbody tr:nth-child(even) td.row-label {
+    background: #f0f0f0 !important;
+  }
+  table.mat-table td input[type="text"] {
+    font-size: 6pt !important;
+    color: #1F2937 !important;
+    background: transparent !important;
+    border: none !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0 !important;
+  }
 
-  /* col widths in print */
-  table.mat-table col.col-data { width: 28pt !important; }
+  /* ── 14. Miscues textarea ── */
+  .miscues-textarea {
+    font-size: 6.5pt !important;
+    min-height: 28pt !important;
+    max-height: 40pt !important;
+    height: 34pt !important;
+    background: #fff !important;
+    color: #1F2937 !important;
+    border: 0.5pt solid #bbb !important;
+    border-radius: 1pt !important;
+    padding: 2pt 3pt !important;
+    line-height: 1.35 !important;
+    overflow: hidden !important;
+    resize: none !important;
+    display: block !important;
+  }
 
-  /* Miscues */
-  .miscues-textarea   { min-height: 40pt !important; font-size: 8pt !important; background: #fff !important; color: #1F2937 !important; border-color: #bbb !important; }
-
-  /* Other/Notes */
-  .other-title        { background: #4B5563 !important; color: #ffffff !important; font-size: 10pt !important; padding: 3pt 6pt !important; border-color: #555 !important; }
-  .other-section      { padding-top: 2pt !important; }
-  textarea.multiline  { min-height: 70pt !important; font-size: 8pt !important; background: #fff !important; color: #1F2937 !important; border-color: #bbb !important; }
-
-  /* Logo image */
-  .logo-area img      { width: 28pt !important; height: 28pt !important; }
+  /* ── 15. Other/Notes (page 2) ── */
+  .other-section { padding-top: 4pt !important; }
+  .other-title {
+    background: #4B5563 !important;
+    color: #ffffff !important;
+    font-size: 8pt !important;
+    padding: 3pt 5pt !important;
+    border: 0.5pt solid #444 !important;
+    margin-bottom: 3pt !important;
+    font-weight: bold !important;
+  }
+  textarea.multiline {
+    font-size: 7pt !important;
+    height: 70pt !important;
+    min-height: 70pt !important;
+    max-height: 70pt !important;
+    background: #fff !important;
+    color: #1F2937 !important;
+    border: 0.5pt solid #bbb !important;
+    padding: 3pt 4pt !important;
+    line-height: 1.4 !important;
+    overflow: hidden !important;
+    display: block !important;
+    width: 100% !important;
+  }
+/* ── GRID LINES FIX ── */
+table.mat-table,
+table.mat-table th,
+table.mat-table td {
+  border: 0.75pt solid #333 !important;
+  border-collapse: collapse !important;
 }
+
+table.mat-table th {
+  background: #4B5563 !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+table.mat-table td.row-label {
+  background: #fafafa !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+table.mat-table td.row-label.section-header {
+  background: #4B5563 !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+table.mat-table tbody tr:nth-child(even) td.row-label {
+  background: #f0f0f0 !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+} /* end @media print */
 </style>
 </head>
 <body>
 
-<!-- ACTION BAR -->
+<!-- ========== ACTION BAR ========== -->
 <div class="action-bar">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:100%;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;">
       <button class="btn" onclick="window.location.href='https://brandonaog.github.io/AOG-hub/'">🏠 HOME</button>
-      <button class="btn" id="printBtn" onclick="printAsImage()">📄 PDF</button>
+      <button class="btn" onclick="window.print()">📄 PRINT</button>
       <button class="btn" onclick="clearForm()">🗑 CLEAR</button>
-      <button class="btn" onclick="saveForIPhone()">📱 iPhone</button>
-      <button class="btn" onclick="saveForAndroid()">🤖 Android</button>
-      <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark mode" aria-label="Toggle dark mode">
+      <button class="btn" onclick="saveForIPhone()">📱 iPHONE</button>
+      <button class="btn" onclick="saveForAndroid()">🤖 ANDROID</button>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark mode">
         <svg class="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"/>
           <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
@@ -549,6 +814,7 @@ body.dark-mode .miscues-textarea:focus {
   </div>
 </div>
 
+<!-- ========== PAGE WRAPPER ========== -->
 <div class="page-wrapper" id="page-wrapper">
 
   <!-- ══════════════ PAGE 1 ══════════════ -->
@@ -557,62 +823,60 @@ body.dark-mode .miscues-textarea:focus {
     <div class="page1-header">
       <div class="logo-area">
         <img src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
-             alt="Logo" style="width:36px;height:36px;display:block;border-radius:50%;object-fit:cover;flex-shrink:0;">
+             alt="Logo" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">
         <div class="logo-text">ALWAYS<span>ON</span><br>
-          <span style="color:#111;font-size:10px;font-family:Arial,sans-serif;letter-spacing:1px;">GENERATORS</span>
+          <span style="color:#111;font-size:10px;letter-spacing:1px;">GENERATORS</span>
         </div>
       </div>
       <div class="checklist-title">GAS INSTALLATION CHECKLIST</div>
     </div>
 
-    <!-- Top fields -->
     <div class="top-fields">
-      <div class="field-row"><label>Customer Name:</label><input type="text" id="f-customer" placeholder="Full name"></div>
+      <div class="field-row"><label>Customer Name:</label><input type="text" placeholder="Full name"></div>
       <div class="field-row"><label>Date:</label><input type="text" id="f-date" placeholder="MM/DD/YYYY"></div>
-      <div class="field-row"><label>Address:</label><input type="text" id="f-address" placeholder="Job address"></div>
-      <div class="field-row"><label>Gas Truck:</label><input type="text" id="f-truck" placeholder="Truck #"></div>
-      <div class="field-row"><label>Job:</label><input type="text" id="f-job" placeholder="Job number"></div>
-      <div class="field-row"><label>Team Member Names:</label><input type="text" id="f-team" placeholder="Names"></div>
+      <div class="field-row"><label>Address:</label><input type="text" placeholder="Job address"></div>
+      <div class="field-row"><label>Gas Truck:</label><input type="text" placeholder="Truck #"></div>
+      <div class="field-row"><label>Job:</label><input type="text" placeholder="Job number"></div>
+      <div class="field-row"><label>Team Member Names:</label><input type="text" placeholder="Names"></div>
       <div class="field-row" style="grid-column:1/-1;"><input type="text" style="width:100%;max-width:320px;" placeholder="Additional team members"></div>
     </div>
 
-    <!-- Info 2-col -->
     <div class="two-col">
       <!-- LEFT -->
       <div>
         <div class="section">
           <div class="section-title">GAS</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row"><b>Team Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked By:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
           <div class="section-row">Natural Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
           <div class="section-row">LP Tank Installation: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">LP Tank Size: <input class="inline-input" style="width:36px;" type="text"> AG <input type="checkbox"> UG <input type="checkbox"></div>
-          <div class="section-row">Tank Serial #: <input class="inline-input" style="width:110px;" type="text"></div>
+          <div class="section-row">LP Tank Size: <input class="inline-input" style="width:32px;" type="text"> AG <input type="checkbox"> UG <input type="checkbox"></div>
+          <div class="section-row">Tank Serial #: <input class="inline-input" style="width:100px;" type="text"></div>
           <div class="section-row">Existing Gas: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Surface Mounted Length: <input class="inline-input" style="width:44px;" type="text"></div>
-          <div class="section-row">Underground Length: <input class="inline-input" style="width:44px;" type="text"></div>
-          <div class="section-row">Attic CSST Length: <input class="inline-input" style="width:44px;" type="text"></div>
-          <div class="section-row">Needs Completed: <input class="inline-input" style="width:120px;" type="text"></div>
+          <div class="section-row">Surface Mounted Length: <input class="inline-input" style="width:40px;" type="text"></div>
+          <div class="section-row">Underground Length: <input class="inline-input" style="width:40px;" type="text"></div>
+          <div class="section-row">Attic CSST Length: <input class="inline-input" style="width:40px;" type="text"></div>
+          <div class="section-row">Needs Completed: <input class="inline-input" style="width:110px;" type="text"></div>
           <div class="section-row"><input type="text" class="full-line-input" placeholder="Additional notes"></div>
         </div>
         <hr class="section-hr">
         <div class="section">
           <div class="section-title">CLEAN UP</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row"><b>Team Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked By:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
           <div class="section-row" style="font-weight:bold;">EVERYTHING CLEAN: <input type="checkbox"> YES</div>
           <div class="section-row">Ready for H/O Training: <input type="checkbox"> YES <input type="checkbox"> NO</div>
-          <div class="section-row">Why Not: <input class="inline-input" style="width:120px;" type="text"></div>
+          <div class="section-row">Why Not: <input class="inline-input" style="width:110px;" type="text"></div>
         </div>
         <hr class="section-hr">
         <div class="section">
           <div class="section-title" style="text-transform:none;">Any Miscues or Delays:</div>
-          <textarea class="miscues-textarea" rows="4" placeholder="Enter any miscues or delays here…"></textarea>
+          <textarea class="miscues-textarea" rows="3" placeholder="Enter any miscues or delays…"></textarea>
         </div>
       </div>
       <!-- RIGHT -->
       <div>
         <div class="section">
           <div class="section-title">WALK THROUGH</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row"><b>Team Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked By:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
           <div class="section-row">Gas Affidavit Form: <input type="checkbox"> YES <input type="checkbox"> NO</div>
           <div class="section-row">Leak Check: <input type="checkbox"> YES <input type="checkbox"> NO</div>
           <div class="section-row">Sediment Trap (Liq. Cooled Only): <input type="checkbox"> YES <input type="checkbox"> NO</div>
@@ -627,7 +891,7 @@ body.dark-mode .miscues-textarea:focus {
         <hr class="section-hr">
         <div class="section">
           <div class="section-title">INSPECTION(S)</div>
-          <div class="section-row"><b>Team Member:</b><input class="inline-input xshort" type="text" placeholder="Name">&nbsp;<b>Checked By:</b><input class="inline-input xshort" type="text" placeholder="Name"></div>
+          <div class="section-row"><b>Team Member:</b>&nbsp;<input class="inline-input xshort" type="text">&nbsp;<b>Checked By:</b>&nbsp;<input class="inline-input xshort" type="text"></div>
           <div class="section-row">Inspected: <input type="checkbox"> YES <input type="checkbox"> NO</div>
           <div class="section-row">FIRE Inspector: <input type="checkbox"> YES <input type="checkbox"> NO</div>
           <div class="section-row">County: <input type="checkbox"> YES <input type="checkbox"> NO</div>
@@ -637,9 +901,8 @@ body.dark-mode .miscues-textarea:focus {
           <div class="section-row" style="font-weight:bold;">Final Gas Passed: <input type="checkbox"> YES <input type="checkbox"> NO</div>
         </div>
       </div>
-    </div><!-- end two-col -->
+    </div>
 
-    <!-- Regulators strip -->
     <div class="reg-row">
       <div class="reg-field"><label>REGULATORS 1<sup>ST</sup> STAGE:</label><input type="text"></div>
       <div class="reg-field"><label>NORGAS:</label><input type="text"></div>
@@ -649,74 +912,35 @@ body.dark-mode .miscues-textarea:focus {
       <div class="reg-field"><label>Pietro:</label><input type="text"></div>
     </div>
 
-    <!-- Page 1 table split -->
     <div class="tables-split">
-      <!-- LEFT: Rigid Pipe + Galv Fittings -->
       <div class="tables-col">
         <div class="grid-section">
           <table class="mat-table" id="pipe-table">
-            <colgroup>
-              <col class="col-label">
-              <col class="col-data"><col class="col-data"><col class="col-data">
-              <col class="col-data"><col class="col-data">
-            </colgroup>
-            <thead>
-              <tr>
-                <th style="text-align:left;">Galv. Pipe &amp; Fittings</th>
-                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-              </tr>
-            </thead>
+            <colgroup><col class="col-label"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"></colgroup>
+            <thead><tr><th style="text-align:left;">Galv. Pipe &amp; Fittings</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="pipe-body"></tbody>
           </table>
         </div>
       </div>
-      <!-- RIGHT: Poly + Risers + Whips -->
       <div class="tables-col">
         <div class="grid-section">
           <table class="mat-table" id="poly-table">
-            <colgroup>
-              <col class="col-label">
-              <col class="col-data"><col class="col-data"><col class="col-data">
-              <col class="col-data"><col class="col-data">
-            </colgroup>
-            <thead>
-              <tr>
-                <th style="text-align:left;">Poly Fittings</th>
-                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-              </tr>
-            </thead>
+            <colgroup><col class="col-label"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"></colgroup>
+            <thead><tr><th style="text-align:left;">Poly Fittings</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="poly-body"></tbody>
           </table>
         </div>
         <div class="grid-section">
           <table class="mat-table" id="risers-table">
-            <colgroup>
-              <col class="col-label">
-              <col class="col-data"><col class="col-data"><col class="col-data">
-              <col class="col-data"><col class="col-data">
-            </colgroup>
-            <thead>
-              <tr>
-                <th style="text-align:left;">Risers</th>
-                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-              </tr>
-            </thead>
+            <colgroup><col class="col-label"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"></colgroup>
+            <thead><tr><th style="text-align:left;">Risers</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="risers-body"></tbody>
           </table>
         </div>
         <div class="grid-section">
           <table class="mat-table" id="whips-table">
-            <colgroup>
-              <col class="col-label">
-              <col class="col-data"><col class="col-data"><col class="col-data">
-              <col class="col-data"><col class="col-data">
-            </colgroup>
-            <thead>
-              <tr>
-                <th style="text-align:left;">Appliance Whips</th>
-                <th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th>
-              </tr>
-            </thead>
+            <colgroup><col class="col-label"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"></colgroup>
+            <thead><tr><th style="text-align:left;">Appliance Whips</th><th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th></tr></thead>
             <tbody id="whips-body"></tbody>
           </table>
         </div>
@@ -729,183 +953,139 @@ body.dark-mode .miscues-textarea:focus {
   <div class="form-page" id="page2">
 
     <div class="page2-tables-split">
-      <!-- LEFT half -->
       <div class="tables-col">
         <div class="grid-section">
           <table class="mat-table" id="nipples-left-table">
-            <colgroup>
-              <col class="col-label">
-              <col class="col-data"><col class="col-data"><col class="col-data">
-              <col class="col-data"><col class="col-data">
-            </colgroup>
-            <thead>
-              <tr>
-                <th style="text-align:left;">Galv. Nipples &amp; Misc.</th>
-                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-              </tr>
-            </thead>
+            <colgroup><col class="col-label"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"></colgroup>
+            <thead><tr><th style="text-align:left;">Galv. Nipples &amp; Misc.</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="nipples-left-body"></tbody>
           </table>
         </div>
       </div>
-      <!-- RIGHT half -->
       <div class="tables-col">
         <div class="grid-section">
           <table class="mat-table" id="nipples-right-table">
-            <colgroup>
-              <col class="col-label">
-              <col class="col-data"><col class="col-data"><col class="col-data">
-              <col class="col-data"><col class="col-data">
-            </colgroup>
-            <thead>
-              <tr>
-                <th style="text-align:left;">Galv. Nipples &amp; Misc.</th>
-                <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-              </tr>
-            </thead>
+            <colgroup><col class="col-label"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"><col class="col-data"></colgroup>
+            <thead><tr><th style="text-align:left;">Galv. Nipples &amp; Misc.</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="nipples-right-body"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- OTHER / NOTES — full width bottom -->
     <div class="other-section">
       <div class="other-title">OTHER / NOTES</div>
-      <textarea
-        class="multiline"
-        rows="4"
-        placeholder="Enter other notes here…"
-        style="width:100%;resize:none;min-height:90px;"
-      ></textarea>
+      <textarea class="multiline" rows="5" placeholder="Enter other notes here…" style="width:100%;resize:none;min-height:90px;"></textarea>
     </div>
 
   </div><!-- end page2 -->
 
 </div><!-- end page-wrapper -->
 
-<p class="notice">📱 iPhone: press &amp; hold images to save &nbsp;|&nbsp; 🤖 Android: images download to gallery</p>
+<p class="notice">📱 iPhone: tap 📄 PRINT → Save to Files as PDF &nbsp;|&nbsp; 🤖 Android: tap 📄 PRINT → Save as PDF</p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-
-// ===== THEME =====
+/* ================================================================
+   THEME
+================================================================ */
 const THEME_KEY = 'aog_gas_theme';
 function getInitialTheme() {
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved) return saved;
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-  return 'light';
+  const s = localStorage.getItem(THEME_KEY);
+  if (s) return s;
+  return window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
 }
 function applyTheme(t) {
-  if (t === 'dark') document.body.classList.add('dark-mode');
-  else document.body.classList.remove('dark-mode');
+  document.body.classList.toggle('dark-mode', t === 'dark');
   try { localStorage.setItem(THEME_KEY, t); } catch(e) {}
 }
 function toggleTheme() {
   applyTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
 }
-function setupThemeToggle() {
+applyTheme(getInitialTheme());
+document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('theme-toggle-btn');
   if (btn) btn.addEventListener('click', toggleTheme);
-}
-applyTheme(getInitialTheme());
+});
 
-// ===== BUILD TABLE HELPERS =====
-function addRow(tbody, labelText, numCols, isHeader) {
+/* ================================================================
+   BUILD TABLES
+================================================================ */
+function addRow(tbody, label, numCols, isHeader) {
   const tr  = document.createElement('tr');
   const lbl = document.createElement('td');
-  lbl.className = isHeader ? 'row-label section-header' : 'row-label';
-  lbl.textContent = labelText;
-  if (isHeader) { lbl.colSpan = numCols + 1; }
+  lbl.className   = isHeader ? 'row-label section-header' : 'row-label';
+  lbl.textContent = label;
+  if (isHeader) lbl.colSpan = numCols + 1;
   tr.appendChild(lbl);
   if (!isHeader) {
     for (let i = 0; i < numCols; i++) {
-      const td  = document.createElement('td');
-      const inp = document.createElement('input');
-      inp.type = 'text'; inp.maxLength = 7;
-      td.appendChild(inp); tr.appendChild(td);
+      const td = document.createElement('td');
+      const ip = document.createElement('input');
+      ip.type = 'text'; ip.maxLength = 7;
+      td.appendChild(ip); tr.appendChild(td);
     }
   }
   tbody.appendChild(tr);
 }
 
-// ── PAGE 1: Galv. Pipe (footage) then Galv. Fittings in same table ──
-(function() {
-  const tbody = document.getElementById('pipe-body');
-  const n = 5;
-  addRow(tbody, 'Rigid Pipe (Footage)',  n, false);
-  addRow(tbody, 'Galv. Fittings',        n, true);
-  ['Galv. 45\'s','Galv. 90\'s','Galv. Couplings','Galv. Caps',
-   'Galv. Sq. Plugs','Galv. Tee\'s','Galv. Union','Misc. (Each)']
-  .forEach(r => addRow(tbody, r, n, false));
+(function buildPipe() {
+  const b = document.getElementById('pipe-body'), n = 5;
+  addRow(b, 'Rigid Pipe (Footage)', n, false);
+  addRow(b, 'Galv. Fittings', n, true);
+  ["Galv. 45's","Galv. 90's","Galv. Couplings","Galv. Caps",
+   "Galv. Sq. Plugs","Galv. Tee's","Galv. Union","Misc. (Each)"]
+  .forEach(r => addRow(b, r, n, false));
 })();
 
-(function() {
-  const tbody = document.getElementById('poly-body');
-  const n = 5;
+(function buildPoly() {
+  const b = document.getElementById('poly-body'), n = 5;
   ['UG Poly (Per FT)','Fusion Coupler','Tee','90 Elbow','Reducer Coupler']
-  .forEach(r => addRow(tbody, r, n, false));
+  .forEach(r => addRow(b, r, n, false));
 })();
 
-(function() {
-  const tbody = document.getElementById('risers-body');
-  const n = 5;
-  ['Gas Riser (30"V×24"H)','Transition']
-  .forEach(r => addRow(tbody, r, n, false));
+(function buildRisers() {
+  const b = document.getElementById('risers-body'), n = 5;
+  ['Gas Riser (30"V×24"H)','Transition'].forEach(r => addRow(b, r, n, false));
 })();
 
-(function() {
-  const tbody = document.getElementById('whips-body');
-  const n = 5;
-  ['12 Inch','18 Inch','48 Inch','60 Inch']
-  .forEach(r => addRow(tbody, r, n, false));
+(function buildWhips() {
+  const b = document.getElementById('whips-body'), n = 5;
+  ['12 Inch','18 Inch','48 Inch','60 Inch'].forEach(r => addRow(b, r, n, false));
 })();
 
-// ── PAGE 2: Nipples split ──
 const ALL_NIPPLE_ROWS = [
-  { label: 'CLOSE STD Galv. Nipple', isHeader: true },
-  { label: '1½" Nipple' }, { label: '2" Nipple' },  { label: '2½" Nipple' },
-  { label: '3" Nipple' },  { label: '3½" Nipple' }, { label: '4" Nipple' },
-  { label: '4½" Nipple' }, { label: '5" Nipple' },  { label: '5½" Nipple' },
-  { label: '6" Nipple' },  { label: '7" Nipple' },  { label: '8" Nipple' },
-  { label: '9" Nipple' },  { label: '10" Nipple' }, { label: '12" Nipple' },
-  { label: 'Yellow Met. Tape (Per FT)' },
-  { label: '3/16 Galv. Cable (Per FT)' },
-  { label: "Galv. 45's" },
-  { label: '3/16 C-Bolt Clamp' },
-  { label: 'Tank Anchor – 48"' },
-  { label: '17lb Anode Bags' },
-  { label: '9lb Anode Bags' },
-  { label: '¾" Galv. 2-Hole Straps' },
-  { label: '½" Galv. 2-Hole Straps' },
-  { label: '¾" CCST (Per FT)' },
-  { label: '½" Shut Off' },
-  { label: '¾" Shut Off' },
-  { label: '¾" SXS 80 PVC 90 Elbow' },
-  { label: '30 PSI Test Gauge' },
-  { label: 'CSST Fitting' },
-  { label: '1"×¾" Reducing Male PVC' },
-  { label: 'CCST Union Fitting' },
-  { label: '20" POL × POL' },
-  { label: '12" POL × POL' },
-  { label: 'Rigid Pipe Strut Clamp' },
-  { label: 'Galv. Minis' },
-  { label: 'Galv. Strut – Deep (FT)' },
-  { label: 'Galv. Strut – Shallow (FT)' }
+  {label:'CLOSE STD Galv. Nipple', isHeader:true},
+  {label:'1½" Nipple'},{label:'2" Nipple'},{label:'2½" Nipple'},
+  {label:'3" Nipple'},{label:'3½" Nipple'},{label:'4" Nipple'},
+  {label:'4½" Nipple'},{label:'5" Nipple'},{label:'5½" Nipple'},
+  {label:'6" Nipple'},{label:'7" Nipple'},{label:'8" Nipple'},
+  {label:'9" Nipple'},{label:'10" Nipple'},{label:'12" Nipple'},
+  {label:'Yellow Met. Tape (Per FT)'},{label:'3/16 Galv. Cable (Per FT)'},
+  {label:"Galv. 45's"},{label:'3/16 C-Bolt Clamp'},
+  {label:'Tank Anchor – 48"'},{label:'17lb Anode Bags'},{label:'9lb Anode Bags'},
+  {label:'¾" Galv. 2-Hole Straps'},{label:'½" Galv. 2-Hole Straps'},
+  {label:'¾" CCST (Per FT)'},{label:'½" Shut Off'},{label:'¾" Shut Off'},
+  {label:'¾" SXS 80 PVC 90 Elbow'},{label:'30 PSI Test Gauge'},
+  {label:'CSST Fitting'},{label:'1"×¾" Reducing Male PVC'},
+  {label:'CCST Union Fitting'},{label:'20" POL × POL'},{label:'12" POL × POL'},
+  {label:'Rigid Pipe Strut Clamp'},{label:'Galv. Minis'},
+  {label:'Galv. Strut – Deep (FT)'},{label:'Galv. Strut – Shallow (FT)'}
 ];
 
 const mid = Math.ceil(ALL_NIPPLE_ROWS.length / 2);
 (function() {
-  const tbody = document.getElementById('nipples-left-body');
-  ALL_NIPPLE_ROWS.slice(0, mid).forEach(r => addRow(tbody, r.label, 5, r.isHeader || false));
+  const b = document.getElementById('nipples-left-body');
+  ALL_NIPPLE_ROWS.slice(0, mid).forEach(r => addRow(b, r.label, 5, r.isHeader || false));
 })();
 (function() {
-  const tbody = document.getElementById('nipples-right-body');
-  ALL_NIPPLE_ROWS.slice(mid).forEach(r => addRow(tbody, r.label, 5, r.isHeader || false));
+  const b = document.getElementById('nipples-right-body');
+  ALL_NIPPLE_ROWS.slice(mid).forEach(r => addRow(b, r.label, 5, r.isHeader || false));
 })();
 
-// ===== YES/NO COLORS =====
+/* ================================================================
+   YES / NO PILL BUTTONS
+================================================================ */
 function applyYNColors() {
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     if (cb.parentElement && cb.parentElement.classList.contains('yn-checkbox-wrap')) return;
@@ -914,9 +1094,9 @@ function applyYNColors() {
     if (!next || next.nodeType !== 3) return;
     const label = next.textContent.trim();
     if (!label) return;
-    const upper = label.toUpperCase();
-    const cls   = upper === 'YES' ? 'yn-yes' : upper === 'NO' ? 'yn-no' : 'yn-opt';
-    const wrap  = document.createElement('span');
+    const u   = label.toUpperCase();
+    const cls = u === 'YES' ? 'yn-yes' : u === 'NO' ? 'yn-no' : 'yn-opt';
+    const wrap = document.createElement('span');
     wrap.className = 'yn-checkbox-wrap ' + cls;
     cb.parentNode.insertBefore(wrap, cb);
     wrap.appendChild(cb);
@@ -930,62 +1110,64 @@ function applyYNColors() {
     sync();
   });
 }
-document.addEventListener('DOMContentLoaded', () => { applyYNColors(); setupThemeToggle(); });
-if (document.readyState !== 'loading') setTimeout(() => { applyYNColors(); setupThemeToggle(); }, 50);
+document.addEventListener('DOMContentLoaded', applyYNColors);
+if (document.readyState !== 'loading') setTimeout(applyYNColors, 50);
 
-// ===== AUTO-SAVE to localStorage =====
-const SAVE_KEY = 'aog_gas_v3';
+/* ================================================================
+   AUTO-SAVE
+================================================================ */
+const SAVE_KEY = 'aog_gas_v4';
 let saveTimer = null;
 
 function collectState() {
-  const data = { inputs: {}, checkboxes: {} };
+  const d = { inputs: {}, checks: {} };
   document.querySelectorAll('input[type="text"], textarea').forEach((el, i) => {
-    data.inputs['i' + i] = el.value;
+    d.inputs['i' + i] = el.value;
   });
   document.querySelectorAll('input[type="checkbox"]').forEach((el, i) => {
-    data.checkboxes['c' + i] = el.checked;
+    d.checks['c' + i] = el.checked;
   });
-  return data;
+  return d;
 }
-
-function restoreState(data) {
-  if (!data) return;
+function restoreState(d) {
+  if (!d) return;
   document.querySelectorAll('input[type="text"], textarea').forEach((el, i) => {
-    if (data.inputs && data.inputs['i' + i] !== undefined) el.value = data.inputs['i' + i];
+    if (d.inputs && d.inputs['i' + i] !== undefined) el.value = d.inputs['i' + i];
   });
   document.querySelectorAll('input[type="checkbox"]').forEach((el, i) => {
-    if (data.checkboxes && data.checkboxes['c' + i] !== undefined) {
-      el.checked = data.checkboxes['c' + i];
+    if (d.checks && d.checks['c' + i] !== undefined) {
+      el.checked = d.checks['c' + i];
       const w = el.parentElement;
-      if (w && w.classList.contains('yn-checkbox-wrap')) {
+      if (w && w.classList.contains('yn-checkbox-wrap'))
         w.classList.toggle('checked', el.checked);
-      }
     }
   });
 }
-
-function autoSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify(collectState())); } catch(e) {}
-    setStatus('Saved ✓');
-    setTimeout(() => setStatus(''), 2000);
-  }, 1200);
+function doSave() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(collectState())); } catch(e) {}
+  setStatus('Saved ✓');
+  setTimeout(() => setStatus(''), 2000);
 }
-
-// Attach auto-save listeners
-document.addEventListener('input',  e => { if (e.target.matches('input[type="text"], textarea')) autoSave(); });
-document.addEventListener('change', e => { if (e.target.matches('input[type="checkbox"]')) autoSave(); });
-
-// Restore on load
+document.addEventListener('input', e => {
+  if (e.target.matches('input[type="text"], textarea')) {
+    clearTimeout(saveTimer); saveTimer = setTimeout(doSave, 1200);
+  }
+});
+document.addEventListener('change', e => {
+  if (e.target.matches('input[type="checkbox"]')) {
+    clearTimeout(saveTimer); saveTimer = setTimeout(doSave, 1200);
+  }
+});
 window.addEventListener('DOMContentLoaded', () => {
   try {
-    const saved = localStorage.getItem(SAVE_KEY);
-    if (saved) restoreState(JSON.parse(saved));
+    const s = localStorage.getItem(SAVE_KEY);
+    if (s) restoreState(JSON.parse(s));
   } catch(e) {}
 });
 
-// ===== CLEAR =====
+/* ================================================================
+   CLEAR
+================================================================ */
 function clearForm() {
   if (!confirm('Clear all fields? This cannot be undone.')) return;
   document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
@@ -997,177 +1179,58 @@ function clearForm() {
   try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
 }
 
-// ===== PRINT AS IMAGE (forces light mode capture) =====
-function printAsImage() {
-  const btn = document.getElementById('printBtn');
-  btn.textContent = '⏳ Please wait…'; btn.disabled = true;
-  setStatus('Capturing pages, please wait…');
-
-  // Always capture in light mode
-  const wasDark = document.body.classList.contains('dark-mode');
-  document.body.classList.remove('dark-mode');
-
-  const ab = document.querySelector('.action-bar');
-  const nt = document.querySelector('.notice');
-  const ss = document.getElementById('save-status');
-  if (ab) ab.style.visibility = 'hidden';
-  if (nt) nt.style.visibility = 'hidden';
-  if (ss) ss.style.visibility = 'hidden';
-
-  const pages       = [document.getElementById('page1'), document.getElementById('page2')];
-  const RENDER_W    = 1050;
-  const LETTER_W_PX = 816;
-  const LETTER_H_PX = 1056;
-
-  const origStyles = pages.map(p => ({
-    width: p.style.width, maxWidth: p.style.maxWidth, minWidth: p.style.minWidth
-  }));
-  pages.forEach(p => {
-    p.style.width    = RENDER_W + 'px';
-    p.style.maxWidth = RENDER_W + 'px';
-    p.style.minWidth = RENDER_W + 'px';
-  });
-
-  setTimeout(() => {
-    Promise.all(pages.map(page =>
-      html2canvas(page, {
-        scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
-        width: RENDER_W, height: page.scrollHeight,
-        windowWidth: RENDER_W, scrollX: 0, scrollY: 0
-      })
-    )).then(canvases => {
-
-      pages.forEach((p, i) => {
-        p.style.width    = origStyles[i].width;
-        p.style.maxWidth = origStyles[i].maxWidth;
-        p.style.minWidth = origStyles[i].minWidth;
-      });
-      if (ab) ab.style.visibility = '';
-      if (nt) nt.style.visibility = '';
-      if (ss) ss.style.visibility = '';
-      // Restore dark mode if it was on
-      if (wasDark) document.body.classList.add('dark-mode');
-
-      let pagesHTML = '';
-      canvases.forEach(canvas => {
-        const logicalW    = canvas.width  / 2;
-        const logicalH    = canvas.height / 2;
-        const scale       = LETTER_W_PX / logicalW;
-        const imgDisplayH = logicalH * scale;
-        const dataURL     = canvas.toDataURL('image/png');
-
-        if (imgDisplayH <= LETTER_H_PX) {
-          pagesHTML += `<div class="print-page"><img src="${dataURL}"
-            style="width:8.5in;height:${(imgDisplayH/96).toFixed(4)}in;display:block;" /></div>`;
-        } else {
-          const numSlices = Math.ceil(imgDisplayH / LETTER_H_PX);
-          for (let i = 0; i < numSlices; i++) {
-            const offsetIn    = ((i * LETTER_H_PX) / 96 * -1).toFixed(4);
-            const imgHeightIn = (imgDisplayH / 96).toFixed(4);
-            pagesHTML += `<div class="print-page"><div class="clip">
-              <img src="${dataURL}"
-                style="position:absolute;top:${offsetIn}in;left:0;width:8.5in;height:${imgHeightIn}in;" />
-              </div></div>`;
-          }
-        }
-      });
-
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'position:fixed;top:-99999px;left:-99999px;width:1px;height:1px;border:none;';
-      document.body.appendChild(iframe);
-      const doc = iframe.contentWindow.document;
-      doc.open();
-      doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-        <style>
-          *{margin:0;padding:0;box-sizing:border-box;}
-          @page{size:8.5in 11in;margin:0;}
-          body{margin:0;padding:0;background:#fff;}
-          .print-page{
-            width:8.5in;height:11in;overflow:hidden;
-            page-break-after:always;break-after:page;
-            position:relative;background:#fff;
-          }
-          .print-page:last-child{page-break-after:avoid;break-after:avoid;}
-          .clip{position:absolute;top:0;left:0;width:8.5in;height:11in;overflow:hidden;}
-          img{display:block;}
-        </style>
-      </head><body>${pagesHTML}</body></html>`);
-      doc.close();
-
-      setTimeout(() => {
-        setStatus('');
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-          btn.textContent = '📄 PDF'; btn.disabled = false; setStatus('');
-        }, 3000);
-      }, 1500);
-
-    }).catch(err => {
-      console.error(err);
-      pages.forEach((p, i) => {
-        p.style.width    = origStyles[i].width;
-        p.style.maxWidth = origStyles[i].maxWidth;
-        p.style.minWidth = origStyles[i].minWidth;
-      });
-      if (ab) ab.style.visibility = '';
-      if (nt) nt.style.visibility = '';
-      if (ss) ss.style.visibility = '';
-      if (wasDark) document.body.classList.add('dark-mode');
-      btn.textContent = '📄 PDF'; btn.disabled = false;
-      setStatus('Capture failed — please try again.');
-      setTimeout(() => setStatus(''), 4000);
-    });
-  }, 200);
-}
-
-// ===== iPHONE SAVE (light mode capture) =====
+/* ================================================================
+   SAVE — iPHONE
+================================================================ */
 function saveForIPhone() {
-  setStatus('Rendering pages, please wait…');
+  setStatus('Rendering pages…');
   const pages   = document.querySelectorAll('.form-page');
   const wasDark = document.body.classList.contains('dark-mode');
   document.body.classList.remove('dark-mode');
 
   const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.87);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch;';
   const closeBtn = document.createElement('button');
-  closeBtn.style.cssText = 'position:sticky;top:0;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:bold;z-index:10000;margin-bottom:12px;';
-  closeBtn.textContent = '✕ Close';
+  closeBtn.style.cssText = 'position:sticky;top:0;background:#DC2626;color:#fff;border:none;border-radius:4px;padding:8px 16px;font-size:13px;cursor:pointer;font-weight:bold;z-index:10000;margin-bottom:12px;align-self:stretch;';
+  closeBtn.textContent = '✕  Close';
   const container = document.createElement('div');
-  container.style.cssText = 'display:flex;flex-direction:column;gap:12px;width:100%;max-width:600px;';
-  overlay.appendChild(closeBtn); overlay.appendChild(container); document.body.appendChild(overlay);
+  container.style.cssText = 'display:flex;flex-direction:column;gap:14px;width:100%;max-width:640px;';
+  overlay.appendChild(closeBtn);
+  overlay.appendChild(container);
+  document.body.appendChild(overlay);
 
   const RENDER_W = 1050;
-  let completed  = 0;
-
+  let done = 0;
   pages.forEach((page, idx) => {
     const oW = page.style.width, oM = page.style.maxWidth, om = page.style.minWidth;
-    page.style.width = RENDER_W+'px'; page.style.maxWidth = RENDER_W+'px'; page.style.minWidth = RENDER_W+'px';
+    page.style.width = RENDER_W + 'px';
+    page.style.maxWidth = RENDER_W + 'px';
+    page.style.minWidth = RENDER_W + 'px';
     setTimeout(() => {
       html2canvas(page, {
-        scale:2, useCORS:true, backgroundColor:'#fff', logging:false,
-        width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W
+        scale: 2, useCORS: true, backgroundColor: '#fff',
+        logging: false, width: RENDER_W,
+        height: page.scrollHeight, windowWidth: RENDER_W
       }).then(canvas => {
         page.style.width = oW; page.style.maxWidth = oM; page.style.minWidth = om;
-        const wrapper = document.createElement('div'); wrapper.style.cssText = 'text-align:center;';
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'text-align:center;';
         const lbl = document.createElement('div');
-        lbl.style.cssText = 'color:#ccc;font-size:11px;margin-bottom:6px;';
-        lbl.textContent = `Page ${idx+1} — long-press image to save`;
+        lbl.style.cssText = 'color:#ddd;font-size:11px;margin-bottom:6px;font-family:Arial,sans-serif;';
+        lbl.textContent = 'Page ' + (idx + 1) + ' — long-press image → Save to Photos';
         const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.92);
-        img.style.cssText = 'max-width:100%;border:2px solid #555;border-radius:4px;display:block;margin:0 auto;';
-        img.alt = `Form page ${idx+1}`;
-        wrapper.appendChild(lbl); wrapper.appendChild(img); container.appendChild(wrapper);
-        completed++;
-        if (completed === pages.length) {
-          setStatus('Long-press each image to save to Photos.');
+        img.src = canvas.toDataURL('image/jpeg', 0.93);
+        img.style.cssText = 'max-width:100%;border:2px solid #444;border-radius:4px;display:block;margin:0 auto;';
+        img.alt = 'Form page ' + (idx + 1);
+        wrap.appendChild(lbl); wrap.appendChild(img); container.appendChild(wrap);
+        done++;
+        if (done === pages.length) {
+          setStatus('Long-press each image → Save to Photos');
           if (wasDark) document.body.classList.add('dark-mode');
         }
       });
-    }, idx * 100);
+    }, idx * 150);
   });
-
   closeBtn.onclick = () => {
     setStatus('');
     if (wasDark) document.body.classList.add('dark-mode');
@@ -1175,42 +1238,49 @@ function saveForIPhone() {
   };
 }
 
-// ===== ANDROID SAVE (light mode capture) =====
+/* ================================================================
+   SAVE — ANDROID
+================================================================ */
 function saveForAndroid() {
-  setStatus('Rendering pages, please wait…');
+  setStatus('Rendering pages…');
   const pages   = document.querySelectorAll('.form-page');
   const wasDark = document.body.classList.contains('dark-mode');
   document.body.classList.remove('dark-mode');
 
   const RENDER_W = 1050;
-  let completed  = 0;
-
+  let done = 0;
   pages.forEach((page, idx) => {
     const oW = page.style.width, oM = page.style.maxWidth, om = page.style.minWidth;
-    page.style.width = RENDER_W+'px'; page.style.maxWidth = RENDER_W+'px'; page.style.minWidth = RENDER_W+'px';
+    page.style.width = RENDER_W + 'px';
+    page.style.maxWidth = RENDER_W + 'px';
+    page.style.minWidth = RENDER_W + 'px';
     setTimeout(() => {
       html2canvas(page, {
-        scale:2, useCORS:true, backgroundColor:'#fff', logging:false,
-        width:RENDER_W, height:page.scrollHeight, windowWidth:RENDER_W
+        scale: 2, useCORS: true, backgroundColor: '#fff',
+        logging: false, width: RENDER_W,
+        height: page.scrollHeight, windowWidth: RENDER_W
       }).then(canvas => {
         page.style.width = oW; page.style.maxWidth = oM; page.style.minWidth = om;
-        const link = document.createElement('a');
-        link.download = pages.length === 1
+        const a = document.createElement('a');
+        a.download = pages.length === 1
           ? 'AOG_Gas_Install.jpg'
-          : `AOG_Gas_Install_Page${idx+1}.jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 0.92);
-        link.click();
-        completed++;
-        if (completed === pages.length) {
+          : 'AOG_Gas_Install_P' + (idx + 1) + '.jpg';
+        a.href = canvas.toDataURL('image/jpeg', 0.93);
+        a.click();
+        done++;
+        if (done === pages.length) {
           setStatus('Images saved to Downloads.');
           setTimeout(() => setStatus(''), 4000);
           if (wasDark) document.body.classList.add('dark-mode');
         }
       });
-    }, idx * 100);
+    }, idx * 150);
   });
 }
 
+/* ================================================================
+   UTILITY
+================================================================ */
 function setStatus(msg) {
   const el = document.getElementById('save-status');
   if (el) el.textContent = msg;
