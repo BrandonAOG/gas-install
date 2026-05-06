@@ -7,83 +7,70 @@
 <style>
 /* ══ TOKENS ══ */
 :root {
-  --cyan:#D97706;--cyan-dim:#B45309;
+  --cyan:#D97706;
   --bg:#F5F5F5;--panel:#FFFFFF;
   --border:rgba(217,119,6,0.25);--border-bright:rgba(217,119,6,0.5);
   --text:#1F2937;--text-muted:#6B7280;--text-dim:#9CA3AF;
-  --glow:0 0 8px rgba(217,119,6,0.3);
   --tbl-header-bg:#2C3E50;--tbl-header-fg:#FFFFFF;
   --tbl-subhead-bg:#4A5568;--tbl-subhead-fg:#FFFFFF;
   --tbl-row-odd:#FFFFFF;--tbl-row-even:#F7F8FA;
   --tbl-border:#D1D5DB;--tbl-label-fg:#1F2937;
-  --radius:8px;--radius-sm:4px;
+  --radius:8px;
 }
 body.dark-mode {
   --bg:#0A0E27;--panel:#0F1535;
   --border:rgba(0,255,200,0.08);--border-bright:rgba(0,255,200,0.25);
   --text:#E0F7FF;--text-muted:#7DD3FC;--text-dim:#38BDF8;
-  --glow:0 0 8px rgba(0,255,200,0.3);
   --cyan:#00FFC8;
   --tbl-header-bg:#0F2D52;--tbl-header-fg:#00FFC8;
   --tbl-subhead-bg:#1A3A6F;--tbl-subhead-fg:#7DD3FC;
   --tbl-row-odd:rgba(15,21,53,0.9);--tbl-row-even:rgba(26,40,71,0.6);
   --tbl-border:rgba(0,255,200,0.18);--tbl-label-fg:#E0F7FF;
 }
-
 *{box-sizing:border-box;margin:0;padding:0;}
 html{width:100%;overflow-x:hidden;}
-
-body {
+body{
   font-family:Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  -webkit-text-size-adjust:100%;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;-webkit-text-size-adjust:100%;
   transition:background 0.3s,color 0.3s;
 }
-body.dark-mode {
+body.dark-mode{
   background:linear-gradient(135deg,#0A0E27,#0F1535,#0A1628,#0F1535,#0A0E27);
   background-attachment:fixed;
 }
 
 /* ══ ACTION BAR ══ */
-.action-bar {
+.action-bar{
   position:sticky;top:0;z-index:1000;
-  background:var(--panel);
-  padding:10px 12px;
-  display:flex;align-items:center;
-  justify-content:space-between;
+  background:var(--panel);padding:10px 12px;
+  display:flex;align-items:center;justify-content:space-between;
   gap:8px;flex-wrap:wrap;
   border-bottom:2px solid var(--border-bright);
   box-shadow:0 2px 12px rgba(0,0,0,0.15);
 }
-body.dark-mode .action-bar {
+body.dark-mode .action-bar{
   background:rgba(15,21,53,0.97);
   border-bottom-color:rgba(0,255,200,0.3);
 }
 .bar-left{display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex:1;}
 .bar-right{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-
-.btn {
+.btn{
   padding:9px 14px;font-size:12px;font-weight:700;
   letter-spacing:0.4px;border:1.5px solid var(--border-bright);
-  background:var(--panel);border-radius:6px;
-  cursor:pointer;color:var(--cyan);
-  font-family:Arial,sans-serif;text-transform:uppercase;
+  background:var(--panel);border-radius:6px;cursor:pointer;
+  color:var(--cyan);font-family:Arial,sans-serif;text-transform:uppercase;
   transition:all 0.15s;-webkit-tap-highlight-color:transparent;
   touch-action:manipulation;white-space:nowrap;
   min-height:40px;display:flex;align-items:center;gap:4px;
 }
 .btn:active{transform:scale(0.96);opacity:0.85;}
 body.dark-mode .btn{background:rgba(0,255,200,0.06);border-color:rgba(0,255,200,0.3);}
-
-.theme-btn {
+.theme-btn{
   width:40px;height:40px;border-radius:6px;
-  border:1.5px solid var(--border-bright);
-  background:var(--panel);
+  border:1.5px solid var(--border-bright);background:var(--panel);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all 0.3s;-webkit-tap-highlight-color:transparent;
-  flex-shrink:0;
+  transition:all 0.3s;-webkit-tap-highlight-color:transparent;flex-shrink:0;
 }
 body.dark-mode .theme-btn{background:rgba(0,255,200,0.06);border-color:rgba(0,255,200,0.3);}
 .theme-icon{
@@ -94,14 +81,12 @@ body.dark-mode .theme-btn{background:rgba(0,255,200,0.06);border-color:rgba(0,25
 .theme-icon-moon{opacity:0;}
 body.dark-mode .theme-icon-sun{opacity:0;transform:rotate(-90deg);}
 body.dark-mode .theme-icon-moon{opacity:1;}
-
 #save-status{
   width:100%;text-align:center;font-size:11px;
-  color:var(--text-muted);min-height:14px;
-  padding:0 4px;
+  color:var(--text-muted);min-height:14px;padding:0 4px;
 }
 
-/* ══ CONTENT WRAPPER ══ */
+/* ══ CONTENT ══ */
 .content{
   max-width:900px;margin:0 auto;
   padding:12px 12px 40px;
@@ -109,145 +94,112 @@ body.dark-mode .theme-icon-moon{opacity:1;}
 }
 
 /* ══ CARD ══ */
-.card {
-  background:var(--panel);
-  border-radius:var(--radius);
+.card{
+  background:var(--panel);border-radius:var(--radius);
   border:1px solid var(--border);
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);overflow:hidden;
 }
 body.dark-mode .card{
   background:rgba(15,21,53,0.95);
   box-shadow:0 2px 16px rgba(0,0,0,0.4);
 }
-
-/* ══ CARD HEADER ══ */
-.card-header {
-  background:var(--tbl-header-bg);
-  color:var(--tbl-header-fg);
-  padding:10px 14px;
-  font-weight:700;font-size:13px;
-  letter-spacing:0.5px;
-  display:flex;align-items:center;gap:8px;
+.card-header{
+  background:var(--tbl-header-bg);color:var(--tbl-header-fg);
+  padding:10px 14px;font-weight:700;font-size:13px;
+  letter-spacing:0.5px;display:flex;align-items:center;gap:8px;
 }
 .card-body{padding:14px;}
 
 /* ══ FORM HEADER ══ */
 .form-header{
   display:flex;align-items:center;gap:12px;
-  padding:14px;border-bottom:1px solid var(--border);
-  flex-wrap:wrap;
+  padding:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;
 }
 .logo-img{
-  width:44px;height:44px;border-radius:50%;
-  object-fit:cover;flex-shrink:0;
-  border:2px solid var(--border-bright);
+  width:44px;height:44px;border-radius:50%;object-fit:cover;
+  flex-shrink:0;border:2px solid var(--border-bright);
 }
-.header-text{}
 .company-name{
   font-weight:900;font-size:16px;
-  font-family:'Arial Black',sans-serif;
-  line-height:1.1;
+  font-family:'Arial Black',sans-serif;line-height:1.1;
 }
 .company-name span{color:#D97706;}
 body.dark-mode .company-name span{color:#00FFC8;}
 .form-title{
-  font-weight:700;font-size:13px;
-  color:var(--text-muted);
+  font-weight:700;font-size:13px;color:var(--text-muted);
   margin-top:2px;letter-spacing:0.5px;text-transform:uppercase;
 }
 
 /* ══ FIELD GRID ══ */
 .field-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px 16px;
-  padding:14px;
-  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px 16px;padding:14px;border-bottom:1px solid var(--border);
 }
 @media(max-width:480px){.field-grid{grid-template-columns:1fr;}}
-
 .field-item{display:flex;flex-direction:column;gap:4px;}
 .field-label{
-  font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:0.5px;
-  color:var(--text-muted);
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.5px;color:var(--text-muted);
 }
 .field-input{
-  width:100%;border:none;
-  border-bottom:2px solid var(--border);
-  padding:6px 4px;font-size:13px;
-  background:transparent;color:var(--text);
-  font-family:Arial,sans-serif;outline:none;
-  transition:border-color 0.2s;
+  width:100%;border:none;border-bottom:2px solid var(--border);
+  padding:6px 4px;font-size:13px;background:transparent;color:var(--text);
+  font-family:Arial,sans-serif;outline:none;transition:border-color 0.2s;
   -webkit-appearance:none;
 }
 .field-input:focus{border-bottom-color:var(--cyan);}
 body.dark-mode .field-input{border-bottom-color:rgba(0,255,200,0.2);color:#E0F7FF;}
 .field-input::placeholder{color:var(--text-dim);}
 
-/* ══ SECTION CARD ══ */
-.section-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
+/* ══ SECTION GRID ══ */
+.section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:600px){.section-grid{grid-template-columns:1fr;}}
-
 .section-title{
-  font-size:11px;font-weight:700;
-  text-transform:uppercase;letter-spacing:0.8px;
-  color:var(--cyan);
-  padding-bottom:6px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:8px;
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.8px;color:var(--cyan);
+  padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:8px;
 }
 
-/* ══ CHECK ROWS ══ */
+/* ══ CHECK ITEMS ══ */
 .check-list{display:flex;flex-direction:column;gap:6px;}
 .check-item{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  gap:8px;padding:6px 10px;
-  background:var(--bg);border-radius:6px;
-  font-size:12px;min-height:36px;flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;padding:6px 10px;background:var(--bg);
+  border-radius:6px;font-size:12px;min-height:36px;flex-wrap:wrap;
 }
 body.dark-mode .check-item{background:rgba(255,255,255,0.04);}
 .check-label{font-weight:500;flex:1;min-width:0;}
 .check-label.bold-label{font-weight:700;}
-
 .yn-group{display:flex;gap:6px;flex-shrink:0;}
 .yn-btn{
   padding:4px 10px;font-size:11px;font-weight:700;
   border-radius:20px;border:1.5px solid #ccc;
-  background:transparent;cursor:pointer;
-  transition:all 0.15s;-webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;color:var(--text);
-  font-family:Arial,sans-serif;min-width:36px;min-height:28px;
+  background:transparent;cursor:pointer;transition:all 0.15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  color:var(--text);font-family:Arial,sans-serif;
+  min-width:36px;min-height:28px;
 }
 .yn-btn.yes-btn.active{background:#059669;border-color:#059669;color:#fff;}
 .yn-btn.no-btn.active{background:#DC2626;border-color:#DC2626;color:#fff;}
 body.dark-mode .yn-btn{border-color:rgba(0,255,200,0.3);color:#E0F7FF;}
-
-/* Inline text input inside check-item */
 .inline-field{
   border:none;border-bottom:1.5px solid var(--border);
   background:transparent;color:var(--text);
   font-size:12px;font-family:Arial,sans-serif;
-  padding:2px 4px;outline:none;
-  min-width:60px;max-width:140px;flex:1;
+  padding:2px 4px;outline:none;min-width:60px;max-width:140px;flex:1;
 }
 body.dark-mode .inline-field{color:#E0F7FF;border-bottom-color:rgba(0,255,200,0.3);}
 
-/* ══ REGULATOR ROW ══ */
+/* ══ REGULATOR GRID ══ */
 .reg-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:10px;
-  padding:12px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px;padding:12px;
 }
 .reg-item{display:flex;flex-direction:column;gap:4px;}
-.reg-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-muted);}
+.reg-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.4px;color:var(--text-muted);
+}
 .reg-input{
   border:none;border-bottom:2px solid var(--border);
   background:transparent;color:var(--text);
@@ -261,46 +213,39 @@ body.dark-mode .reg-input{border-bottom-color:rgba(0,255,200,0.2);color:#E0F7FF;
 .note-area{
   width:100%;resize:vertical;
   border:1.5px solid var(--border);border-radius:6px;
-  padding:10px;font-size:13px;
-  font-family:Arial,sans-serif;line-height:1.5;
-  color:var(--text);background:var(--panel);
-  outline:none;transition:border-color 0.2s;
-  -webkit-appearance:none;
+  padding:10px;font-size:13px;font-family:Arial,sans-serif;line-height:1.5;
+  color:var(--text);background:var(--panel);outline:none;
+  transition:border-color 0.2s;-webkit-appearance:none;
 }
 .note-area:focus{border-color:var(--cyan);}
-body.dark-mode .note-area{background:rgba(10,14,39,0.6);border-color:rgba(0,255,200,0.2);color:#E0F7FF;}
+body.dark-mode .note-area{
+  background:rgba(10,14,39,0.6);border-color:rgba(0,255,200,0.2);color:#E0F7FF;
+}
 
 /* ══ MATERIAL TABLES ══ */
 .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .table-scroll::-webkit-scrollbar{height:4px;}
 .table-scroll::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:2px;}
-
 table.mat-table{
-  border-collapse:collapse;
-  width:100%;
-  min-width:320px;
+  border-collapse:collapse;width:100%;min-width:320px;
   font-family:Arial,sans-serif;
 }
 table.mat-table th,
 table.mat-table td{
   border:1px solid var(--tbl-border);
-  padding:6px 4px;text-align:center;
-  font-size:12px;vertical-align:middle;
+  padding:6px 4px;text-align:center;font-size:12px;vertical-align:middle;
 }
 table.mat-table thead tr th{
-  background:var(--tbl-header-bg);
-  color:var(--tbl-header-fg);
-  font-weight:700;font-size:11px;
-  white-space:nowrap;padding:8px 6px;
+  background:var(--tbl-header-bg);color:var(--tbl-header-fg);
+  font-weight:700;font-size:11px;white-space:nowrap;padding:8px 6px;
 }
 table.mat-table thead tr th:first-child{text-align:left;padding-left:10px;}
 table.mat-table tbody tr:nth-child(odd) td{background:var(--tbl-row-odd);}
 table.mat-table tbody tr:nth-child(even) td{background:var(--tbl-row-even);}
 table.mat-table td.row-label{
-  text-align:left;font-weight:600;
-  font-size:12px;color:var(--tbl-label-fg);
-  padding-left:10px;white-space:nowrap;
-  min-width:140px;
+  text-align:left;font-weight:600;font-size:12px;
+  color:var(--tbl-label-fg);padding-left:10px;
+  white-space:nowrap;min-width:140px;
 }
 table.mat-table td.row-label.section-header{
   background:var(--tbl-subhead-bg)!important;
@@ -313,8 +258,7 @@ table.mat-table td input[type="text"]{
   font-size:12px;font-weight:600;padding:2px 0;
   background:transparent;color:var(--tbl-label-fg);
   font-family:Arial,sans-serif;outline:none;
-  min-width:32px;max-width:52px;
-  caret-color:var(--cyan);
+  min-width:32px;max-width:52px;caret-color:var(--cyan);
 }
 table.mat-table td input[type="text"]:focus{
   background:rgba(217,119,6,0.08);border-radius:3px;
@@ -323,128 +267,264 @@ body.dark-mode table.mat-table td input[type="text"]:focus{
   background:rgba(0,255,200,0.08);
 }
 
-/* ══ PAGE BADGE ══ */
-.page-badge{
-  text-align:center;padding:6px;
-  font-size:10px;font-weight:700;
-  letter-spacing:1px;text-transform:uppercase;
-  color:var(--text-dim);
-}
-
-/* ══════════════════
-   PRINT
-══════════════════ */
+/* ══════════════════════════════════
+   PRINT STYLES — Safari Compatible
+══════════════════════════════════ */
 @media print {
-  @page{size:letter portrait;margin:0.35in;}
 
-  html{zoom:0.82;}
+  /* Safari needs @page with explicit size — no zoom property */
+  @page {
+    size:8.5in 11in;
+    margin:0.3in 0.3in 0.3in 0.3in;
+  }
+  @page :first { margin:0.3in; }
+
+  /* Reset everything for print */
   html,body{
-    width:100%!important;max-width:100%!important;
+    width:100%!important;
+    max-width:100%!important;
     margin:0!important;padding:0!important;
-    background:#fff!important;color:#000!important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    background:#fff!important;
+    color:#000!important;
+    font-size:9pt!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
   }
   body.dark-mode{background:#fff!important;}
 
-  .action-bar,.page-badge,.notice{display:none!important;}
+  /* Hide screen-only elements */
+  .action-bar,
+  #save-status,
+  .notice{display:none!important;}
 
+  /* Content wrapper — no padding, no gap */
   .content{
-    max-width:100%!important;padding:0!important;gap:8px!important;
+    max-width:100%!important;
+    width:100%!important;
+    padding:0!important;
+    gap:0!important;
+    display:block!important;
   }
 
-  /* Page 1 = header + fields + sections + regulators + page1 tables */
-  /* Page 2 = nipple tables */
-  .card{
-    border:1px solid #ccc!important;
-    border-radius:0!important;
-    box-shadow:none!important;
-    page-break-inside:avoid;break-inside:avoid;
+  /* ── PAGE 1 wrapper ── */
+  /* Everything up to #nipples-card is page 1 */
+  .print-page-1{
+    display:block;
+    width:100%;
   }
-  .card-body{padding:8px!important;}
-  .form-header{padding:8px!important;}
-  .field-grid{padding:8px!important;gap:6px 12px!important;}
 
-  /* Force page break before nipples card */
+  /* ── PAGE 2 starts here ── */
   #nipples-card{
     page-break-before:always!important;
     break-before:page!important;
+    display:block;width:100%;
   }
 
-  /* Section grid stays 2-col in print */
-  .section-grid{grid-template-columns:1fr 1fr!important;}
+  /* Cards */
+  .card{
+    border:1px solid #bbb!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+    margin-bottom:4pt!important;
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
 
-  /* Check items smaller */
+  /* Card header */
+  .card-header{
+    background:#2C3E50!important;
+    color:#fff!important;
+    padding:4pt 8pt!important;
+    font-size:9pt!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  .card-body{padding:5pt 6pt!important;}
+
+  /* Form header */
+  .form-header{padding:5pt 6pt!important;}
+  .logo-img{width:28pt!important;height:28pt!important;}
+  .company-name{font-size:11pt!important;}
+  .form-title{font-size:8pt!important;}
+
+  /* Field grid */
+  .field-grid{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:3pt 10pt!important;
+    padding:5pt 6pt!important;
+    border-bottom:1px solid #ccc!important;
+  }
+  .field-label{font-size:7pt!important;}
+  .field-input{
+    font-size:9pt!important;
+    border-bottom:1px solid #999!important;
+    color:#000!important;padding:2pt 2pt!important;
+  }
+
+  /* Section grid — always 2 col in print */
+  .section-grid{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8pt!important;
+  }
+  .section-title{
+    font-size:7pt!important;
+    margin-bottom:3pt!important;
+    padding-bottom:2pt!important;
+  }
+
+  /* Check items */
+  .check-list{gap:1pt!important;}
   .check-item{
-    padding:3px 8px!important;min-height:24px!important;
-    border-radius:0!important;font-size:11px!important;
+    padding:2pt 5pt!important;
+    min-height:0!important;
+    border-radius:0!important;
+    background:#fff!important;
+    font-size:8pt!important;
   }
-  .yn-btn{
-    padding:2px 7px!important;font-size:10px!important;
-    min-height:20px!important;min-width:28px!important;
-  }
-  .yn-btn.active{
-    -webkit-print-color-adjust:exact;print-color-adjust:exact;
-  }
-  .field-input,.reg-input,.inline-field{
-    font-size:11px!important;
+  .inline-field{
+    font-size:8pt!important;
     border-bottom:1px solid #999!important;
     color:#000!important;
   }
-  .section-title{font-size:10px!important;margin-bottom:4px!important;}
-  .check-list{gap:3px!important;}
-  .field-label,.reg-label{font-size:9px!important;}
+  .yn-btn{
+    padding:1pt 5pt!important;
+    font-size:7pt!important;
+    min-height:14pt!important;
+    min-width:22pt!important;
+    border-radius:10pt!important;
+  }
+  .yn-btn.yes-btn.active{
+    background:#059669!important;border-color:#059669!important;color:#fff!important;
+    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
+  }
+  .yn-btn.no-btn.active{
+    background:#DC2626!important;border-color:#DC2626!important;color:#fff!important;
+    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
+  }
 
-  /* Note areas */
+  /* Regulators */
+  .reg-grid{
+    display:grid!important;
+    grid-template-columns:repeat(6,1fr)!important;
+    gap:4pt 6pt!important;
+    padding:5pt 6pt!important;
+  }
+  .reg-label{font-size:7pt!important;}
+  .reg-input{
+    font-size:9pt!important;
+    border-bottom:1px solid #999!important;
+    color:#000!important;
+  }
+
+  /* Miscues textarea */
   .note-area{
-    font-size:11px!important;
-    border:1px solid #ccc!important;
+    font-size:8pt!important;
+    border:1px solid #bbb!important;
     color:#000!important;background:#fff!important;
     resize:none!important;
-    min-height:50px!important;
+    min-height:40pt!important;
+    padding:4pt!important;
   }
 
-  /* Tables */
-  .table-scroll{overflow:visible!important;}
-  table.mat-table{min-width:0!important;font-size:10px!important;}
+  /* Tables — no scroll, shrink to fit */
+  .table-scroll{
+    overflow:visible!important;
+    width:100%!important;
+  }
+  table.mat-table{
+    width:100%!important;
+    min-width:0!important;
+    font-size:7.5pt!important;
+    table-layout:fixed!important;
+  }
+  table.mat-table col:first-child{width:auto!important;}
   table.mat-table th,
-  table.mat-table td{padding:3px 2px!important;font-size:10px!important;}
-  table.mat-table td.row-label{
-    font-size:10px!important;padding-left:4px!important;min-width:100px!important;
+  table.mat-table td{
+    padding:2pt 2pt!important;
+    font-size:7.5pt!important;
+    border:0.5pt solid #ccc!important;
   }
   table.mat-table thead tr th{
-    background:#2C3E50!important;color:#fff!important;font-size:10px!important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    background:#2C3E50!important;
+    color:#fff!important;
+    font-size:7pt!important;
+    padding:3pt 2pt!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  table.mat-table thead tr th:first-child{
+    padding-left:4pt!important;
+  }
+  table.mat-table td.row-label{
+    font-size:7pt!important;
+    padding-left:3pt!important;
+    min-width:0!important;
+    white-space:normal!important;
+    word-break:break-word;
   }
   table.mat-table td.row-label.section-header{
-    background:#4A5568!important;color:#fff!important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    background:#4A5568!important;
+    color:#fff!important;
+    font-size:7pt!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
   }
-  table.mat-table tbody tr:nth-child(odd) td{background:#fff!important;}
-  table.mat-table tbody tr:nth-child(even) td{background:#f7f8fa!important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  table.mat-table tbody tr:nth-child(odd) td{
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+  }
+  table.mat-table tbody tr:nth-child(even) td{
+    background:#f5f5f5!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  table.mat-table td input[type="text"]{
+    font-size:7pt!important;
+    color:#000!important;
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+  }
 
-  .reg-grid{padding:6px!important;gap:6px!important;}
-  .card-header{padding:6px 10px!important;font-size:11px!important;}
-  .company-name{font-size:13px!important;}
-  .form-title{font-size:11px!important;}
-  .logo-img{width:32px!important;height:32px!important;}
+  /* Tables card — 4 tables side by side in 2x2 */
+  .tables-split-card .card-body{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:4pt!important;
+    padding:4pt!important;
+  }
+  .tables-split-card .card-body > .table-scroll{
+    width:100%!important;
+  }
 
-  /* 2-col nipple tables */
+  /* Nipples card — 2 tables side by side */
   #nipples-split{
     display:grid!important;
     grid-template-columns:1fr 1fr!important;
-    gap:0 8px!important;
+    gap:6pt!important;
   }
-  #nipples-split .table-scroll{overflow:visible!important;}
+  #nipples-split .table-scroll{
+    overflow:visible!important;
+    width:100%!important;
+  }
 
-  .other-notes-card{page-break-inside:avoid;break-inside:avoid;}
-  .tables-split-card{page-break-inside:avoid;break-inside:avoid;}
+  /* Other notes */
+  .other-notes-card{
+    page-break-inside:avoid;break-inside:avoid;
+  }
 
-  body *{color:#000!important;}
-  table.mat-table thead tr th,
-  table.mat-table td.row-label.section-header,
-  .card-header,#page2-banner{color:#fff!important;}
-  .card-header{background:#2C3E50!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  /* Force all text black in print */
+  .card *{color:#000!important;}
+  .card-header,
+  .card-header *,
+  table.mat-table thead th,
+  table.mat-table td.row-label.section-header{
+    color:#fff!important;
+  }
 }
 </style>
 </head>
@@ -454,7 +534,7 @@ body.dark-mode table.mat-table td input[type="text"]:focus{
 <div class="action-bar">
   <div class="bar-left">
     <button class="btn" onclick="window.location.href='https://brandonaog.github.io/AOG-hub/'">🏠</button>
-    <button class="btn" onclick="window.print()">📄 Print / PDF</button>
+    <button class="btn" onclick="window.print()">📄 Print</button>
     <button class="btn" onclick="clearForm()">🗑 Clear</button>
     <button class="btn" onclick="saveForIPhone()">📱 iPhone</button>
     <button class="btn" onclick="saveForAndroid()">🤖 Android</button>
@@ -486,447 +566,206 @@ body.dark-mode table.mat-table td input[type="text"]:focus{
 <!-- ══ MAIN CONTENT ══ -->
 <div class="content">
 
-  <!-- HEADER CARD -->
-  <div class="card">
-    <div class="form-header">
-      <img class="logo-img"
-        src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
-        alt="AOG Logo">
-      <div class="header-text">
-        <div class="company-name">ALWAYS<span>ON</span> GENERATORS</div>
-        <div class="form-title">Gas Installation Checklist</div>
-      </div>
-    </div>
-    <div class="field-grid">
-      <div class="field-item">
-        <div class="field-label">Customer Name</div>
-        <input class="field-input" type="text" id="f-customer" placeholder="Full name">
-      </div>
-      <div class="field-item">
-        <div class="field-label">Date</div>
-        <input class="field-input" type="date" id="f-date">
-      </div>
-      <div class="field-item">
-        <div class="field-label">Address</div>
-        <input class="field-input" type="text" id="f-address" placeholder="Job address">
-      </div>
-      <div class="field-item">
-        <div class="field-label">Gas Truck</div>
-        <input class="field-input" type="text" id="f-truck" placeholder="Truck #">
-      </div>
-      <div class="field-item">
-        <div class="field-label">Job #</div>
-        <input class="field-input" type="text" id="f-job" placeholder="Job number">
-      </div>
-      <div class="field-item">
-        <div class="field-label">Team Members</div>
-        <input class="field-input" type="text" id="f-team" placeholder="Names">
-      </div>
-    </div>
-  </div>
+  <!-- ░░ PAGE 1 ░░ -->
+  <div class="print-page-1">
 
-  <!-- GAS + WALK THROUGH -->
-  <div class="card">
-    <div class="card-header">⛽ Gas &amp; Walk Through</div>
-    <div class="card-body">
-      <div class="section-grid">
-
-        <!-- GAS -->
+    <!-- HEADER -->
+    <div class="card">
+      <div class="form-header">
+        <img class="logo-img"
+          src="https://lh3.googleusercontent.com/a/ACg8ocJP3abFJ_3mTYZ2vCcFGJ5eDsMroNqrPrfd3aX3T5Pa-Xq7SVg=s317-c-no"
+          alt="AOG">
         <div>
-          <div class="section-title">Gas</div>
-          <div class="check-list">
-            <div class="check-item">
-              <span class="check-label">Member</span>
-              <input class="inline-field" type="text" placeholder="Name">
+          <div class="company-name">ALWAYS<span>ON</span> GENERATORS</div>
+          <div class="form-title">Gas Installation Checklist</div>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="field-item">
+          <div class="field-label">Customer Name</div>
+          <input class="field-input" type="text" id="f-customer" placeholder="Full name">
+        </div>
+        <div class="field-item">
+          <div class="field-label">Date</div>
+          <input class="field-input" type="date" id="f-date">
+        </div>
+        <div class="field-item">
+          <div class="field-label">Address</div>
+          <input class="field-input" type="text" id="f-address" placeholder="Job address">
+        </div>
+        <div class="field-item">
+          <div class="field-label">Gas Truck</div>
+          <input class="field-input" type="text" id="f-truck" placeholder="Truck #">
+        </div>
+        <div class="field-item">
+          <div class="field-label">Job #</div>
+          <input class="field-input" type="text" id="f-job" placeholder="Job number">
+        </div>
+        <div class="field-item">
+          <div class="field-label">Team Members</div>
+          <input class="field-input" type="text" id="f-team" placeholder="Names">
+        </div>
+      </div>
+    </div>
+
+    <!-- GAS + WALK THROUGH -->
+    <div class="card">
+      <div class="card-header">⛽ Gas &amp; Walk Through</div>
+      <div class="card-body">
+        <div class="section-grid">
+          <!-- GAS -->
+          <div>
+            <div class="section-title">Gas</div>
+            <div class="check-list">
+              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Natural Gas</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="nat-gas">Y</button><button class="yn-btn no-btn" data-group="nat-gas">N</button></div></div>
+              <div class="check-item"><span class="check-label">LP Tank Install</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="lp-install">Y</button><button class="yn-btn no-btn" data-group="lp-install">N</button></div></div>
+              <div class="check-item"><span class="check-label">LP Tank Size</span><input class="inline-field" type="text" placeholder="Gal." style="max-width:50px;"><div class="yn-group" style="margin-left:4px;"><button class="yn-btn yes-btn" data-group="ag-ug">AG</button><button class="yn-btn no-btn" data-group="ag-ug">UG</button></div></div>
+              <div class="check-item"><span class="check-label">Tank Serial #</span><input class="inline-field" type="text" placeholder="Serial"></div>
+              <div class="check-item"><span class="check-label">Existing Gas</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="exist-gas">Y</button><button class="yn-btn no-btn" data-group="exist-gas">N</button></div></div>
+              <div class="check-item"><span class="check-label">Surface Mount (ft)</span><input class="inline-field" type="text" placeholder="0"></div>
+              <div class="check-item"><span class="check-label">Underground (ft)</span><input class="inline-field" type="text" placeholder="0"></div>
+              <div class="check-item"><span class="check-label">Attic CSST (ft)</span><input class="inline-field" type="text" placeholder="0"></div>
+              <div class="check-item"><span class="check-label">Needs Completed</span><input class="inline-field" type="text" placeholder="Notes"></div>
             </div>
-            <div class="check-item">
-              <span class="check-label">Checked By</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Natural Gas</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="nat-gas">YES</button>
-                <button class="yn-btn no-btn"  data-group="nat-gas">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">LP Tank Install</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="lp-install">YES</button>
-                <button class="yn-btn no-btn"  data-group="lp-install">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">LP Tank Size</span>
-              <input class="inline-field" type="text" placeholder="Gal." style="max-width:60px;">
-              <span style="font-size:11px;white-space:nowrap;">
-                AG<button class="yn-btn yes-btn" data-group="ag-ug" style="margin-left:4px;">AG</button>
-                <button class="yn-btn no-btn" data-group="ag-ug" style="margin-left:2px;">UG</button>
-              </span>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Tank Serial #</span>
-              <input class="inline-field" type="text" placeholder="Serial">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Existing Gas</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="exist-gas">YES</button>
-                <button class="yn-btn no-btn"  data-group="exist-gas">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Surface Mount (ft)</span>
-              <input class="inline-field" type="text" placeholder="0">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Underground (ft)</span>
-              <input class="inline-field" type="text" placeholder="0">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Attic CSST (ft)</span>
-              <input class="inline-field" type="text" placeholder="0">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Needs Completed</span>
-              <input class="inline-field" type="text" placeholder="Notes">
+          </div>
+          <!-- WALK THROUGH -->
+          <div>
+            <div class="section-title">Walk Through</div>
+            <div class="check-list">
+              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Gas Affidavit Form</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="affidavit">Y</button><button class="yn-btn no-btn" data-group="affidavit">N</button></div></div>
+              <div class="check-item"><span class="check-label">Leak Check</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="leak">Y</button><button class="yn-btn no-btn" data-group="leak">N</button></div></div>
+              <div class="check-item"><span class="check-label">Sediment Trap</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="sediment">Y</button><button class="yn-btn no-btn" data-group="sediment">N</button></div></div>
+              <div class="check-item"><span class="check-label">Shutoff Valves</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="shutoff">Y</button><button class="yn-btn no-btn" data-group="shutoff">N</button></div></div>
+              <div class="check-item"><span class="check-label">Flex Whip (No Kinks)</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="flexwhip">Y</button><button class="yn-btn no-btn" data-group="flexwhip">N</button></div></div>
+              <div class="check-item"><span class="check-label">Pressure Check</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="pressure">Y</button><button class="yn-btn no-btn" data-group="pressure">N</button></div></div>
+              <div class="check-item"><span class="check-label">Line Purged</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="purged">Y</button><button class="yn-btn no-btn" data-group="purged">N</button></div></div>
+              <div class="check-item"><span class="check-label">Painted Threads</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="painted">Y</button><button class="yn-btn no-btn" data-group="painted">N</button></div></div>
+              <div class="check-item"><span class="check-label">1st Stage Connection</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="stage1">Y</button><button class="yn-btn no-btn" data-group="stage1">N</button></div></div>
+              <div class="check-item"><span class="check-label">Regulators to Code</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="regs">Y</button><button class="yn-btn no-btn" data-group="regs">N</button></div></div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- WALK THROUGH -->
-        <div>
-          <div class="section-title">Walk Through</div>
-          <div class="check-list">
-            <div class="check-item">
-              <span class="check-label">Member</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Checked By</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Gas Affidavit Form</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="affidavit">YES</button>
-                <button class="yn-btn no-btn"  data-group="affidavit">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Leak Check</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="leak">YES</button>
-                <button class="yn-btn no-btn"  data-group="leak">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Sediment Trap (Liq. Cooled)</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="sediment">YES</button>
-                <button class="yn-btn no-btn"  data-group="sediment">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Shutoff Valves Verified</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="shutoff">YES</button>
-                <button class="yn-btn no-btn"  data-group="shutoff">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Flex Whip (No Kinks)</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="flexwhip">YES</button>
-                <button class="yn-btn no-btn"  data-group="flexwhip">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Pressure Check</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="pressure">YES</button>
-                <button class="yn-btn no-btn"  data-group="pressure">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Line Purged (If Gas Ready)</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="purged">YES</button>
-                <button class="yn-btn no-btn"  data-group="purged">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Painted Threads / Fittings</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="painted">YES</button>
-                <button class="yn-btn no-btn"  data-group="painted">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">1st Stage Connection</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="stage1">YES</button>
-                <button class="yn-btn no-btn"  data-group="stage1">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Regulators to Code</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="regs">YES</button>
-                <button class="yn-btn no-btn"  data-group="regs">NO</button>
-              </div>
+    <!-- CLEAN UP + INSPECTIONS -->
+    <div class="card">
+      <div class="card-header">🔍 Clean Up &amp; Inspections</div>
+      <div class="card-body">
+        <div class="section-grid">
+          <!-- CLEAN UP -->
+          <div>
+            <div class="section-title">Clean Up</div>
+            <div class="check-list">
+              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label bold-label">Everything Clean</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="clean">Y</button><button class="yn-btn no-btn" data-group="clean">N</button></div></div>
+              <div class="check-item"><span class="check-label">Ready for H/O Training</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="hoready">Y</button><button class="yn-btn no-btn" data-group="hoready">N</button></div></div>
+              <div class="check-item"><span class="check-label">Why Not</span><input class="inline-field" type="text" placeholder="Reason"></div>
             </div>
           </div>
+          <!-- INSPECTIONS -->
+          <div>
+            <div class="section-title">Inspections</div>
+            <div class="check-list">
+              <div class="check-item"><span class="check-label">Member</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Checked By</span><input class="inline-field" type="text" placeholder="Name"></div>
+              <div class="check-item"><span class="check-label">Inspected</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="insp">Y</button><button class="yn-btn no-btn" data-group="insp">N</button></div></div>
+              <div class="check-item"><span class="check-label">FIRE Inspector</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="fire">Y</button><button class="yn-btn no-btn" data-group="fire">N</button></div></div>
+              <div class="check-item"><span class="check-label">County</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="county">Y</button><button class="yn-btn no-btn" data-group="county">N</button></div></div>
+              <div class="check-item"><span class="check-label">Gas Rough</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="gasrough">Y</button><button class="yn-btn no-btn" data-group="gasrough">N</button></div></div>
+              <div class="check-item"><span class="check-label">Tank</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="tank">Y</button><button class="yn-btn no-btn" data-group="tank">N</button></div></div>
+              <div class="check-item"><span class="check-label">Underground Gas</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="uggas">Y</button><button class="yn-btn no-btn" data-group="uggas">N</button></div></div>
+              <div class="check-item"><span class="check-label bold-label">Final Gas Passed</span><div class="yn-group"><button class="yn-btn yes-btn" data-group="fingas">Y</button><button class="yn-btn no-btn" data-group="fingas">N</button></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISCUES -->
+    <div class="card">
+      <div class="card-header">⚠️ Miscues / Delays</div>
+      <div class="card-body">
+        <textarea class="note-area" rows="3" placeholder="Enter any miscues or delays…"></textarea>
+      </div>
+    </div>
+
+    <!-- REGULATORS -->
+    <div class="card">
+      <div class="card-header">🔧 Regulators</div>
+      <div class="reg-grid">
+        <div class="reg-item"><div class="reg-label">1st Stage</div><input class="reg-input" type="text" placeholder="—"></div>
+        <div class="reg-item"><div class="reg-label">Norgas</div><input class="reg-input" type="text" placeholder="—"></div>
+        <div class="reg-item"><div class="reg-label">2nd Stg Straight</div><input class="reg-input" type="text" placeholder="—"></div>
+        <div class="reg-item"><div class="reg-label">2nd Stg Back</div><input class="reg-input" type="text" placeholder="—"></div>
+        <div class="reg-item"><div class="reg-label">2 PSI</div><input class="reg-input" type="text" placeholder="—"></div>
+        <div class="reg-item"><div class="reg-label">Pietro</div><input class="reg-input" type="text" placeholder="—"></div>
+      </div>
+    </div>
+
+    <!-- MATERIAL TABLES PAGE 1 — 2x2 grid -->
+    <div class="card tables-split-card">
+      <div class="card-header">📦 Materials — Pipe, Poly, Risers &amp; Whips</div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
+
+        <div class="table-scroll">
+          <table class="mat-table">
+            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
+            <thead><tr><th>Galv. Pipe &amp; Fittings</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+            <tbody id="pipe-body"></tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="mat-table">
+            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
+            <thead><tr><th>Poly Fittings</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+            <tbody id="poly-body"></tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="mat-table">
+            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
+            <thead><tr><th>Risers</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
+            <tbody id="risers-body"></tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="mat-table">
+            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
+            <thead><tr><th>Appliance Whips</th><th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th></tr></thead>
+            <tbody id="whips-body"></tbody>
+          </table>
         </div>
 
       </div>
     </div>
-  </div>
 
-  <!-- CLEAN UP + INSPECTIONS -->
-  <div class="card">
-    <div class="card-header">🔍 Clean Up &amp; Inspections</div>
-    <div class="card-body">
-      <div class="section-grid">
+  </div><!-- /print-page-1 -->
 
-        <!-- CLEAN UP -->
-        <div>
-          <div class="section-title">Clean Up</div>
-          <div class="check-list">
-            <div class="check-item">
-              <span class="check-label">Member</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Checked By</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label bold-label">Everything Clean</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="clean">YES</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Ready for H/O Training</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="hoready">YES</button>
-                <button class="yn-btn no-btn"  data-group="hoready">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Why Not</span>
-              <input class="inline-field" type="text" placeholder="Reason">
-            </div>
-          </div>
-        </div>
-
-        <!-- INSPECTIONS -->
-        <div>
-          <div class="section-title">Inspections</div>
-          <div class="check-list">
-            <div class="check-item">
-              <span class="check-label">Member</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Checked By</span>
-              <input class="inline-field" type="text" placeholder="Name">
-            </div>
-            <div class="check-item">
-              <span class="check-label">Inspected</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="insp">YES</button>
-                <button class="yn-btn no-btn"  data-group="insp">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">FIRE Inspector</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="fire">YES</button>
-                <button class="yn-btn no-btn"  data-group="fire">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">County</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="county">YES</button>
-                <button class="yn-btn no-btn"  data-group="county">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Gas Rough</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="gasrough">YES</button>
-                <button class="yn-btn no-btn"  data-group="gasrough">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Tank</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="tank">YES</button>
-                <button class="yn-btn no-btn"  data-group="tank">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label">Underground Gas</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="uggas">YES</button>
-                <button class="yn-btn no-btn"  data-group="uggas">NO</button>
-              </div>
-            </div>
-            <div class="check-item">
-              <span class="check-label bold-label">Final Gas Passed</span>
-              <div class="yn-group">
-                <button class="yn-btn yes-btn" data-group="fingas">YES</button>
-                <button class="yn-btn no-btn"  data-group="fingas">NO</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- MISCUES -->
-  <div class="card">
-    <div class="card-header">⚠️ Miscues / Delays</div>
-    <div class="card-body">
-      <textarea class="note-area" rows="4" placeholder="Enter any miscues or delays…"></textarea>
-    </div>
-  </div>
-
-  <!-- REGULATORS -->
-  <div class="card">
-    <div class="card-header">🔧 Regulators</div>
-    <div class="reg-grid">
-      <div class="reg-item">
-        <div class="reg-label">1st Stage</div>
-        <input class="reg-input" type="text" placeholder="—">
-      </div>
-      <div class="reg-item">
-        <div class="reg-label">Norgas</div>
-        <input class="reg-input" type="text" placeholder="—">
-      </div>
-      <div class="reg-item">
-        <div class="reg-label">2nd Stg Straight</div>
-        <input class="reg-input" type="text" placeholder="—">
-      </div>
-      <div class="reg-item">
-        <div class="reg-label">2nd Stg Back</div>
-        <input class="reg-input" type="text" placeholder="—">
-      </div>
-      <div class="reg-item">
-        <div class="reg-label">2 PSI</div>
-        <input class="reg-input" type="text" placeholder="—">
-      </div>
-      <div class="reg-item">
-        <div class="reg-label">Pietro</div>
-        <input class="reg-input" type="text" placeholder="—">
-      </div>
-    </div>
-  </div>
-
-  <!-- MATERIAL TABLES — PAGE 1 SIDE -->
-  <div class="card tables-split-card">
-    <div class="card-header">📦 Materials — Pipe, Poly, Risers &amp; Whips</div>
-    <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
-
-      <div class="table-scroll">
-        <table class="mat-table" id="pipe-table">
-          <colgroup>
-            <col style="min-width:140px;">
-            <col style="width:50px;"><col style="width:50px;"><col style="width:50px;">
-            <col style="width:50px;"><col style="width:50px;">
-          </colgroup>
-          <thead><tr>
-            <th>Galv. Pipe &amp; Fittings</th>
-            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-          </tr></thead>
-          <tbody id="pipe-body"></tbody>
-        </table>
-      </div>
-
-      <div class="table-scroll">
-        <table class="mat-table" id="poly-table">
-          <colgroup>
-            <col style="min-width:140px;">
-            <col style="width:50px;"><col style="width:50px;"><col style="width:50px;">
-            <col style="width:50px;"><col style="width:50px;">
-          </colgroup>
-          <thead><tr>
-            <th>Poly Fittings</th>
-            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-          </tr></thead>
-          <tbody id="poly-body"></tbody>
-        </table>
-      </div>
-
-      <div class="table-scroll">
-        <table class="mat-table" id="risers-table">
-          <colgroup>
-            <col style="min-width:140px;">
-            <col style="width:50px;"><col style="width:50px;"><col style="width:50px;">
-            <col style="width:50px;"><col style="width:50px;">
-          </colgroup>
-          <thead><tr>
-            <th>Risers</th>
-            <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-          </tr></thead>
-          <tbody id="risers-body"></tbody>
-        </table>
-      </div>
-
-      <div class="table-scroll">
-        <table class="mat-table" id="whips-table">
-          <colgroup>
-            <col style="min-width:140px;">
-            <col style="width:50px;"><col style="width:50px;"><col style="width:50px;">
-            <col style="width:50px;"><col style="width:50px;">
-          </colgroup>
-          <thead><tr>
-            <th>Appliance Whips</th>
-            <th>½"</th><th>3/8"</th><th>5/8"</th><th>1"</th><th>¾"</th>
-          </tr></thead>
-          <tbody id="whips-body"></tbody>
-        </table>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- GALV. NIPPLES — PAGE 2 -->
+  <!-- ░░ PAGE 2 ░░ -->
   <div class="card" id="nipples-card">
-    <div class="card-header" id="page2-banner">📦 Materials — Galv. Nipples &amp; Misc.</div>
+    <div class="card-header">📦 Materials — Galv. Nipples &amp; Misc.</div>
     <div class="card-body">
       <div id="nipples-split" style="display:flex;flex-direction:column;gap:14px;">
         <div class="table-scroll">
-          <table class="mat-table" id="nipples-left-table">
-            <colgroup>
-              <col style="min-width:160px;">
-              <col style="width:50px;"><col style="width:50px;"><col style="width:50px;">
-              <col style="width:50px;"><col style="width:50px;">
-            </colgroup>
-            <thead><tr>
-              <th>Galv. Nipples &amp; Misc.</th>
-              <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-            </tr></thead>
+          <table class="mat-table">
+            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
+            <thead><tr><th>Galv. Nipples &amp; Misc.</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="nipples-left-body"></tbody>
           </table>
         </div>
         <div class="table-scroll">
-          <table class="mat-table" id="nipples-right-table">
-            <colgroup>
-              <col style="min-width:160px;">
-              <col style="width:50px;"><col style="width:50px;"><col style="width:50px;">
-              <col style="width:50px;"><col style="width:50px;">
-            </colgroup>
-            <thead><tr>
-              <th>Galv. Nipples &amp; Misc. (cont.)</th>
-              <th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th>
-            </tr></thead>
+          <table class="mat-table">
+            <colgroup><col><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"><col style="width:46px;"></colgroup>
+            <thead><tr><th>Galv. Nipples &amp; Misc. (cont.)</th><th>2"</th><th>1¼"</th><th>1"</th><th>¾"</th><th>½"</th></tr></thead>
             <tbody id="nipples-right-body"></tbody>
           </table>
         </div>
@@ -966,14 +805,8 @@ function toggleTheme(){applyTheme(document.body.classList.contains('dark-mode')?
 /* ── YES/NO BUTTONS ── */
 document.addEventListener('click',function(e){
   const btn=e.target.closest('.yn-btn');
-  if(!btn)return;
-  const grp=btn.dataset.group;
-  if(!grp)return;
-  const isYes=btn.classList.contains('yes-btn');
-  const siblings=document.querySelectorAll(`[data-group="${grp}"]`);
-  siblings.forEach(b=>{
-    b.classList.remove('active');
-  });
+  if(!btn||!btn.dataset.group)return;
+  document.querySelectorAll(`[data-group="${btn.dataset.group}"]`).forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   autoSave();
 });
@@ -984,7 +817,7 @@ function addRow(tbody,label,cols,isHeader){
   const td=document.createElement('td');
   td.className=isHeader?'row-label section-header':'row-label';
   td.textContent=label;
-  if(isHeader)td.colSpan=cols+1;
+  if(isHeader){td.colSpan=cols+1;}
   tr.appendChild(td);
   if(!isHeader){
     for(let i=0;i<cols;i++){
@@ -998,35 +831,28 @@ function addRow(tbody,label,cols,isHeader){
   tbody.appendChild(tr);
 }
 
-/* Pipe & Fittings */
+/* Build tables */
 (()=>{
-  const b=document.getElementById('pipe-body');
-  addRow(b,'Rigid Pipe (Footage)',5,false);
-  addRow(b,'Galv. Fittings',5,true);
+  const pb=document.getElementById('pipe-body');
+  addRow(pb,'Rigid Pipe (Footage)',5);
+  addRow(pb,'Galv. Fittings',5,true);
   ['Galv. 45s','Galv. 90s','Couplings','Caps','Sq. Plugs','Tees','Union','Misc. (Each)']
-  .forEach(r=>addRow(b,r,5,false));
+    .forEach(r=>addRow(pb,r,5));
 })();
-
-/* Poly */
 (()=>{
-  const b=document.getElementById('poly-body');
+  const pb=document.getElementById('poly-body');
   ['UG Poly (Per FT)','Fusion Coupler','Tee','90 Elbow','Reducer Coupler']
-  .forEach(r=>addRow(b,r,5,false));
+    .forEach(r=>addRow(pb,r,5));
 })();
-
-/* Risers */
 (()=>{
-  const b=document.getElementById('risers-body');
-  ['Gas Riser 30"V×24"H','Transition'].forEach(r=>addRow(b,r,5,false));
+  const rb=document.getElementById('risers-body');
+  ['Gas Riser 30"V×24"H','Transition'].forEach(r=>addRow(rb,r,5));
 })();
-
-/* Whips */
 (()=>{
-  const b=document.getElementById('whips-body');
-  ['12 Inch','18 Inch','48 Inch','60 Inch'].forEach(r=>addRow(b,r,5,false));
+  const wb=document.getElementById('whips-body');
+  ['12 Inch','18 Inch','48 Inch','60 Inch'].forEach(r=>addRow(wb,r,5));
 })();
 
-/* Nipples */
 const NIPPLE_ROWS=[
   {label:'CLOSE STD Nipple',h:true},
   {label:'1½" Nipple'},{label:'2" Nipple'},{label:'2½" Nipple'},
@@ -1047,12 +873,12 @@ const NIPPLE_ROWS=[
 ];
 const mid=Math.ceil(NIPPLE_ROWS.length/2);
 (()=>{
-  const b=document.getElementById('nipples-left-body');
-  NIPPLE_ROWS.slice(0,mid).forEach(r=>addRow(b,r.label,5,r.h||false));
+  const lb=document.getElementById('nipples-left-body');
+  NIPPLE_ROWS.slice(0,mid).forEach(r=>addRow(lb,r.label,5,r.h||false));
 })();
 (()=>{
-  const b=document.getElementById('nipples-right-body');
-  NIPPLE_ROWS.slice(mid).forEach(r=>addRow(b,r.label,5,r.h||false));
+  const rb=document.getElementById('nipples-right-body');
+  NIPPLE_ROWS.slice(mid).forEach(r=>addRow(rb,r.label,5,r.h||false));
 })();
 
 /* ── AUTO SAVE ── */
@@ -1062,15 +888,9 @@ function autoSave(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{
     const data={};
-    document.querySelectorAll('[data-key]').forEach(el=>{
-      data[el.dataset.key]=el.value||el.checked;
-    });
-    // save yn groups
     document.querySelectorAll('.yn-btn.active').forEach(btn=>{
-      const k='yn_'+btn.dataset.group+'_'+(btn.classList.contains('yes-btn')?'yes':'no');
-      data[k]=true;
+      data['yn_'+btn.dataset.group+'_'+(btn.classList.contains('yes-btn')?'y':'n')]=true;
     });
-    // save text inputs / textareas
     document.querySelectorAll('input[type="text"],input[type="date"],textarea').forEach((el,i)=>{
       data['inp_'+i]=el.value;
     });
@@ -1079,7 +899,6 @@ function autoSave(){
     setTimeout(()=>setStatus(''),2000);
   },1200);
 }
-
 document.querySelectorAll('input,textarea').forEach(el=>{
   el.addEventListener('input',autoSave);
   el.addEventListener('change',autoSave);
@@ -1099,26 +918,23 @@ function setStatus(msg){
   if(el)el.textContent=msg;
 }
 
-/* ── iPHONE ── */
+/* ── iPHONE SAVE ── */
 function saveForIPhone(){
   setStatus('Rendering…');
   const wasDark=document.body.classList.contains('dark-mode');
   if(wasDark)document.body.classList.remove('dark-mode');
-  const pages=[document.getElementById('page1'),document.getElementById('page2')];
   const overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;';
   const closeBtn=document.createElement('button');
   closeBtn.style.cssText='background:#DC2626;color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;position:sticky;top:0;z-index:10;';
   closeBtn.textContent='✕ Close';
   closeBtn.onclick=()=>{if(wasDark)document.body.classList.add('dark-mode');document.body.removeChild(overlay);setStatus('');};
   overlay.appendChild(closeBtn);
   document.body.appendChild(overlay);
-  // render the full content area
-  const target=document.querySelector('.content');
-  html2canvas(target,{scale:2,useCORS:true,backgroundColor:'#fff',logging:false})
+  html2canvas(document.querySelector('.content'),{scale:2,useCORS:true,backgroundColor:'#fff',logging:false})
   .then(canvas=>{
     const lbl=document.createElement('div');
-    lbl.style.cssText='color:#ccc;font-size:12px;';
+    lbl.style.cssText='color:#ccc;font-size:12px;text-align:center;';
     lbl.textContent='Long-press image → Save to Photos';
     const img=document.createElement('img');
     img.src=canvas.toDataURL('image/jpeg',0.88);
@@ -1129,19 +945,18 @@ function saveForIPhone(){
   });
 }
 
-/* ── ANDROID ── */
+/* ── ANDROID SAVE ── */
 function saveForAndroid(){
   setStatus('Rendering…');
   const wasDark=document.body.classList.contains('dark-mode');
   if(wasDark)document.body.classList.remove('dark-mode');
-  const target=document.querySelector('.content');
-  html2canvas(target,{scale:2,useCORS:true,backgroundColor:'#fff',logging:false})
+  html2canvas(document.querySelector('.content'),{scale:2,useCORS:true,backgroundColor:'#fff',logging:false})
   .then(canvas=>{
-    const link=document.createElement('a');
-    link.download='AOG_Gas_Install.jpg';
-    link.href=canvas.toDataURL('image/jpeg',0.88);
-    link.click();
-    setStatus('Saved to Downloads ✓');
+    const a=document.createElement('a');
+    a.download='AOG_Gas_Install.jpg';
+    a.href=canvas.toDataURL('image/jpeg',0.88);
+    a.click();
+    setStatus('Saved ✓');
     setTimeout(()=>setStatus(''),3000);
     if(wasDark)document.body.classList.add('dark-mode');
   });
