@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SparkPrice — Electrical Parts Price Compare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1a1814; --panel:#221f18; --panel2:#262219; --ink:#ece6d8; --ink2:#f4efe2;
+    --muted:#8a8577; --muted2:#b3ab97; --line:#2f2b21; --line2:#3a352a;
+    --gold:#d4a017; --gold2:#b8860b; --green:#7bc47f; --red:#b04b3a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;min-height:100vh}
+  header{padding:20px 18px 14px;background:linear-gradient(160deg,#222019,#1a1814);
+    border-bottom:1px solid #332f26;position:sticky;top:0;z-index:10}
+  .brand-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+    display:grid;place-items:center;color:var(--bg);box-shadow:0 2px 12px rgba(212,160,23,.35);font-size:20px}
+  .brand{font-weight:800;letter-spacing:.12em;font-size:17px;color:var(--ink2)}
+  .tagline{font-size:11px;color:var(--muted);letter-spacing:.03em;margin-top:1px}
+  .badge{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--gold);
+    border:1px solid #5a4d22;padding:4px 8px;border-radius:6px;background:#2a2418}
+  .search{display:flex;align-items:center;gap:10px;background:#0f0e0b;border:1px solid var(--line2);
+    border-radius:12px;padding:10px 12px}
+  .search input{flex:1;background:transparent;border:none;outline:none;color:var(--ink);
+    font-size:15px;font-family:inherit}
+  .search .ico{color:var(--muted);flex-shrink:0;font-size:16px}
+  .go{background:var(--gold);color:var(--bg);border:none;border-radius:8px;padding:8px 14px;
+    font-weight:700;font-size:12px;letter-spacing:.06em;cursor:pointer;font-family:inherit}
+  .pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .pill{background:var(--panel2);border:1px solid var(--line2);color:var(--muted2);
+    border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+  .pill.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:600}
+  .suppliers{display:flex;gap:8px;margin-top:12px;font-size:11px;align-items:baseline;flex-wrap:wrap}
+  .suppliers .lab{color:var(--gold);font-weight:700;letter-spacing:.04em;flex-shrink:0}
+  .suppliers .names{color:var(--muted);line-height:1.5}
+  .controls{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 8px;
+    flex-wrap:wrap;gap:10px}
+  .count{font-size:13px;color:var(--muted2)}
+  .count .q{color:var(--muted)}
+  .ctrls{display:flex;gap:8px}
+  .ctrl{display:flex;align-items:center;gap:5px;background:var(--panel2);border:1px solid var(--line2);
+    color:var(--muted2);border-radius:8px;padding:6px 11px;font-size:12px;cursor:pointer;font-family:inherit}
+  .ctrl.active{background:#2a2418;border-color:#5a4d22;color:var(--gold)}
+  main{padding:8px 18px 24px;display:flex;flex-direction:column;gap:10px}
+  .card{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;justify-content:space-between;animation:rise .3s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .c-main{flex:1;min-width:0}
+  .c-name{font-size:14.5px;font-weight:600;color:var(--ink2);line-height:1.35;margin-bottom:8px}
+  .c-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px}
+  .seller{color:var(--gold);font-weight:600}
+  .ship{color:var(--muted)}
+  .c-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+  .price{font-size:20px;font-weight:800;color:var(--ink);line-height:1}
+  .price.best{color:var(--green)}
+  .unit{font-size:11px;color:var(--muted);margin-top:2px}
+  .besttag{font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--bg);background:var(--green);
+    padding:2px 6px;border-radius:4px;margin-top:5px}
+  .view{display:flex;align-items:center;gap:4px;background:transparent;border:1px solid var(--line2);
+    color:var(--ink);border-radius:8px;padding:6px 12px;font-size:12px;text-decoration:none;font-weight:600}
+  .center{padding:48px 0;display:grid;place-items:center;color:var(--muted)}
+  footer{padding:16px 18px 28px;font-size:11px;color:#6b665a;text-align:center;border-top:1px solid #2a2620}
+  .right-col{display:flex;flex-direction:column;align-items:flex-end}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand-row">
+      <div class="logo">⚡</div>
+      <div>
+        <div class="brand">SPARKPRICE</div>
+        <div class="tagline">electrical parts · live price compare</div>
+      </div>
+      <div class="badge" id="badge">DEMO DATA</div>
+    </div>
+    <div class="search">
+      <span class="ico">🔍</span>
+      <input id="q" placeholder="Search parts, e.g. 12 AWG THHN, EMT connector, 20A breaker…" />
+      <button class="go" id="go">SEARCH</button>
+    </div>
+    <div class="pills" id="pills"></div>
+    <div class="suppliers">
+      <span class="lab" id="supcount"></span>
+      <span class="names" id="supnames"></span>
+    </div>
+  </header>
+  <div class="controls">
+    <div class="count" id="count"></div>
+    <div class="ctrls">
+      <button class="ctrl" id="stockBtn">▣ In stock</button>
+      <button class="ctrl" id="sortBtn">↕ Price ↑</button>
+    </div>
+  </div>
+  <main id="results"></main>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+// ============================================================================
+//  SparkPrice — standalone build
+//  USE_DEMO=true  -> runs on sample data (no backend needed)
+//  USE_DEMO=false -> calls BACKEND_URL (deploy backend-server.js, add API key)
+// ============================================================================
+const USE_DEMO = true;
+const BACKEND_URL = "https://YOUR-BACKEND.vercel.app/api/search";
+
+const SUPPLIERS = [
+  "Grainger","Graybar","Rexel","Platt","Home Depot Pro","Lowe's Pro","Zoro",
+  "City Electric","Border States","Gexpro","Gordon Electric Supply","SupplyHouse.com"
+];
+
+const CATS = [
+  {id:"all",label:"All"},{id:"wire",label:"Wire & Cable"},
+  {id:"fitting",label:"Fittings & Conduit"},{id:"breaker",label:"Breakers"},
+  {id:"device",label:"Devices"}
+];
+
+const DEMO_DB = [
+  {id:1,name:'12 AWG THHN Stranded Copper Wire — 500 ft, Black',cat:'wire',seller:'Graybar',price:142.50,unit:'/500ft',ship:'Free',stock:true,url:'#'},
+  {id:2,name:'12 AWG THHN Stranded Copper Wire — 500 ft, Black',cat:'wire',seller:'Home Depot Pro',price:138.99,unit:'/500ft',ship:'$12.00',stock:true,url:'#'},
+  {id:3,name:'12 AWG THHN Stranded Copper Wire — 500 ft, Black',cat:'wire',seller:'Grainger',price:151.20,unit:'/500ft',ship:'Free',stock:true,url:'#'},
+  {id:4,name:'12 AWG THHN Stranded Copper Wire — 500 ft, Black',cat:'wire',seller:'Zoro',price:134.75,unit:'/500ft',ship:'Free over $50',stock:true,url:'#'},
+  {id:17,name:'12 AWG THHN Stranded Copper Wire — 500 ft, Black',cat:'wire',seller:'Gordon Electric Supply',price:136.40,unit:'/500ft',ship:'$10.00',stock:true,url:'#'},
+  {id:5,name:'12-2 NM-B Romex w/ Ground — 250 ft',cat:'wire',seller:'Home Depot Pro',price:189.00,unit:'/250ft',ship:'Free',stock:true,url:'#'},
+  {id:6,name:'12-2 NM-B Romex w/ Ground — 250 ft',cat:'wire',seller:"Lowe's Pro",price:197.50,unit:'/250ft',ship:'$15.00',stock:false,url:'#'},
+  {id:7,name:'1/2 in. EMT Conduit Connector, Set-Screw (50 pk)',cat:'fitting',seller:'Graybar',price:28.40,unit:'/50pk',ship:'Free',stock:true,url:'#'},
+  {id:8,name:'1/2 in. EMT Conduit Connector, Set-Screw (50 pk)',cat:'fitting',seller:'Grainger',price:31.10,unit:'/50pk',ship:'Free',stock:true,url:'#'},
+  {id:9,name:'1/2 in. EMT Conduit Connector, Set-Screw (50 pk)',cat:'fitting',seller:'Zoro',price:24.95,unit:'/50pk',ship:'Free over $50',stock:true,url:'#'},
+  {id:18,name:'1/2 in. EMT Conduit Connector, Set-Screw (50 pk)',cat:'fitting',seller:'SupplyHouse.com',price:23.80,unit:'/50pk',ship:'Free over $99',stock:true,url:'#'},
+  {id:10,name:'3/4 in. Liquidtight Straight Connector',cat:'fitting',seller:'Home Depot Pro',price:4.18,unit:'/ea',ship:'$8.00',stock:true,url:'#'},
+  {id:11,name:'20A Single-Pole Breaker, QO Series',cat:'breaker',seller:'Graybar',price:12.85,unit:'/ea',ship:'Free',stock:true,url:'#'},
+  {id:12,name:'20A Single-Pole Breaker, QO Series',cat:'breaker',seller:'Grainger',price:14.20,unit:'/ea',ship:'Free',stock:true,url:'#'},
+  {id:13,name:'20A Single-Pole Breaker, QO Series',cat:'breaker',seller:'Rexel',price:11.95,unit:'/ea',ship:'$9.50',stock:true,url:'#'},
+  {id:19,name:'20A Single-Pole Breaker, QO Series',cat:'breaker',seller:'Gordon Electric Supply',price:11.40,unit:'/ea',ship:'$7.00',stock:true,url:'#'},
+  {id:14,name:'15A Decorator Receptacle, Tamper-Resistant (10 pk)',cat:'device',seller:'Zoro',price:21.40,unit:'/10pk',ship:'Free over $50',stock:true,url:'#'},
+  {id:15,name:'15A Decorator Receptacle, Tamper-Resistant (10 pk)',cat:'device',seller:'Home Depot Pro',price:23.97,unit:'/10pk',ship:'Free',stock:true,url:'#'},
+  {id:20,name:'15A Decorator Receptacle, Tamper-Resistant (10 pk)',cat:'device',seller:'SupplyHouse.com',price:20.75,unit:'/10pk',ship:'Free over $99',stock:true,url:'#'},
+  {id:16,name:'4 in. Square Junction Box, 1-1/2 in. Deep',cat:'fitting',seller:'Graybar',price:2.10,unit:'/ea',ship:'Free',stock:true,url:'#'}
+];
+
+let state = { q:"12 AWG THHN", cat:"all", sort:"price", inStock:false, results:[] };
+
+function demoSearch(q,cat){
+  const s=q.trim().toLowerCase();
+  return DEMO_DB.filter(r=>{
+    const mq=!s||r.name.toLowerCase().includes(s)||r.seller.toLowerCase().includes(s);
+    const mc=cat==="all"||r.cat===cat;
+    const ms=SUPPLIERS.includes(r.seller);
+    return mq&&mc&&ms;
+  });
+}
+
+async function runSearch(){
+  const res=document.getElementById("results");
+  res.innerHTML='<div class="center">Searching…</div>';
+  try{
+    if(USE_DEMO){
+      await new Promise(r=>setTimeout(r,400));
+      state.results=demoSearch(state.q,state.cat);
+    }else{
+      const r=await fetch(`${BACKEND_URL}?q=${encodeURIComponent(state.q)}&cat=${state.cat}`);
+      if(!r.ok)throw new Error("Backend "+r.status);
+      const d=await r.json();
+      state.results=d.results||[];
+    }
+  }catch(e){
+    res.innerHTML='<div class="center">Couldn\'t reach backend: '+e.message+'</div>';
+    return;
+  }
+  render();
+}
+
+function render(){
+  let r=[...state.results];
+  if(state.inStock)r=r.filter(x=>x.stock);
+  r.sort((a,b)=> state.sort==="price"?a.price-b.price:
+                 state.sort==="priceDesc"?b.price-a.price:0);
+  const best=r.length?Math.min(...r.map(x=>x.price)):null;
+
+  document.getElementById("count").innerHTML=
+    `${r.length} result${r.length!==1?"s":""} <span class="q">for "${state.q}"</span>`;
+
+  const res=document.getElementById("results");
+  if(!r.length){res.innerHTML='<div class="center">No matches. Try a broader term.</div>';return;}
+  res.innerHTML=r.map((x,i)=>`
+    <div class="card" style="animation-delay:${i*40}ms">
+      <div class="c-main">
+        <div class="c-name">${x.name}</div>
+        <div class="c-meta">
+          <span class="seller">${x.seller}</span>
+          <span style="color:${x.stock?'#3d8b40':'#b04b3a'}">${x.stock?'● In stock':'○ Backordered'}</span>
+          <span class="ship">Ship: ${x.ship}</span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="right-col">
+          <span class="price ${x.price===best?'best':''}">$${x.price.toFixed(2)}</span>
+          <span class="unit">${x.unit}</span>
+          ${x.price===best?'<span class="besttag">LOWEST</span>':''}
+        </div>
+        <a class="view" href="${x.url}" target="_blank" rel="noreferrer">View ↗</a>
+      </div>
+    </div>`).join("");
+}
+
+// init
+document.getElementById("supcount").textContent=`Searching ${SUPPLIERS.length}:`;
+document.getElementById("supnames").textContent=SUPPLIERS.join(" · ");
+document.getElementById("foot").textContent=
+  (USE_DEMO?"Prices are sample data":"Prices from connected sellers")+" · always verify on the seller's site before ordering";
+if(!USE_DEMO)document.getElementById("badge").style.display="none";
+
+const pills=document.getElementById("pills");
+CATS.forEach(c=>{
+  const b=document.createElement("button");
+  b.className="pill"+(c.id==="all"?" active":"");
+  b.textContent=c.label;
+  b.onclick=()=>{state.cat=c.id;[...pills.children].forEach(p=>p.classList.remove("active"));b.classList.add("active");runSearch();};
+  pills.appendChild(b);
+});
+
+document.getElementById("go").onclick=()=>{state.q=document.getElementById("q").value||state.q;runSearch();};
+document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter"){state.q=e.target.value;runSearch();}});
+document.getElementById("stockBtn").onclick=function(){state.inStock=!state.inStock;this.classList.toggle("active",state.inStock);render();};
+document.getElementById("sortBtn").onclick=function(){
+  state.sort=state.sort==="price"?"priceDesc":"price";
+  this.textContent="↕ Price "+(state.sort==="priceDesc"?"↓":"↑");render();};
+
+document.getElementById("q").value=state.q;
+runSearch();
+</script>
+</body>
+</html>
