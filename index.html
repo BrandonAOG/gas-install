@@ -787,7 +787,10 @@ body.dark-mode .miscues-textarea {
     break-inside: auto !important;
   }
 
-  /* Page 1: allow content to flow/break freely, force new page after */
+  /* Page 1: fills its sheet, forces a new page after. overflow:hidden clips
+     any sub-pixel/scaled overflow so it can't spill onto a blank page.
+     break-inside:auto (not avoid) so a 1px overage doesn't bump the whole
+     page and leave page 1 blank. */
   #page1 {
     page-break-inside: auto !important;
     break-inside: auto !important;
@@ -795,9 +798,11 @@ body.dark-mode .miscues-textarea {
     break-after: page !important;
     page-break-before: avoid !important;
     break-before: avoid !important;
+    overflow: hidden !important;
   }
 
-  /* Page 2: let it follow naturally after the page break on page1 */
+  /* Page 2: follows the break, is the LAST page — never force a break after
+     it (a trailing break-after creates an empty final page when scaled). */
   #page2 {
     page-break-before: avoid !important;
     break-before: avoid !important;
@@ -805,6 +810,7 @@ body.dark-mode .miscues-textarea {
     break-after: avoid !important;
     page-break-inside: auto !important;
     break-inside: auto !important;
+    overflow: hidden !important;
   }
 
   /* Safari print: CSS grid can collapse — use table-based layout for page2 split */
@@ -1730,12 +1736,42 @@ body.dark-mode .miscues-textarea {
   }
   body:not(.capturing) #page1 .section-row .row-label-text:not(#_) { display: inline !important; }
 
-  /* Page-2 number inputs: print white with dark text (no structural reset). */
+  /* Page-2 number inputs: transparent so the row zebra tint shows through;
+     dark text. (White fill here would block the alternating orange tint
+     under the inputs, leaving a gap mid-row.) */
   #page2 table.mat-table tbody td input[type="number"] {
-    background: #fff !important;
+    background: transparent !important;
     color: #1F2937 !important; -webkit-text-fill-color: #1F2937 !important;
     border: none !important; border-radius: 0 !important;
     box-shadow: none !important; height: auto !important;
+  }
+
+  /* ── SCALE-PROOF CARD SUPPRESSION ──
+     Scaling the OS print preview makes the browser report a narrow width,
+     which can re-trigger the @media screen (max-width:767px) CARD layout
+     mid-preview — and if the .printing class was dropped during the
+     re-render, the cards leak into the PDF. Because these rules live in
+     @media print, they win whenever print media is active (any scale),
+     regardless of the .printing class. They reassert ONLY safe sizing
+     props (font-size / padding / white-space) — never display / width /
+     table-layout / col widths / flex / grid — so the fixed-table column
+     layout (wide label column) is preserved. */
+  #page2 table.mat-table th {
+    font-size: 9.5pt !important; padding: 0.5pt 1pt !important;
+  }
+  #page2 table.mat-table td {
+    font-size: 9.5pt !important; padding: 0.5pt 1pt !important;
+  }
+  #page2 table.mat-table td.row-label {
+    font-size: 9.5pt !important; padding: 0.5pt 1pt !important;
+    white-space: normal !important; line-height: 1.1 !important;
+  }
+  #page2 table.mat-table td input[type="number"] {
+    font-size: 9pt !important; height: auto !important; line-height: 1.2 !important;
+  }
+  /* Page-1 section rows: keep the print row layout, not the stacked cards. */
+  #page1 .section-row {
+    display: block !important;
   }
 }
 
