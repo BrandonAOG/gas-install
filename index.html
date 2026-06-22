@@ -441,10 +441,10 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
    matching the reference layout. Print/capture untouched.
    ============================================================ */
 @media screen and (max-width:540px) {
-  #page1 .two-col { gap:14px 0; }
+  body:not(.capturing) #page1 .two-col { gap:14px 0; }
 
   /* --- Card shell --- */
-  #page1 .section {
+  body:not(.capturing) #page1 .section {
     background:var(--panel);
     border:1px solid var(--border-bright);
     border-radius:12px;
@@ -452,21 +452,21 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
     margin-bottom:14px;
     box-shadow:0 1px 5px rgba(0,0,0,0.07);
   }
-  body.dark-mode #page1 .section {
+  body.dark-mode:not(.capturing) #page1 .section {
     background:rgba(15,21,53,0.6);
     border-color:rgba(0,255,200,0.18);
     box-shadow:0 0 14px rgba(0,255,200,0.05);
   }
-  #page1 .section .section-title {
+  body:not(.capturing) #page1 .section .section-title {
     margin-top:0;
     font-size:16px;
     border-bottom:1px solid var(--border-bright);
     padding-bottom:6px;
     margin-bottom:14px;
   }
-  #page1 hr.section-hr { display:none; }
+  body:not(.capturing) #page1 hr.section-hr { display:none; }
   /* --- Default: rows stack (label on top, control below) --- */
-  #page1 .section-row {
+  body:not(.capturing) #page1 .section-row {
     display:flex;
     flex-direction:column;
     align-items:stretch;
@@ -474,13 +474,13 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
     margin-bottom:16px;
     font-size:15px;
   }
-  #page1 .section-row:last-child { margin-bottom:0; }
-  #page1 .section-row b { font-size:15px; font-weight:bold; }
+  body:not(.capturing) #page1 .section-row:last-child { margin-bottom:0; }
+  body:not(.capturing) #page1 .section-row b { font-size:15px; font-weight:bold; }
 
   /* --- Boxed full-width text inputs --- */
-  #page1 .section-row .inline-input,
-  #page1 .section-row .full-line-input,
-  #page1 .full-line-input {
+  body:not(.capturing) #page1 .section-row .inline-input,
+  body:not(.capturing) #page1 .section-row .full-line-input,
+  body:not(.capturing) #page1 .full-line-input {
     width:100% !important;
     max-width:100% !important;
     box-sizing:border-box;
@@ -492,26 +492,26 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
     min-height:48px;
     color:var(--text) !important;
   }
-  body.dark-mode #page1 .section-row .inline-input,
-  body.dark-mode #page1 .section-row .full-line-input,
-  body.dark-mode #page1 .full-line-input {
+  body.dark-mode:not(.capturing) #page1 .section-row .inline-input,
+  body.dark-mode:not(.capturing) #page1 .section-row .full-line-input,
+  body.dark-mode:not(.capturing) #page1 .full-line-input {
     background:rgba(10,14,39,0.6) !important;
     border-color:rgba(0,255,200,0.2) !important;
     color:#E0F7FF !important;
   }
-  #page1 .section-row .inline-input:focus,
-  #page1 .section-row .full-line-input:focus {
+  body:not(.capturing) #page1 .section-row .inline-input:focus,
+  body:not(.capturing) #page1 .section-row .full-line-input:focus {
     border-color:var(--cyan) !important;
     box-shadow:0 0 0 2px rgba(211,94,19,0.15) !important;
   }
-  body.dark-mode #page1 .section-row .inline-input:focus,
-  body.dark-mode #page1 .section-row .full-line-input:focus {
+  body.dark-mode:not(.capturing) #page1 .section-row .inline-input:focus,
+  body.dark-mode:not(.capturing) #page1 .section-row .full-line-input:focus {
     border-color:#00FFC8 !important;
     box-shadow:0 0 0 2px rgba(0,255,200,0.18) !important;
   }
 
   /* --- YES/NO/AG/UG pills (built by applyYNColors as .yn-checkbox-wrap) --- */
-  #page1 .section-row .yn-checkbox-wrap {
+  body:not(.capturing) #page1 .section-row .yn-checkbox-wrap {
     display:inline-flex;
     align-items:center;
     gap:9px;
@@ -525,31 +525,32 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
     min-height:50px;
     background:var(--panel);
   }
-  body.dark-mode #page1 .section-row .yn-checkbox-wrap {
+  body.dark-mode:not(.capturing) #page1 .section-row .yn-checkbox-wrap {
     background:rgba(10,14,39,0.4);
     border-color:rgba(0,255,200,0.22);
   }
-  #page1 .section-row .yn-checkbox-wrap input[type="checkbox"] {
+  body:not(.capturing) #page1 .section-row .yn-checkbox-wrap input[type="checkbox"] {
     width:22px; height:22px; margin:0; flex-shrink:0;
   }
 
   /* Rows containing pills go horizontal so YES/NO share a line, with the
      leading label text wrapping full-width above the pills. */
-  #page1 .section-row:has(.yn-checkbox-wrap) {
+  body:not(.capturing) #page1 .section-row:has(.yn-checkbox-wrap) {
     flex-direction:row;
     flex-wrap:wrap;
     align-items:center;
     column-gap:10px;
     row-gap:8px;
   }
-  #page1 .section-row .yn-rowlabel {
+  body:not(.capturing) #page1 .section-row .yn-rowlabel {
+    display:block;
     flex:1 1 100%;
     font-size:15px;
     font-weight:bold;
   }
   /* A pill row that also has a text input (e.g. LP Tank Size + AG/UG):
      let the input take a full line, pills share the next line. */
-  #page1 .section-row:has(.yn-checkbox-wrap) .inline-input { flex:1 1 100%; }
+  body:not(.capturing) #page1 .section-row:has(.yn-checkbox-wrap) .inline-input { flex:1 1 100%; }
 }
 
 .section-title {
@@ -562,6 +563,14 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
   display:flex; align-items:center; flex-wrap:wrap; gap:3px;
 }
 hr.section-hr { border:none; border-top:1px solid rgba(211,94,19,0.2); margin:6px 0; }
+
+/* The .yn-rowlabel span is a helper added by JS only so the mobile card view
+   can put a pill row's label on its own line. By default it is layout-neutral
+   (display:contents = as if the span weren't there), so it never affects the
+   desktop view, print output, or image capture. The mobile screen block below
+   promotes it to a real full-width flex item. */
+.yn-rowlabel { display: contents; }
+
 .full-line-input {
   width:100%; border:none; border-bottom:1px solid var(--text);
   background:transparent; color:var(--text); font-size:12px; padding:1px 2px;
@@ -738,9 +747,6 @@ body.dark-mode .miscues-textarea {
    ============================================================ */
 
 @media print {
-
-  /* yn-rowlabel is a mobile-screen-only wrapper; keep it layout-neutral in print */
-  #page1 .yn-rowlabel { display: contents !important; }
 
   /* ── 0. Page geometry ── */
   @page {
@@ -1458,9 +1464,6 @@ body.dark-mode .miscues-textarea {
   .full-line-input { width: 100% !important; font-size: 9pt !important; }
 
   input[type="checkbox"] { width: 9pt !important; height: 9pt !important; accent-color: #D35E13 !important; }
-  /* The yn-rowlabel span is a mobile-screen-only helper; make it layout-neutral
-     in print so it doesn't add height or break rows. */
-  #page1 .yn-rowlabel { display: contents !important; }
   .yn-checkbox-wrap { font-size: 9pt !important; padding: 0 1.5pt !important; line-height: 1.1 !important; }
   .yn-checkbox-wrap.yn-yes.checked { background: #059669 !important; -webkit-print-color-adjust: exact !important; }
   .yn-checkbox-wrap.yn-no.checked  { background: #DC2626 !important; -webkit-print-color-adjust: exact !important; }
@@ -2119,6 +2122,7 @@ function buildFileName(ext, page) {
    before capture so images look like the printed output.
 ================================================================ */
 function injectCaptureStyles() {
+  document.body.classList.add('capturing');
   const el = document.createElement('style');
   el.id = 'capture-print-styles';
   el.textContent = `
@@ -2168,7 +2172,6 @@ function injectCaptureStyles() {
     .checklist-title { font-size:11pt!important; text-align:center!important; font-weight:bold!important; border-top:1pt solid #1F2937!important; padding-top:3pt!important; }
     .reg-row { font-size:8.5pt!important; line-height:1.35!important; }
     /* ── Page 1 image-capture: enlarge text/inputs/pills to fill the sheet ── */
-    #page1 .yn-rowlabel { display:contents!important; }
     #page1 .section-row { font-size:12pt!important; line-height:1.5!important; min-height:0!important; margin-bottom:5pt!important; }
     #page1 .section-row b { font-size:12pt!important; }
     #page1 .section-title { font-size:12pt!important; margin-bottom:2pt!important; padding-bottom:1pt!important; }
@@ -2261,6 +2264,7 @@ function clearCaptureProxies() {
 }
 function removeCaptureStyles() {
   clearCaptureProxies();
+  document.body.classList.remove('capturing');
   const el = document.getElementById('capture-print-styles');
   if (el) el.remove();
 }
