@@ -2280,71 +2280,92 @@ if (document.readyState !== 'loading') setTimeout(applyYNColors, 50);
 })();
 
 /* ================================================================
-   PRINTING-CLASS CLEANUP (all platforms)
+   PRINTING-CLASS CLEANUP (all platforms) — TRANSIENT-PROOF / AUTOMATIC
    The 📄 PDF button adds body.printing before window.print() so the
    mobile-card @media screen rules (guarded by :not(.printing)) never
    leak into the printout.
 
-   SAFARI NOTE: Safari does NOT reliably apply @media print to the live
-   print PREVIEW. While the dialog is open it keeps rendering the on-screen
-   (@media screen) layout and re-evaluates it at the *scaled* width — so
-   scaling the preview re-triggers the (max-width:767px) CARD layout. The
-   ONLY thing that keeps the cards out during that preview is the .printing
-   class staying on the body the entire time the dialog is open.
+   SAFARI PROBLEM: Safari renders the live print PREVIEW using @media
+   *screen* and re-evaluates it at the *scaled* width, so scaling the
+   preview re-triggers the (max-width:767px) CARD layout. Only the
+   .printing class keeps the cards out during that preview, so it MUST
+   stay on the body for the entire time the dialog is open.
 
-   Therefore we must NOT remove .printing on matchMedia('print') flips:
-   Safari flips that media to false during preview re-renders (including
-   while you drag the scale slider), which would strip .printing mid-dialog
-   and bring the cards back. We remove .printing ONLY when the dialog has
-   truly closed:
-     • afterprint  (fires when the print/preview dialog is dismissed), or
-     • the first real screen interaction after print started (pointer/touch/
-       key/scroll on the page) — Safari fires these only once the user is
-       back on the page, i.e. the dialog is gone.
+   The hard part is knowing when the dialog has actually CLOSED, because
+   Safari flips matchMedia('print') to false *transiently* during preview
+   re-renders (including every time you drag the scale slider). A single
+   flip is not a close.
+
+   SOLUTION — require a *sustained* exit, fully automatic, no user action:
+   Clear .printing only when print media has been false CONTINUOUSLY for a
+   debounce window (any re-entry cancels it), OR on a real afterprint.
+   Transient preview flips re-enter print within a few ms, so they cancel
+   the debounce and never clear. Closing the dialog leaves print media
+   false permanently → the debounce completes → cards return. We also
+   confirm on focus/visibility regain, but ONLY when print media is
+   currently false (so a stray event mid-preview can't clear early).
 ================================================================ */
 (function(){
   var printActive = false;
+  var exitTimer = null;
+  var EXIT_DEBOUNCE_MS = 600;   // must exceed any transient preview re-render gap
 
-  function clearPrinting(){
+  function mqPrint(){
+    return window.matchMedia && window.matchMedia('print').matches;
+  }
+
+  function doClear(){
     if (!printActive) return;
     printActive = false;
+    clearTimeout(exitTimer); exitTimer = null;
     document.body.classList.remove('printing');
-    removeScreenListeners();
   }
 
-  // First genuine on-screen interaction after print = dialog has closed.
-  function onScreenInteract(){ clearPrinting(); }
-  var SCREEN_EVENTS = ['pointerdown','touchstart','mousedown','keydown','wheel','scroll'];
-  function addScreenListeners(){
-    SCREEN_EVENTS.forEach(function(ev){
-      window.addEventListener(ev, onScreenInteract, { passive:true, capture:true });
-    });
+  // Schedule a clear that only fires if print media STAYS false for the
+  // whole debounce window. Re-entering print (a preview re-render) cancels it.
+  function scheduleClear(){
+    if (!printActive) return;
+    clearTimeout(exitTimer);
+    exitTimer = setTimeout(function(){
+      if (printActive && !mqPrint()) doClear();
+    }, EXIT_DEBOUNCE_MS);
   }
-  function removeScreenListeners(){
-    SCREEN_EVENTS.forEach(function(ev){
-      window.removeEventListener(ev, onScreenInteract, { capture:true });
-    });
-  }
+  function cancelClear(){ clearTimeout(exitTimer); exitTimer = null; }
 
-  // Mark print active the moment the dialog opens / print begins.
   function armPrint(){
     printActive = true;
+    cancelClear();
     document.body.classList.add('printing');
-    // Defer attaching screen listeners so the click that opened print
-    // (and any synthetic events Safari fires while opening) don't instantly
-    // clear it.
-    setTimeout(addScreenListeners, 1200);
   }
-  window.armPrint = armPrint;       // button can call this directly (iOS Safari
-                                    // sometimes never fires beforeprint).
+  window.armPrint = armPrint;            // button calls this (iOS Safari may
+                                         // never fire beforeprint).
   window.addEventListener('beforeprint', armPrint);
 
-  // afterprint = dialog dismissed → safe to drop the class.
-  window.addEventListener('afterprint', clearPrinting);
+  // afterprint = explicit dismissal → clear immediately.
+  window.addEventListener('afterprint', doClear);
 
-  // NOTE: intentionally NO matchMedia('print') removal here — that flips
-  // false during Safari preview re-renders and would strip .printing while
-  // the dialog is still open.
+  // matchMedia('print') edges: entering re-arms/cancels any pending clear;
+  // leaving starts the debounced clear (cancelled if we re-enter quickly).
+  if (window.matchMedia) {
+    var mq = window.matchMedia('print');
+    var onEdge = function(e){
+      if (e.matches) { armPrint(); }     // (re)entered print/preview
+      else if (printActive) { scheduleClear(); }  // left — but verify it sticks
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onEdge);
+    else if (mq.addListener) mq.addListener(onEdge);
+  }
+
+  // Regaining focus / visibility is a strong "dialog closed" hint, but only
+  // act on it if print media is actually false right now (avoids clearing
+  // during an on-screen preview where print media is still true).
+  function confirmIfExited(){
+    if (printActive && !mqPrint()) scheduleClear();
+  }
+  window.addEventListener('focus', confirmIfExited);
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) confirmIfExited();
+  });
 }());
 const SAVE_KEY = 'aog_gas_install_v1';
 let saveTimer = null;
