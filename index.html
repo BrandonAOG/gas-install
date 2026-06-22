@@ -437,33 +437,121 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
 
 /* ============================================================
    MOBILE — CARD VIEW FOR PAGE 1 SECTIONS (screen only)
-   Turn each section into a clean, self-contained card.
+   Stacked, roomy fields with boxed inputs and pill checkboxes,
+   matching the reference layout. Print/capture untouched.
    ============================================================ */
 @media screen and (max-width:540px) {
-  #page1 .two-col { gap:10px 0; }
+  #page1 .two-col { gap:14px 0; }
+
+  /* --- Card shell --- */
   #page1 .section {
     background:var(--panel);
     border:1px solid var(--border-bright);
-    border-radius:10px;
-    padding:12px 14px;
-    margin-bottom:10px;
-    box-shadow:0 1px 4px rgba(0,0,0,0.06);
+    border-radius:12px;
+    padding:16px 16px 18px;
+    margin-bottom:14px;
+    box-shadow:0 1px 5px rgba(0,0,0,0.07);
   }
   body.dark-mode #page1 .section {
     background:rgba(15,21,53,0.6);
     border-color:rgba(0,255,200,0.18);
-    box-shadow:0 0 12px rgba(0,255,200,0.05);
+    box-shadow:0 0 14px rgba(0,255,200,0.05);
   }
   #page1 .section .section-title {
     margin-top:0;
+    font-size:16px;
     border-bottom:1px solid var(--border-bright);
-    padding-bottom:4px;
-    margin-bottom:8px;
+    padding-bottom:6px;
+    margin-bottom:14px;
   }
-  /* Dividers are redundant once each section is a card */
   #page1 hr.section-hr { display:none; }
-  #page1 .section-row { margin-bottom:5px; }
+  /* --- Default: rows stack (label on top, control below) --- */
+  #page1 .section-row {
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:6px;
+    margin-bottom:16px;
+    font-size:15px;
+  }
+  #page1 .section-row:last-child { margin-bottom:0; }
+  #page1 .section-row b { font-size:15px; font-weight:bold; }
+
+  /* --- Boxed full-width text inputs --- */
+  #page1 .section-row .inline-input,
+  #page1 .section-row .full-line-input,
+  #page1 .full-line-input {
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box;
+    border:1px solid var(--border-bright) !important;
+    border-radius:10px;
+    background:var(--panel) !important;
+    padding:12px 14px !important;
+    font-size:16px !important;
+    min-height:48px;
+    color:var(--text) !important;
+  }
+  body.dark-mode #page1 .section-row .inline-input,
+  body.dark-mode #page1 .section-row .full-line-input,
+  body.dark-mode #page1 .full-line-input {
+    background:rgba(10,14,39,0.6) !important;
+    border-color:rgba(0,255,200,0.2) !important;
+    color:#E0F7FF !important;
+  }
+  #page1 .section-row .inline-input:focus,
+  #page1 .section-row .full-line-input:focus {
+    border-color:var(--cyan) !important;
+    box-shadow:0 0 0 2px rgba(211,94,19,0.15) !important;
+  }
+  body.dark-mode #page1 .section-row .inline-input:focus,
+  body.dark-mode #page1 .section-row .full-line-input:focus {
+    border-color:#00FFC8 !important;
+    box-shadow:0 0 0 2px rgba(0,255,200,0.18) !important;
+  }
+
+  /* --- YES/NO/AG/UG pills (built by applyYNColors as .yn-checkbox-wrap) --- */
+  #page1 .section-row .yn-checkbox-wrap {
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    flex:1 1 0;
+    min-width:120px;
+    border:1px solid var(--border-bright);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:15px;
+    font-weight:bold;
+    min-height:50px;
+    background:var(--panel);
+  }
+  body.dark-mode #page1 .section-row .yn-checkbox-wrap {
+    background:rgba(10,14,39,0.4);
+    border-color:rgba(0,255,200,0.22);
+  }
+  #page1 .section-row .yn-checkbox-wrap input[type="checkbox"] {
+    width:22px; height:22px; margin:0; flex-shrink:0;
+  }
+
+  /* Rows containing pills go horizontal so YES/NO share a line, with the
+     leading label text wrapping full-width above the pills. */
+  #page1 .section-row:has(.yn-checkbox-wrap) {
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+    column-gap:10px;
+    row-gap:8px;
+  }
+  #page1 .section-row .yn-rowlabel {
+    flex:1 1 100%;
+    font-size:15px;
+    font-weight:bold;
+  }
+  /* A pill row that also has a text input (e.g. LP Tank Size + AG/UG):
+     let the input take a full line, pills share the next line. */
+  #page1 .section-row:has(.yn-checkbox-wrap) .inline-input { flex:1 1 100%; }
 }
+
 .section-title {
   font-weight:bold; font-size:12px; text-transform:uppercase;
   border-bottom:1px solid var(--border-bright);
@@ -1832,6 +1920,33 @@ function applyYNColors() {
 }
 document.addEventListener('DOMContentLoaded', applyYNColors);
 if (document.readyState !== 'loading') setTimeout(applyYNColors, 50);
+
+/* Wrap the leading label text of each pill row in a span so mobile CSS can
+   put it on its own line above the YES/NO pills. Additive only — no inputs
+   are added/removed/reordered; harmless to print/capture (styled only under
+   the mobile media query). */
+function wrapPillRowLabels() {
+  document.querySelectorAll('#page1 .section-row').forEach(row => {
+    if (!row.querySelector('.yn-checkbox-wrap')) return;
+    if (row.querySelector(':scope > .yn-rowlabel')) return;
+    // Collect leading nodes before the first pill (text and/or <b>)
+    const lead = [];
+    for (const node of Array.from(row.childNodes)) {
+      if (node.nodeType === 1 && node.classList && node.classList.contains('yn-checkbox-wrap')) break;
+      lead.push(node);
+    }
+    // Only wrap if there's actual label text
+    const hasText = lead.some(n => (n.nodeType === 3 && n.textContent.trim()) ||
+                                   (n.nodeType === 1));
+    if (!hasText) return;
+    const span = document.createElement('span');
+    span.className = 'yn-rowlabel';
+    row.insertBefore(span, row.firstChild);
+    lead.forEach(n => span.appendChild(n));
+  });
+}
+document.addEventListener('DOMContentLoaded', () => setTimeout(wrapPillRowLabels, 60));
+if (document.readyState !== 'loading') setTimeout(wrapPillRowLabels, 110);
 
 // Force Safari to repaint tables — without this, borders don't render until a reflow
 (function safariTableReflow() {
