@@ -434,126 +434,6 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
 }
 @media (max-width:540px) { .two-col { grid-template-columns:1fr; } }
 .section { margin-bottom:8px; }
-
-/* ============================================================
-   MOBILE — CARD VIEW FOR PAGE 1 SECTIONS (screen only)
-   Stacked, roomy fields with boxed inputs and pill checkboxes,
-   matching the reference layout. Print/capture untouched.
-   ============================================================ */
-@media screen and (max-width:540px) {
-  body:not(.capturing) #page1 .two-col { gap:14px 0; }
-
-  /* --- Card shell --- */
-  body:not(.capturing) #page1 .section {
-    background:var(--panel);
-    border:1px solid var(--border-bright);
-    border-radius:12px;
-    padding:16px 16px 18px;
-    margin-bottom:14px;
-    box-shadow:0 1px 5px rgba(0,0,0,0.07);
-  }
-  body.dark-mode:not(.capturing) #page1 .section {
-    background:rgba(15,21,53,0.6);
-    border-color:rgba(0,255,200,0.18);
-    box-shadow:0 0 14px rgba(0,255,200,0.05);
-  }
-  body:not(.capturing) #page1 .section .section-title {
-    margin-top:0;
-    font-size:16px;
-    border-bottom:1px solid var(--border-bright);
-    padding-bottom:6px;
-    margin-bottom:14px;
-  }
-  body:not(.capturing) #page1 hr.section-hr { display:none; }
-  /* --- Default: rows stack (label on top, control below) --- */
-  body:not(.capturing) #page1 .section-row {
-    display:flex;
-    flex-direction:column;
-    align-items:stretch;
-    gap:4px;
-    margin-bottom:11px;
-    font-size:13px;
-  }
-  body:not(.capturing) #page1 .section-row:last-child { margin-bottom:0; }
-  body:not(.capturing) #page1 .section-row b { font-size:13px; font-weight:bold; }
-
-  /* --- Boxed full-width text inputs --- */
-  body:not(.capturing) #page1 .section-row .inline-input,
-  body:not(.capturing) #page1 .section-row .full-line-input,
-  body:not(.capturing) #page1 .full-line-input {
-    width:100% !important;
-    max-width:100% !important;
-    box-sizing:border-box;
-    border:1px solid var(--border-bright) !important;
-    border-radius:8px;
-    background:var(--panel) !important;
-    padding:7px 11px !important;
-    font-size:15px !important;
-    min-height:34px;
-    color:var(--text) !important;
-  }
-  body.dark-mode:not(.capturing) #page1 .section-row .inline-input,
-  body.dark-mode:not(.capturing) #page1 .section-row .full-line-input,
-  body.dark-mode:not(.capturing) #page1 .full-line-input {
-    background:rgba(10,14,39,0.6) !important;
-    border-color:rgba(0,255,200,0.2) !important;
-    color:#E0F7FF !important;
-  }
-  body:not(.capturing) #page1 .section-row .inline-input:focus,
-  body:not(.capturing) #page1 .section-row .full-line-input:focus {
-    border-color:var(--cyan) !important;
-    box-shadow:0 0 0 2px rgba(211,94,19,0.15) !important;
-  }
-  body.dark-mode:not(.capturing) #page1 .section-row .inline-input:focus,
-  body.dark-mode:not(.capturing) #page1 .section-row .full-line-input:focus {
-    border-color:#00FFC8 !important;
-    box-shadow:0 0 0 2px rgba(0,255,200,0.18) !important;
-  }
-
-  /* --- YES/NO/AG/UG pills (built by applyYNColors as .yn-checkbox-wrap) --- */
-  /* Pills hug their content (not stretched to fill the row) and wrap, matching
-     the reference form's compact sizing. */
-  body:not(.capturing) #page1 .section-row .yn-checkbox-wrap {
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    flex:0 0 auto;
-    border:1px solid var(--border-bright);
-    border-radius:8px;
-    padding:6px 11px;
-    font-size:13px;
-    font-weight:bold;
-    background:var(--panel);
-  }
-  body.dark-mode:not(.capturing) #page1 .section-row .yn-checkbox-wrap {
-    background:rgba(10,14,39,0.4);
-    border-color:rgba(0,255,200,0.22);
-  }
-  body:not(.capturing) #page1 .section-row .yn-checkbox-wrap input[type="checkbox"] {
-    width:15px; height:15px; margin:0; flex-shrink:0;
-  }
-
-  /* Rows containing pills go horizontal so pills sit left-aligned and wrap,
-     with the leading label text on its own line above them. */
-  body:not(.capturing) #page1 .section-row:has(.yn-checkbox-wrap) {
-    flex-direction:row;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:flex-start;
-    column-gap:8px;
-    row-gap:7px;
-  }
-  body:not(.capturing) #page1 .section-row .yn-rowlabel {
-    display:block;
-    flex:1 1 100%;
-    font-size:13px;
-    font-weight:bold;
-  }
-  /* A pill row that also has a text input (e.g. LP Tank Size + AG/UG):
-     let the input take a full line, pills share the next line. */
-  body:not(.capturing) #page1 .section-row:has(.yn-checkbox-wrap) .inline-input { flex:1 1 100%; }
-}
-
 .section-title {
   font-weight:bold; font-size:12px; text-transform:uppercase;
   border-bottom:1px solid var(--border-bright);
@@ -564,14 +444,6 @@ body.dark-mode .inline-input { color:#E0F7FF; border-bottom-color:rgba(0,255,200
   display:flex; align-items:center; flex-wrap:wrap; gap:3px;
 }
 hr.section-hr { border:none; border-top:1px solid rgba(211,94,19,0.2); margin:6px 0; }
-
-/* The .yn-rowlabel span is a helper added by JS only so the mobile card view
-   can put a pill row's label on its own line. By default it is layout-neutral
-   (display:contents = as if the span weren't there), so it never affects the
-   desktop view, print output, or image capture. The mobile screen block below
-   promotes it to a real full-width flex item. */
-.yn-rowlabel { display: contents; }
-
 .full-line-input {
   width:100%; border:none; border-bottom:1px solid var(--text);
   background:transparent; color:var(--text); font-size:12px; padding:1px 2px;
@@ -751,7 +623,7 @@ body.dark-mode .miscues-textarea {
 
   /* ── 0. Page geometry ── */
   @page {
-    size: 8.5in 11in;
+    size: 8.5in 11in portrait;
     margin: 0.12in 0.15in;
   }
 
@@ -1103,7 +975,6 @@ body.dark-mode .miscues-textarea {
     width: 8.5pt !important;
     height: 8.5pt !important;
     margin: 0 0.5pt !important;
-    accent-color: #D35E13 !important;
   }
   .yn-checkbox-wrap {
     font-size: 9pt !important;
@@ -1111,14 +982,9 @@ body.dark-mode .miscues-textarea {
     gap: 0.5pt !important;
     line-height: 1.1 !important;
     border-radius: 1pt !important;
-    background: transparent !important;
-    color: #1F2937 !important;
   }
   .yn-checkbox-wrap.yn-yes { border-color: #ccc !important; color: #1F2937 !important; }
   .yn-checkbox-wrap.yn-no  { border-color: #ccc !important; color: #1F2937 !important; }
-  body.dark-mode .yn-checkbox-wrap {
-    background: transparent !important; border-color: #ccc !important; color: #1F2937 !important;
-  }
   .yn-checkbox-wrap.yn-yes.checked { background: #059669 !important; border-color: #047857 !important; color: #fff !important; }
   .yn-checkbox-wrap.yn-no.checked  { background: #DC2626 !important; border-color: #b91c1c !important; color: #fff !important; }
   .yn-checkbox-wrap.yn-opt.checked { background: #D35E13 !important; border-color: #a04a0f !important; color: #fff !important; }
@@ -1383,25 +1249,6 @@ body.dark-mode .miscues-textarea {
 
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-  /* Neutralize any lingering dark-mode backgrounds/shadows so they don't print
-     as gray boxes on mobile (the dark-mode class can still be on the body when
-     a phone rasterizes the PDF, since print events race the OS share sheet).
-     Intended light surfaces (orange headers, zebra rows, checked YN pills) are
-     re-applied by higher-specificity rules below, so they survive this wipe. */
-  body.dark-mode,
-  body.dark-mode * {
-    background-color: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    filter: none !important;
-  }
-  body.dark-mode,
-  body.dark-mode .form-page {
-    background: #FFFFFF !important;
-    color: #1F2937 !important;
-  }
-
   input::placeholder, textarea::placeholder,
   *::-webkit-input-placeholder { color: transparent !important; opacity: 0 !important; }
 
@@ -1485,24 +1332,14 @@ body.dark-mode .miscues-textarea {
   .inline-input, .full-line-input {
     font-size: 9pt !important; line-height: 1.2 !important;
     min-height: 0 !important; padding: 0 2pt !important; clip-path: none !important;
-    background: transparent !important; color: #1F2937 !important;
   }
   .full-line-input { width: 100% !important; font-size: 9pt !important; }
 
-  input[type="checkbox"] { width: 9pt !important; height: 9pt !important; accent-color: #D35E13 !important; }
-  /* Unchecked pills must be plain (no gray box / no dark-mode bleed): force
-     transparent background and neutral text regardless of any lingering
-     dark-mode variables. Checked states re-assert their fill below. */
-  .yn-checkbox-wrap {
-    font-size: 9pt !important; padding: 0 1.5pt !important; line-height: 1.1 !important;
-    background: transparent !important; border-color: #bbb !important; color: #1F2937 !important;
-  }
-  body.dark-mode .yn-checkbox-wrap {
-    background: transparent !important; border-color: #bbb !important; color: #1F2937 !important;
-  }
-  .yn-checkbox-wrap.yn-yes.checked { background: #059669 !important; border-color:#047857 !important; color:#fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .yn-checkbox-wrap.yn-no.checked  { background: #DC2626 !important; border-color:#b91c1c !important; color:#fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .yn-checkbox-wrap.yn-opt.checked { background: #D35E13 !important; border-color:#a04a0f !important; color:#fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  input[type="checkbox"] { width: 9pt !important; height: 9pt !important; }
+  .yn-checkbox-wrap { font-size: 9pt !important; padding: 0 1.5pt !important; line-height: 1.1 !important; }
+  .yn-checkbox-wrap.yn-yes.checked { background: #059669 !important; -webkit-print-color-adjust: exact !important; }
+  .yn-checkbox-wrap.yn-no.checked  { background: #DC2626 !important; -webkit-print-color-adjust: exact !important; }
+  .yn-checkbox-wrap.yn-opt.checked { background: #D35E13 !important; -webkit-print-color-adjust: exact !important; }
 
   #page1 textarea.multiline, .miscues-textarea {
     display: none !important;
@@ -1630,14 +1467,293 @@ body.dark-mode .miscues-textarea {
 @media print {
   .action-bar { display: none !important; }
 }
+
+/* ===== MOBILE PAGE-1 — CARD + STACKED ROWS (screen only) =====
+   Each section becomes a card; each row stacks its label on its own line with
+   checkboxes/inputs flowing below. Labels are wrapped by labelPage1Rows() in
+   JS. Desktop and print are untouched. Page-2 matrix tables are left as-is. */
+@media screen and (max-width: 767px) {
+  body:not(.capturing):not(.printing) #page1 hr.section-hr { display: none !important; }
+
+  /* Section = card. */
+  body:not(.capturing):not(.printing) #page1 .section {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  body.dark-mode:not(.capturing):not(.printing) #page1 .section { border-color: var(--border-bright); }
+
+  body:not(.capturing):not(.printing) #page1 .section-title {
+    font-size: 13px !important;
+    margin: 0 0 10px !important;
+    padding-bottom: 6px !important;
+  }
+
+  /* Stack rows: label full-width line, controls wrap beneath. */
+  body:not(.capturing):not(.printing) #page1 .section-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px 8px !important;
+    margin-bottom: 14px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+  body:not(.capturing):not(.printing) #page1 .section-row:last-child { margin-bottom: 0 !important; }
+
+  /* The wrapped leading label gets its own full-width line. */
+  body:not(.capturing):not(.printing) #page1 .section-row .row-label-text {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    font-weight: 600 !important;
+  }
+  /* Bold labels (<b>) inside the wrap shouldn't double up weight oddly. */
+  body:not(.capturing):not(.printing) #page1 .section-row .row-label-text b { font-weight: 700 !important; }
+
+  /* Free-text inputs full width (override inline style widths). */
+  body:not(.capturing):not(.printing) #page1 .section-row .inline-input {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    border: 1px solid var(--border-bright) !important;
+    border-radius: 6px !important;
+    padding: 2px 10px !important;
+    background: var(--bg) !important;
+    font-size: 16px !important;
+  }
+  body:not(.capturing):not(.printing) #page1 .section-row .full-line-input {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+    border: 1px solid var(--border-bright) !important;
+    border-radius: 6px !important;
+    padding: 2px 10px !important;
+    background: var(--bg) !important;
+    font-size: 16px !important;
+  }
+
+  /* Checkbox pills: bigger, easy to tap, flow below the label. */
+  body:not(.capturing):not(.printing) #page1 .section-row .yn-checkbox-wrap {
+    font-size: 13px !important;
+    padding: 6px 12px 6px 8px !important;
+    border-radius: 6px !important;
+  }
+  body:not(.capturing):not(.printing) #page1 .section-row .yn-checkbox-wrap input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 5px 0 0 !important;
+  }
+
+  /* Multiline textareas (Needs Completed / Why Not) full width. */
+  body:not(.capturing):not(.printing) #page1 .section-row .multiline {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border: 1px solid var(--border-bright) !important;
+    border-radius: 6px !important;
+    padding: 8px 10px !important;
+    min-height: 90px !important;
+    font-size: 16px !important;
+    background: var(--bg) !important;
+  }
+
+  /* Top-fields (Customer Name block) = card, matching the sections. */
+  body:not(.capturing):not(.printing) #page1 .top-fields {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  body.dark-mode:not(.capturing):not(.printing) #page1 .top-fields { border-color: var(--border-bright); }
+
+  /* Stack each field as label-over-input, like the section card rows. */
+  body:not(.capturing):not(.printing) #page1 .top-fields .field-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    margin-bottom: 14px !important;
+  }
+  body:not(.capturing):not(.printing) #page1 .top-fields-row:last-child .field-row:last-child {
+    margin-bottom: 0 !important;
+  }
+  body:not(.capturing):not(.printing) #page1 .top-fields .field-row label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    white-space: normal !important;
+  }
+  body:not(.capturing):not(.printing) #page1 .top-fields .field-row input[type="text"],
+  body:not(.capturing):not(.printing) #page1 .top-fields .field-row input[type="date"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    border: 1px solid var(--border-bright) !important;
+    border-radius: 6px !important;
+    padding: 2px 10px !important;
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    font-size: 16px !important;
+  }
+
+  /* Regulators row = card, matching the sections. */
+  body:not(.capturing):not(.printing) #page2 .reg-row {
+    border: 1px solid var(--border) !important;
+    border-top: 1px solid var(--border) !important;
+    border-bottom: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    background: var(--panel) !important;
+    padding: 12px 14px !important;
+    margin-bottom: 12px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px 12px !important;
+    align-items: stretch !important;
+  }
+  body.dark-mode:not(.capturing):not(.printing) #page2 .reg-row { border-color: var(--border-bright) !important; }
+
+  body:not(.capturing):not(.printing) #page2 .reg-row .reg-title {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    font-size: 13px !important;
+    margin: 0 0 4px !important;
+    padding-bottom: 6px !important;
+    border-bottom: 1px solid var(--border-bright) !important;
+  }
+
+  /* Stack each regulator field as label-over-input. */
+  body:not(.capturing):not(.printing) #page2 .reg-row .reg-field {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+  }
+  body:not(.capturing):not(.printing) #page2 .reg-row .reg-field label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: normal !important;
+    line-height: 1.3 !important;
+  }
+  body:not(.capturing):not(.printing) #page2 .reg-row .reg-field input[type="text"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    border: 1px solid var(--border-bright) !important;
+    border-radius: 6px !important;
+    padding: 2px 10px !important;
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    font-size: 16px !important;
+  }
+}
+
+/* ===== MOBILE — MATERIAL TABLES, NATIVE LAYOUT (screen only) =====
+   Keep the real desktop table look (orange titles, section bands, striping)
+   and just shrink it to fit the phone, with bigger inputs so they're easy to
+   tap and >=16px text so iOS doesn't zoom on focus. The table already uses
+   table-layout:fixed/width:100%, so it fits without horizontal scroll. */
+@media screen and (max-width: 767px) {
+  body:not(.printing):not(.capturing) .grid-section {
+    overflow-x: visible !important; margin-bottom: 14px !important;
+  }
+  body:not(.printing):not(.capturing) table.mat-table {
+    width: 100% !important; table-layout: auto !important; font-size: 12px !important;
+  }
+  body:not(.printing):not(.capturing) table.mat-table col.col-data { width: 40px !important; }
+  body:not(.printing):not(.capturing) table.mat-table td:not(.row-label),
+  body:not(.printing):not(.capturing) table.mat-table th:not(:first-child) {
+    width: 40px !important;
+  }
+
+  body:not(.printing):not(.capturing) table.mat-table th {
+    font-size: 12px !important; padding: 7px 2px !important;
+  }
+  body:not(.printing):not(.capturing) table.mat-table td.row-label {
+    font-size: 12px !important; padding: 6px 8px !important; line-height: 1.2 !important;
+    text-align: left !important; white-space: nowrap !important;
+  }
+  body:not(.printing):not(.capturing) table.mat-table td.row-label.section-header {
+    font-size: 12px !important; padding: 7px 4px !important;
+  }
+  body:not(.printing):not(.capturing) table.mat-table td { padding: 2px !important; }
+  body:not(.printing):not(.capturing) table.mat-table td input[type="number"] {
+    width: 100% !important; height: 30px !important; text-align: center !important;
+    font-size: 16px !important;                 /* >=16px stops iOS zoom-on-focus */
+    padding: 0 !important; box-sizing: border-box !important;
+  }
+}
+
+/* ===== PRINT — DETERMINISTIC CARD KILL (does not rely on .printing) =====
+   iOS Safari can apply the @media screen card rules while building the PDF.
+   These rules use IDs (#page1 / #page2) so they outrank every screen card
+   rule (which has no ID) regardless of .printing-class timing. They force
+   inputs to print white with dark text.
+
+   NOTE: the page-2 material tables intentionally do NOT get display/width/
+   flex/grid overrides here. Those overrides fight `table-layout:fixed` and
+   collapse the row-label column (labels wrapped one char per line and page 2
+   spilled onto a 3rd sheet). The mobile card layout is already kept out of
+   print by the `.printing` class (set by the PDF button) and by the card
+   rules being @media screen only, so the structural reset is unnecessary. */
+@media print {
+  /* Page-1 field inputs: white fill, dark text, underline (not a box).
+     The :not(#_) raises specificity above the screen card rule, which also
+     carries #page1, so this wins even if .printing hasn't been applied. */
+  body:not(.capturing) #page1 .section-row .inline-input:not(#_),
+  body:not(.capturing) #page1 .section-row .full-line-input:not(#_) {
+    background: #fff !important;
+    color: #1F2937 !important; -webkit-text-fill-color: #1F2937 !important;
+    border: none !important; border-bottom: 0.5pt solid #999 !important;
+    border-radius: 0 !important; box-shadow: none !important;
+    height: auto !important; min-height: 0 !important;
+  }
+  body:not(.capturing) #page1 .section-row .multiline:not(#_) {
+    background: #fff !important; color: #1F2937 !important;
+    border-radius: 0 !important; box-shadow: none !important;
+  }
+  body:not(.capturing) #page1 .section-row .row-label-text:not(#_) { display: inline !important; }
+
+  /* Page-2 number inputs: print white with dark text (no structural reset). */
+  #page2 table.mat-table tbody td input[type="number"] {
+    background: #fff !important;
+    color: #1F2937 !important; -webkit-text-fill-color: #1F2937 !important;
+    border: none !important; border-radius: 0 !important;
+    box-shadow: none !important; height: auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
+<style>
+.build-badge{position:fixed;bottom:8px;left:8px;z-index:99999;
+  font:600 11px/1 -apple-system,system-ui,sans-serif;
+  background:#D35E13;color:#fff;padding:5px 9px;border-radius:6px;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);opacity:.9;pointer-events:none;}
+@media print{.build-badge{display:none !important;}}
+</style>
 
 <!-- ========== ACTION BAR ========== -->
 <div class="action-bar" id="action-bar">
   <button class="btn" onclick="window.location.href='../'">🏠 HOME</button>
-  <button class="btn" onclick="(function(){ document.title = buildFileName('pdf', null).replace('.pdf',''); setTimeout(function(){ window.print(); }, 100); })()">📄 PDF</button>
+  <button class="btn" onclick="(function(){ document.title = buildFileName('pdf', null).replace('.pdf',''); document.body.classList.add('printing'); setTimeout(function(){ window.print(); }, 100); })()">📄 PDF</button>
   <button class="btn" id="btn-capture" onclick="saveSmart()">📸 CAPTURE</button>
   <button class="btn" onclick="clearForm()">🗑 CLEAR</button>
   <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle dark mode" aria-label="Toggle dark mode">
@@ -1936,6 +2052,23 @@ const MISC_ROWS = [
   MISC_ROWS.forEach(r => addRow(b, r.label, 5, r.isHeader || false));
 })();
 
+/* Copy each table's size headers onto its data cells (data-size) so the
+   mobile card layout can label every number input. Screen-only CSS reads it;
+   it has no effect on desktop or print. */
+(function labelMatTableCells() {
+  document.querySelectorAll('table.mat-table').forEach(function(t) {
+    var sizes = Array.prototype.slice.call(t.querySelectorAll('thead th'))
+      .slice(1)                                   // drop the title cell
+      .map(function(th) { return th.textContent.trim(); });
+    t.querySelectorAll('tbody tr').forEach(function(tr) {
+      var dataCells = tr.querySelectorAll('td:not(.row-label)');
+      Array.prototype.forEach.call(dataCells, function(td, i) {
+        if (sizes[i]) td.setAttribute('data-size', sizes[i]);
+      });
+    });
+  });
+})();
+
 /* ================================================================
    YES / NO PILL BUTTONS
 ================================================================ */
@@ -1963,35 +2096,43 @@ function applyYNColors() {
     sync();
   });
 }
-document.addEventListener('DOMContentLoaded', applyYNColors);
-if (document.readyState !== 'loading') setTimeout(applyYNColors, 50);
 
-/* Wrap the leading label text of each pill row in a span so mobile CSS can
-   put it on its own line above the YES/NO pills. Additive only — no inputs
-   are added/removed/reordered; harmless to print/capture (styled only under
-   the mobile media query). */
-function wrapPillRowLabels() {
-  document.querySelectorAll('#page1 .section-row').forEach(row => {
-    if (!row.querySelector('.yn-checkbox-wrap')) return;
-    if (row.querySelector(':scope > .yn-rowlabel')) return;
-    // Collect leading nodes before the first pill (text and/or <b>)
-    const lead = [];
-    for (const node of Array.from(row.childNodes)) {
-      if (node.nodeType === 1 && node.classList && node.classList.contains('yn-checkbox-wrap')) break;
-      lead.push(node);
+// ===== MOBILE PAGE-1 — WRAP ROW LABELS =====
+// Each .section-row begins with bare label text (e.g. "Natural Gas: ") before
+// its checkboxes/inputs. To put the label on its own line in the mobile card
+// layout, wrap that leading text in <span class="row-label-text">. Runs BEFORE
+// applyYNColors so it only touches the question label, not the YES/NO text.
+function labelPage1Rows() {
+  var p1 = document.getElementById('page1');
+  if (!p1) return;
+  p1.querySelectorAll('.section-row').forEach(function (row) {
+    if (row.querySelector('.row-label-text')) return;            // already done
+    // Skip rows that are just a full-width input or textarea with no label.
+    var first = row.firstChild;
+    // Walk leading nodes, collecting text/<b> until we hit an input/checkbox/textarea.
+    var labelNodes = [];
+    var n = first;
+    while (n) {
+      if (n.nodeType === 1 && /^(INPUT|TEXTAREA|SELECT)$/.test(n.tagName)) break;
+      if (n.nodeType === 1 && n.classList && n.classList.contains('yn-checkbox-wrap')) break;
+      labelNodes.push(n);
+      n = n.nextSibling;
     }
-    // Only wrap if there's actual label text
-    const hasText = lead.some(n => (n.nodeType === 3 && n.textContent.trim()) ||
-                                   (n.nodeType === 1));
-    if (!hasText) return;
-    const span = document.createElement('span');
-    span.className = 'yn-rowlabel';
-    row.insertBefore(span, row.firstChild);
-    lead.forEach(n => span.appendChild(n));
+    if (!labelNodes.length) return;
+    // Only wrap if there's actual label text (not just whitespace).
+    var txt = labelNodes.map(function (x) { return x.textContent; }).join('').trim();
+    if (!txt) return;
+    var span = document.createElement('span');
+    span.className = 'row-label-text';
+    row.insertBefore(span, labelNodes[0]);
+    labelNodes.forEach(function (x) { span.appendChild(x); });
   });
 }
-document.addEventListener('DOMContentLoaded', () => setTimeout(wrapPillRowLabels, 60));
-if (document.readyState !== 'loading') setTimeout(wrapPillRowLabels, 110);
+document.addEventListener('DOMContentLoaded', labelPage1Rows);
+if (document.readyState !== 'loading') labelPage1Rows();
+
+document.addEventListener('DOMContentLoaded', applyYNColors);
+if (document.readyState !== 'loading') setTimeout(applyYNColors, 50);
 
 // Force Safari to repaint tables — without this, borders don't render until a reflow
 (function safariTableReflow() {
@@ -2046,7 +2187,67 @@ if (document.readyState !== 'loading') setTimeout(wrapPillRowLabels, 110);
     document.body.style.webkitTextSizeAdjust = '';
     document.body.style.textSizeAdjust = '';
   });
+
+  /* ----------------------------------------------------------------
+     triggerPrint() — fixes the "first print is wrong" bug on Mobile
+     Safari. Instead of calling window.print() immediately (which lets
+     Safari snapshot the page BEFORE the print viewport/layout has been
+     applied on the first tap), we:
+       1. force the print layout (.printing class + filename),
+       2. apply the 1050px print viewport/width up front (don't wait for
+          the beforeprint event, which fires too late the first time),
+       3. wait two animation frames so Safari commits the new layout,
+       4. THEN print.
+     Result: the first print matches every subsequent print.
+  ---------------------------------------------------------------- */
+  window.triggerPrint = function() {
+    document.body.classList.add('printing');
+    try { document.title = buildFileName('pdf', null).replace('.pdf',''); } catch (e) {}
+
+    // Pre-apply the same print viewport/width the beforeprint handler uses,
+    // so the very first print already renders at full desktop width.
+    if (isIOS) {
+      if (metaViewport) metaViewport.setAttribute('content', 'width=1050, initial-scale=1.0');
+      document.body.style.width = '1050px';
+      document.body.style.maxWidth = '1050px';
+      document.body.style.webkitTextSizeAdjust = 'none';
+      document.body.style.textSizeAdjust = 'none';
+    }
+
+    // Safety: drop the printing class after a while in case afterprint
+    // never fires (Mobile Safari sometimes skips it).
+    setTimeout(function(){ document.body.classList.remove('printing'); }, 10000);
+
+    // Wait two frames so the layout above is actually committed, then print.
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        window.print();
+      });
+    });
+  };
 })();
+
+/* ================================================================
+   PRINTING-CLASS CLEANUP (all platforms)
+   The 📄 PDF button adds body.printing before window.print() so the
+   mobile-card @media screen rules (guarded by :not(.printing)) never
+   leak into the printout. This removes the class once printing ends.
+   A timeout safety-net covers browsers that skip afterprint.
+   Desktop print otherwise relies entirely on the @media print CSS,
+   exactly like the known-good version. iOS Safari keeps its own
+   dedicated print path defined above — untouched.
+================================================================ */
+(function(){
+  function clearPrinting(){ document.body.classList.remove('printing'); }
+  window.addEventListener('afterprint', clearPrinting);
+  // matchMedia is the reliable "leaving print" signal in WebKit/Chrome.
+  if (window.matchMedia) {
+    var mq = window.matchMedia('print');
+    var handler = function(e){ if (!e.matches) clearPrinting(); };
+    if (mq.addEventListener) mq.addEventListener('change', handler);
+    else if (mq.addListener) mq.addListener(handler);
+  }
+}());
 const SAVE_KEY = 'aog_gas_install_v1';
 let saveTimer = null;
 
@@ -2157,6 +2358,9 @@ function buildFileName(ext, page) {
    before capture so images look like the printed output.
 ================================================================ */
 function injectCaptureStyles() {
+  // Disable the mobile card layout during capture so html2canvas renders the
+  // desktop/print arrangement (the mobile @media rules are scoped to
+  // body:not(.capturing)).
   document.body.classList.add('capturing');
   const el = document.createElement('style');
   el.id = 'capture-print-styles';
@@ -2215,7 +2419,7 @@ function injectCaptureStyles() {
     #page1 .inline-input, #page1 .full-line-input { font-size:12pt!important; min-height:16pt!important; }
     #page1 input[type="text"], #page1 input[type="date"] { font-size:12pt!important; min-height:16pt!important; }
     #page1 .yn-checkbox-wrap { font-size:12pt!important; padding:2pt 6pt 2pt 3pt!important; gap:3pt!important; }
-    #page1 input[type="checkbox"] { width:14pt!important; height:14pt!important; accent-color:#D35E13!important; }
+    #page1 input[type="checkbox"] { width:14pt!important; height:14pt!important; }
     #page1 textarea.multiline, #page1 .miscues-textarea, #page1 .print-proxy { font-size:12pt!important; line-height:1.4!important; }
     #page1 .section { margin-bottom:4pt!important; }
     #page1 hr.section-hr { margin:5pt 0!important; }
@@ -2299,9 +2503,9 @@ function clearCaptureProxies() {
 }
 function removeCaptureStyles() {
   clearCaptureProxies();
-  document.body.classList.remove('capturing');
   const el = document.getElementById('capture-print-styles');
   if (el) el.remove();
+  document.body.classList.remove('capturing');
 }
 
 
@@ -2749,6 +2953,7 @@ function saveForAndroid() {
   // Also expose as global so you can call AOGDebug() manually in console
   window.AOGDebug = () => logPrintState('MANUAL CALL');
 })();
+
 function setStatus(msg) {
   const el = document.getElementById('save-status');
   if (el) el.textContent = msg;
@@ -2842,22 +3047,22 @@ function setStatus(msg) {
 
     // ── top-fields inputs (Customer Name, Date, Address etc.) ──
     document.querySelectorAll('.top-fields-row .field-row input[type="text"]').forEach(el =>
-      save(el, 'display:inline!important;width:55%!important;min-width:0!important;box-sizing:border-box!important;font-size:9pt!important;text-align:left!important;background:transparent!important;border:none!important;border-bottom:0.5pt solid #999!important;border-radius:0!important;box-shadow:none!important;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;'));
+      save(el, 'display:inline!important;width:55%!important;min-width:0!important;box-sizing:border-box!important;font-size:9pt!important;text-align:left!important;'));
     document.querySelectorAll('.top-fields-row .field-row input[type="date"]').forEach(el =>
-      save(el, 'display:inline-block!important;width:auto!important;min-width:0!important;max-width:60%!important;box-sizing:border-box!important;font-size:9pt!important;text-align:left!important;vertical-align:baseline!important;background:transparent!important;border:none!important;border-bottom:0.5pt solid #999!important;border-radius:0!important;box-shadow:none!important;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;'));
+      save(el, 'display:inline-block!important;width:auto!important;min-width:0!important;max-width:60%!important;box-sizing:border-box!important;font-size:9pt!important;text-align:left!important;vertical-align:baseline!important;'));
 
     // ── inline inputs — shorten team member fields ──
     document.querySelectorAll('.section-row .inline-input').forEach(el => {
       const style = el.getAttribute('style') || '';
       const w = style.includes('25ch') ? '17ch' : style.includes('20ch') ? '17ch' : style.includes('15ch') ? '17ch' : style.includes('10ch') ? '10ch' : '7ch';
-      save(el, 'width:' + w + '!important;font-size:7pt!important;line-height:1.2!important;min-height:0!important;padding:0 2pt!important;clip-path:none!important;-webkit-appearance:none!important;background:transparent!important;border:none!important;border-bottom:0.5pt solid #999!important;border-radius:0!important;box-shadow:none!important;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;');
+      save(el, 'width:' + w + '!important;font-size:7pt!important;line-height:1.2!important;min-height:0!important;padding:0 2pt!important;clip-path:none!important;-webkit-appearance:none!important;');
     });
     document.querySelectorAll('.section-row .inline-input').forEach(el =>
       el.style.setProperty('font-size', '7pt', 'important'));
 
     // ── full-line inputs ──
     document.querySelectorAll('.full-line-input').forEach(el =>
-      save(el, 'font-size:9pt!important;width:100%!important;background:transparent!important;border:none!important;border-bottom:0.5pt solid #999!important;border-radius:0!important;box-shadow:none!important;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;'));
+      save(el, 'font-size:9pt!important;width:100%!important;'));
 
     // ── force font-size via setProperty on all inputs/textareas (Safari ignores cssText) ──
     document.querySelectorAll('input[type="text"], input[type="date"]').forEach(el => {
@@ -2889,20 +3094,9 @@ function setStatus(msg) {
 
     // ── checkboxes and yn pills ──
     document.querySelectorAll('input[type="checkbox"]').forEach(el =>
-      save(el, 'width:9pt!important;height:9pt!important;margin:0 0.5pt!important;accent-color:#D35E13!important;'));
-    document.querySelectorAll('.yn-checkbox-wrap').forEach(el => {
-      var base = 'font-size:9pt!important;padding:0.25pt 2pt 0.25pt 0.5pt!important;gap:0.5pt!important;line-height:1.1!important;border-radius:1pt!important;';
-      if (el.classList.contains('checked')) {
-        // Preserve the checked fill color (green/red/orange) even in dark mode.
-        var fill = el.classList.contains('yn-no') ? '#DC2626'
-                 : el.classList.contains('yn-opt') ? '#D35E13'
-                 : '#059669';
-        save(el, base + 'background:' + fill + '!important;border:1px solid ' + fill + '!important;color:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;');
-      } else {
-        // Unchecked: plain, no gray box / no dark-mode background bleed.
-        save(el, base + 'background:transparent!important;border:1px solid #bbb!important;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;');
-      }
-    });
+      save(el, 'width:9pt!important;height:9pt!important;margin:0 0.5pt!important;'));
+    document.querySelectorAll('.yn-checkbox-wrap').forEach(el =>
+      save(el, 'font-size:9pt!important;padding:0.25pt 2pt 0.25pt 0.5pt!important;gap:0.5pt!important;line-height:1.1!important;border-radius:1pt!important;'));
 
     // ── mat-tables ──
     document.querySelectorAll('table.mat-table').forEach(el =>
@@ -2952,6 +3146,9 @@ function setStatus(msg) {
     wasDark = document.body.classList.contains('dark-mode');
     restored = false;
     if (wasDark) document.body.classList.remove('dark-mode');
+    // Disable the mobile card layout so page 1 prints as the compact
+    // 1-page form (and inputs aren't dark-filled boxes in dark mode).
+    document.body.classList.add('printing');
     // Safety fallback in case all events fail
     clearTimeout(restoreTimer);
     restoreTimer = setTimeout(restoreDark, 8000);
@@ -2962,6 +3159,7 @@ function setStatus(msg) {
     restored = true;
     active = false;
     clearTimeout(restoreTimer);
+    document.body.classList.remove('printing');
     if (wasDark) {
       document.body.classList.add('dark-mode');
       wasDark = false;
