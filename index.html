@@ -2623,11 +2623,11 @@ function capturePageToCanvas() {
         // media query (max-width:600px) still matches the narrow device viewport
         // during html2canvas cloning and would otherwise force each field to its
         // own line, dropping the date below. These !important rules win in the clone.
-        '#name-job-date-row { flex-wrap: nowrap !important; column-gap: 6px !important; }',
-        '#name-job-date-row label { flex: 0 0 auto !important; width: auto !important; }',
-        '#name-job-date-row #name { flex: 2 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
-        '#name-job-date-row #number { flex: 1 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
-        '#name-job-date-row #date { flex: 1 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
+        '#cust-info-body #name-job-date-row { flex-wrap: nowrap !important; column-gap: 6px !important; }',
+        '#cust-info-body #name-job-date-row label { flex: 0 0 auto !important; width: auto !important; }',
+        '#cust-info-body #name-job-date-row #name { flex: 2 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
+        '#cust-info-body #name-job-date-row #number { flex: 1 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
+        '#cust-info-body #name-job-date-row #date { flex: 1 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
         // Mobile renders the form smaller; bump the root font so the content
         // reads at a comfortable size. Desktop gets a slight +1.5px bump too.
         (_isMobileCap ? 'html { font-size: 29.3px !important; }' : 'html { font-size: 19.3px !important; }'),
