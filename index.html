@@ -1930,6 +1930,10 @@ function openPrintPreview() {
   var isMobileChrome = document.body.classList.contains('mobile-chrome');
   var isIPad         = document.body.classList.contains('ipad');
   var isNarrowMobile = isMobileSafari || isMobileChrome;
+  // Real phone flag captured BEFORE the iPad blocks below reassign
+  // isMobileSafari/isNarrowMobile to true. Used for the landscape→portrait
+  // viewport override so it only targets actual phones.
+  var isPhone        = isMobileSafari || isMobileChrome;
   var wasDark        = document.body.classList.contains('dark-mode');
 
   // ── Set document title for PDF filename (name + address + report) ──
@@ -1966,6 +1970,22 @@ function openPrintPreview() {
     vp.setAttribute('content', 'width=835, initial-scale=1, viewport-fit=cover');
     isNarrowMobile = true;
     isMobileSafari = true;
+  }
+
+  // ── Phone in landscape: force a portrait-width viewport before printing ──
+  // With width=device-width, a phone held in landscape gives a wide layout
+  // viewport, so the stamped 820px sheet renders scaled into a landscape page.
+  // Pin the viewport to the device's PORTRAIT (narrow) CSS width so the page
+  // lays out exactly as it would in portrait, regardless of physical rotation.
+  // origVP (captured above) restores the real value when the dialog closes.
+  // (Image capture path is separate and intentionally left untouched.)
+  var _isLandscape = (window.matchMedia && window.matchMedia('(orientation: landscape)').matches)
+                     || (window.innerWidth > window.innerHeight);
+  if (isPhone && _isLandscape && vp) {
+    // Math.min() = the narrow (portrait) dimension regardless of whether the
+    // browser rotates screen.width/height with orientation.
+    var _portraitW = Math.min(screen.width || 0, screen.height || 0) || 390;
+    vp.setAttribute('content', 'width=' + _portraitW + ', initial-scale=1, maximum-scale=1, viewport-fit=cover');
   }
 
   // ── Snapshot store — every element we touch gets its original style saved ──
