@@ -2874,6 +2874,35 @@ function capturePageToCanvas() {
                   if (_cd.parentNode) _cd.parentNode.replaceChild(_sp, _cd);
                 }
               } catch (e) {}
+
+              // ── Force Name/Job#/Date proportions INLINE in the clone ──
+              // The injected capture-force-style kept losing to the
+              // @media(max-width:600px) !important rules inside html2canvas's
+              // clone (portrait collapsed the row). Inline styles on the cloned
+              // elements can't be outranked by any stylesheet/media query, so
+              // set the 2/1/1 split directly. Mirrors the landscape target.
+              try {
+                var _row2 = clonedDoc.getElementById('name-job-date-row');
+                if (_row2) {
+                  _row2.style.setProperty('flex-wrap', 'nowrap', 'important');
+                  _row2.style.setProperty('column-gap', '6px', 'important');
+                  Array.prototype.forEach.call(_row2.querySelectorAll('label'), function (l) {
+                    l.style.setProperty('flex', '0 0 auto', 'important');
+                    l.style.setProperty('width', 'auto', 'important');
+                  });
+                  function _setFlex2(el, grow) {
+                    if (!el) return;
+                    el.style.setProperty('flex', grow + ' 1 0', 'important');
+                    el.style.setProperty('width', 'auto', 'important');
+                    el.style.setProperty('min-width', '0', 'important');
+                    el.style.setProperty('max-width', 'none', 'important');
+                  }
+                  _setFlex2(clonedDoc.getElementById('name'), 2);
+                  _setFlex2(clonedDoc.getElementById('number'), 1);
+                  _setFlex2(clonedDoc.getElementById('date'), 1); // present if no date value
+                  if (typeof _sp !== 'undefined' && _sp) _setFlex2(_sp, 1); // the date span
+                }
+              } catch (e) {}
             }
           }).then(srcCanvas => {
             restoreCapture();
