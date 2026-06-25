@@ -1224,10 +1224,13 @@ body.dark-mode::-webkit-scrollbar-thumb:hover { background: linear-gradient(180d
    ════════════════════════════════════════════════════════════════════════ */
 @media print {
   html.ipad { font-size: 18.3px !important; }
-  html.ipad, html.ipad body { width: auto !important; max-width: 100% !important; display: block !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
+  /* Lock the iPad PDF to a fixed 8.7in width (835px @ 96dpi). The viewport meta
+     doesn't affect print, so width:auto let iPad Safari pick its own print width;
+     pinning 835px makes the iPad PDF deterministically 8.7in wide. */
+  html.ipad, html.ipad body { width: 835px !important; max-width: 835px !important; margin: 0 auto !important; display: block !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
 
   html.ipad .page {
-    width: 100% !important; max-width: 100% !important;
+    width: 100% !important; max-width: 835px !important;
     /* ~8px each side (was ~0.13in/12.5px): nudges the content ~8px wider still,
        even padding, to wrap long rows even less. */
     padding: 4px 8px 0 8px !important;
@@ -2624,7 +2627,7 @@ function capturePageToCanvas() {
         '#name-job-date-row label { flex: 0 0 auto !important; width: auto !important; }',
         '#name-job-date-row #name { flex: 2 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
         '#name-job-date-row #number { flex: 1 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
-        '#name-job-date-row #date { flex: 0 0 100px !important; width: 100px !important; max-width: none !important; min-width: 100px !important; }',
+        '#name-job-date-row #date { flex: 1 1 0 !important; width: auto !important; max-width: none !important; min-width: 0 !important; }',
         // Mobile renders the form smaller; bump the root font so the content
         // reads at a comfortable size. Desktop gets a slight +1.5px bump too.
         (_isMobileCap ? 'html { font-size: 29.3px !important; }' : 'html { font-size: 19.3px !important; }'),
@@ -2654,6 +2657,25 @@ function capturePageToCanvas() {
         // bottom padding / height so the border sits clear below the text.
         '.header { padding-bottom: 12px !important; min-height: 64px !important; align-items: center !important; }',
         '.header-logo { align-items: center !important; }',
+        // ── Match the PDF (print) layout in the captured image ──
+        // html2canvas evaluates media queries against the real ~390px device
+        // width, so the narrow max-width:768/600 rules fire and make the image
+        // look "mobile" (small header, stacked customer-info, 1-col test grid)
+        // while the PDF uses the wide print layout. Re-assert the wide/print
+        // values (copied from the @media print header rules) so the saved image
+        // matches the PDF side by side.
+        '.header-logo { padding-left: 0 !important; }',
+        '.logo-img { width: 46px !important; height: 46px !important; }',
+        '.company-name { font-size: calc(1.05rem + 0.3px) !important; letter-spacing: 1px !important; white-space: nowrap !important; }',
+        '.doc-title { font-size: calc(1.05rem + 0.3px) !important; letter-spacing: 1.5px !important; white-space: nowrap !important; }',
+        // Customer-info: keep fields on single rows (undo the max-width:600 stacking)
+        '#cust-info-body .field-row, #cust-info-body .field-row-nowrap { flex-wrap: nowrap !important; }',
+        '#cust-info-body .field-row label { flex: 0 0 auto !important; width: auto !important; }',
+        '#cust-info-body .field-row input, #cust-info-body .field-row select { flex: 1 1 0 !important; width: auto !important; min-width: 0 !important; max-width: none !important; }',
+        '#model-serial-hrs-row { flex-wrap: nowrap !important; gap: 6px !important; }',
+        '#model-serial-hrs-row > span { flex: 1 1 0 !important; width: auto !important; min-width: 0 !important; }',
+        // Sim "Simulated Power Test" grid: keep two-up like the print layout
+        '.test-grid { grid-template-columns: 1fr 1fr !important; }',
         // Hide placeholder hint text in the captured image.
         'input::placeholder, textarea::placeholder { color: transparent !important; opacity: 0 !important; }',
         'input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: transparent !important; opacity: 0 !important; }',
