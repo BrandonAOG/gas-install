@@ -937,7 +937,7 @@ body.dark-mode::-webkit-scrollbar-thumb:hover { background: linear-gradient(180d
   html.macos textarea,
   html.macos select         { font-size: calc(0.626rem - 0.45px) !important; min-height: 16px !important; }
   html.macos #batnotes      { height: 40px !important; min-height: 40px !important; max-height: 40px !important; overflow: hidden !important; }
-  html.macos #gennotes      { height: 90px !important; min-height: 90px !important; max-height: 90px !important; overflow: hidden !important; }
+  html.macos #gennotes      { height: 100px !important; min-height: 100px !important; max-height: 100px !important; overflow: hidden !important; }
   html.macos #oilnotes,
   html.macos #gasnotes,
   html.macos #tsnotes       { height: 40px !important; min-height: 40px !important; max-height: 40px !important; overflow: hidden !important; }
@@ -1042,7 +1042,7 @@ body.dark-mode::-webkit-scrollbar-thumb:hover { background: linear-gradient(180d
   textarea { height: auto !important; min-height: 30px !important; background: white !important; border: 0.5px solid #D35E13 !important; font-size: calc(0.706rem + 0.3px) !important; padding: 1px 3px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
   #batnotes { height: 40px !important; min-height: 40px !important; max-height: 40px !important; overflow: hidden !important; }
-  #gennotes { height: 90px !important; min-height: 90px !important; max-height: 90px !important; overflow: hidden !important; }
+  #gennotes { height: 100px !important; min-height: 100px !important; max-height: 100px !important; overflow: hidden !important; }
   #oilnotes { height: 40px !important; min-height: 40px !important; max-height: 40px !important; overflow: hidden !important; }
   #svcnotes { height: 40px !important; min-height: 40px !important; max-height: 40px !important; overflow: hidden !important; }
   #gasnotes { height: 40px !important; min-height: 40px !important; max-height: 40px !important; overflow: hidden !important; }
@@ -1131,7 +1131,7 @@ body.dark-mode::-webkit-scrollbar-thumb:hover { background: linear-gradient(180d
   body.mobile-safari #date, body.mobile-safari #number { min-width: 120px !important; flex-shrink: 0 !important; width: auto !important; }
   /* Tightened from 60/40px to recover the ~25px lost to the new 0.25in @page bottom margin */
   body.mobile-safari #batnotes { height: 32px !important; min-height: 32px !important; max-height: 32px !important; overflow: hidden !important; }
-  body.mobile-safari #gennotes { height: 90px !important; min-height: 90px !important; max-height: 90px !important; overflow: hidden !important; }
+  body.mobile-safari #gennotes { height: 88px !important; min-height: 88px !important; max-height: 88px !important; overflow: hidden !important; }
   body.mobile-safari #oilnotes, body.mobile-safari #gasnotes, body.mobile-safari #tsnotes, body.mobile-safari #svcnotes { height: 32px !important; min-height: 32px !important; max-height: 32px !important; overflow: hidden !important; }
   /* Mobile prints the 820px layout scaled down to fit, shrinking controls.
      Bump them back up so they read the same size as desktop print. */
@@ -1174,7 +1174,7 @@ body.dark-mode::-webkit-scrollbar-thumb:hover { background: linear-gradient(180d
   body.mobile-chrome #name { flex: 0 1 50% !important; min-width: 0 !important; }
   body.mobile-chrome #date, body.mobile-chrome #number { min-width: 120px !important; flex-shrink: 0 !important; width: auto !important; }
   body.mobile-chrome #batnotes { height: 32px !important; min-height: 32px !important; max-height: 32px !important; overflow: hidden !important; }
-  body.mobile-chrome #gennotes { height: 90px !important; min-height: 90px !important; max-height: 90px !important; overflow: hidden !important; }
+  body.mobile-chrome #gennotes { height: 88px !important; min-height: 88px !important; max-height: 88px !important; overflow: hidden !important; }
   body.mobile-chrome #oilnotes, body.mobile-chrome #gasnotes, body.mobile-chrome #tsnotes, body.mobile-chrome #svcnotes { height: 32px !important; min-height: 32px !important; max-height: 32px !important; overflow: hidden !important; }
   /* Match desktop apparent control size on mobile Chrome too */
   body.mobile-chrome .check-item input[type="checkbox"], body.mobile-chrome .check-item input[type="radio"] { width: 12px !important; height: 12px !important; min-width: 12px !important; min-height: 12px !important; }
@@ -1251,7 +1251,7 @@ body.dark-mode::-webkit-scrollbar-thumb:hover { background: linear-gradient(180d
 
   /* Notes boxes — kept at the same heights as iPhone (54 / 34). */
   html.ipad #batnotes { height: 32px !important; min-height: 32px !important; max-height: 32px !important; overflow: hidden !important; }
-  html.ipad #gennotes { height: 90px !important; min-height: 90px !important; max-height: 90px !important; overflow: hidden !important; }
+  html.ipad #gennotes { height: 88px !important; min-height: 88px !important; max-height: 88px !important; overflow: hidden !important; }
   html.ipad #oilnotes, html.ipad #gasnotes, html.ipad #tsnotes, html.ipad #svcnotes { height: 32px !important; min-height: 32px !important; max-height: 32px !important; overflow: hidden !important; }
 
   /* Keep control + label sizes readable (match desktop apparent size) */
@@ -1625,7 +1625,7 @@ body.dark-mode .action-bar {
             <label for="exercisetime">Exercise Schedule</label>
             <input type="text" id="exercisetime" size="10" class="med" placeholder="e.g., Tues 11:00am">
           </div>
-          <textarea id="gennotes" placeholder="Generator notes..." style="height:90px;"></textarea>
+          <textarea id="gennotes" placeholder="Generator notes..." style="height:88px;"></textarea>
         </div>
       </div>
     </div>
@@ -1868,7 +1868,7 @@ body.dark-mode .action-bar {
 
   <div class="footer">
     <span class="footer-text">GENERATOR MAINTENANCE REPORT · CONFIDENTIAL</span>
-    <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);">Ver 1.0B</span>
+    <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);">Ver 1.1A</span>
   </div>
   <div class="page-corner-bl"></div>
   <div class="page-corner-br"></div>
@@ -2155,7 +2155,7 @@ function openPrintPreview() {
 
     // textareas — match mobile-safari print heights
     var taNotes = {
-      'batnotes': '34px', 'gennotes': '90px',
+      'batnotes': '34px', 'gennotes': '88px',
       'oilnotes': '34px', 'gasnotes': '34px', 'tsnotes': '34px', 'svcnotes': '34px'
     };
     Object.keys(taNotes).forEach(function(id) {
