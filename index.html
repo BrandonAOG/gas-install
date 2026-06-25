@@ -1958,6 +1958,16 @@ function openPrintPreview() {
     isMobileSafari = true;  // use the WebKit 350 ms settle delay
   }
 
+  // ── iPad Chrome (CriOS): explicit handling — CriOS UA on iPadOS ──
+  // Not caught by isMobileChrome (Android-only) or always by the Macintosh
+  // UA check above. Detect it directly and apply the same 835px viewport.
+  var isIPadChrome = /CriOS/.test(navigator.userAgent);
+  if (isIPadChrome && vp && !isNarrowMobile) {
+    vp.setAttribute('content', 'width=835, initial-scale=1, viewport-fit=cover');
+    isNarrowMobile = true;
+    isMobileSafari = true;
+  }
+
   // ── Snapshot store — every element we touch gets its original style saved ──
   var _snapshots = [];
   function _snap(el, prop, val) {
