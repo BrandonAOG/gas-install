@@ -2573,6 +2573,20 @@ function capturePageToCanvas() {
       const prevPaddingTop = page.style.paddingTop;
       const prevBodyPad   = document.body.style.padding;
 
+      // ── Render the page in its WIDE (landscape) layout for the capture ──
+      // On a phone the layout viewport is ~390px even though we stamp the page
+      // to CAPTURE_WIDTH, so the @media (max-width:600/768) MOBILE rules still
+      // fire during html2canvas cloning and collapse the form to single-column.
+      // Pin the viewport to the capture width so those narrow rules switch off
+      // and the page lays out exactly as it would in landscape. The output is
+      // still padded to a portrait 8.5x11 sheet downstream. Restored in
+      // restoreCapture. (Only needed on mobile; desktop is already wide.)
+      const _capVp     = document.querySelector('meta[name="viewport"]');
+      const _capOrigVP = _capVp ? _capVp.getAttribute('content') : null;
+      if (_isMobileCap && _capVp) {
+        _capVp.setAttribute('content', 'width=' + CAPTURE_WIDTH + ', initial-scale=1, viewport-fit=cover');
+      }
+
       page.style.width     = CAPTURE_WIDTH + 'px';
       page.style.maxWidth  = CAPTURE_WIDTH + 'px';
       // Size the page to its CONTENT height (no forced full-sheet minimum) so
@@ -2731,6 +2745,7 @@ function capturePageToCanvas() {
       }
 
       function restoreCapture() {
+        if (_capVp && _capOrigVP != null) _capVp.setAttribute('content', _capOrigVP);
         page.style.width     = prevWidth;
         page.style.maxWidth  = prevMaxWidth;
         page.style.height    = prevHeight;
