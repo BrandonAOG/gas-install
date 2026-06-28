@@ -1779,16 +1779,37 @@ document.addEventListener('DOMContentLoaded',function(){
      user returns to the page (iOS) or via afterprint (desktop), with a fallback. */
   window.printPDF=function(){
     preparePrint();
+
     var done=false;
     function restoreOnce(){
       if(done) return; done=true;
       document.removeEventListener('visibilitychange', onVis);
       restorePrint();
     }
-    function onVis(){ if(document.visibilityState==='visible') restoreOnce(); }
-    document.addEventListener('visibilitychange', onVis);  // iOS: return from share sheet
-    setTimeout(restoreOnce, 4000);                         // fallback (and desktop also uses afterprint)
-    try{ window.print(); }catch(e){}
+    /* Only restore once the user has actually returned to the page AFTER the
+       print/share sheet was shown — never on a short timer, which on iOS fires
+       while Safari is still capturing the PDF and re-darkens the snapshot. */
+    var printingStarted=false;
+    function onVis(){
+      if(printingStarted && document.visibilityState==='visible') restoreOnce();
+    }
+    document.addEventListener('visibilitychange', onVis);
+
+    /* CRITICAL: preparePrint() removed .dark-mode and injected a stylesheet on
+       THIS tick. iOS Safari snapshots the page for the preview before that style
+       recalc + reflow finishes if we print synchronously, so ~90% of the time it
+       captures the still-dark frame. Wait two animation frames (style + layout
+       flushed) plus a short paint delay, THEN print. */
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        setTimeout(function(){
+          printingStarted=true;
+          try{ window.print(); }catch(e){}
+          /* Long safety-net restore only — far beyond any real save flow. */
+          setTimeout(restoreOnce, 60000);
+        }, 60);
+      });
+    });
   };
 })();
 </script>
