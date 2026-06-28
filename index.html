@@ -1642,9 +1642,13 @@ document.addEventListener('DOMContentLoaded',function(){
 /* ===== PDF PRINT: light/default theme, no placeholders, fit one 8.5x11 page (.15in margins) ===== */
 (function(){
   var DPI=96, MARGIN=0.15;                 // inches
+  
+  // Detect Safari (desktop + iOS)
+  var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+  
   /* PRINT-ONLY enlargement (screen layout is untouched): wider sheet + bigger
      base font + a boost for the tiny uppercase labels so paper text is legible. */
-  var PRINT_WIDTH=1200;                     // px wide sheet for the printout only
+  var PRINT_WIDTH = isSafari ? 1300 : 1200;  // 900px for Safari (narrower fit), 1200px for others
   var PRINT_ROOT='22px';                    // base font-size while printing
   var PRINT_LABEL_REM='0.70rem';            // size for the small labels while printing
   var saved=null;
