@@ -1704,7 +1704,12 @@ document.addEventListener('DOMContentLoaded',function(){
          few % AFTER this sync measurement; pad for it so the footer isn't clipped */
       var hSafe=h*1.05;
       var availW=(8.5 - 2*MARGIN)*DPI;     // ~787px printable width
-      var availH=(11  - 2*MARGIN)*DPI;     // ~1027px printable height
+      /* iOS Safari's Save-to-PDF injects its own URL/date header + page-number
+         footer that steal ~1.4in of height it doesn't tell CSS about; reserve it
+         there so the sheet still fits one page. Other browsers keep full height. */
+      var iOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+                (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+      var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
       var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
       /* fixed-size, overflow:hidden wrapper makes the *layout* height shrink so
          it can't spill to a 2nd page (a bare transform leaves the box full-size) */
