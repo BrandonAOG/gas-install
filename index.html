@@ -335,6 +335,8 @@
     @page{ size:8.5in 11in; margin:0.15in; }
     html,body{
       background:#fff !important; padding:0 !important; margin:0 !important;
+      width:100% !important;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
     }
     /* strip the screen "desk" backdrop and any dark-mode shell */
     body, body.dark-mode{ background:#fff !important; }
@@ -342,14 +344,25 @@
     .action-bar{ display:none !important; }
     #seasonal-canvas{ display:none !important; }
     .header::after{ display:none !important; }      /* animated scanline */
+    .page::before,.page::after{ display:none !important; }   /* corner decorations */
+    .page-corner-bl,.page-corner-br{ display:none !important; }
     /* hide all placeholder text in the printout */
     input::placeholder, textarea::placeholder{ color:transparent !important; opacity:0 !important; }
-    /* the sheet itself (scaled to fit via JS at print time) */
+    /* the sheet itself — CSS fallback so mobile works without beforeprint JS */
     .page{
+      width:100% !important;
+      max-width:100% !important;
+      margin:0 !important;
+      border-left:none !important;
+      border-right:none !important;
       box-shadow:none !important;
+      transform:none !important;       /* JS may override on desktop; CSS is the mobile fallback */
       transform-origin:top left;
     }
     .page, .header, .footer, .section, .top-grid, .meta-grid{ break-inside:avoid; }
+    /* on narrow-viewport prints (mobile) keep two-col grids readable */
+    .top-grid{ grid-template-columns:1fr 1fr !important; }
+    .meta-grid{ grid-template-columns:1fr 1fr !important; }
   }
 </style>
 </head>
@@ -1668,25 +1681,33 @@ document.addEventListener('DOMContentLoaded',function(){
       el.removeAttribute('placeholder');
     });
 
-    /* scale the whole sheet to fit one Letter page within the margins.
-       A fixed-size, overflow:hidden wrapper makes the *layout* height shrink
-       (a bare transform leaves the layout box full-size -> spills to page 2). */
     if(page){
       page.style.transform='none'; page.style.margin='0';
-      var w=page.offsetWidth, h=page.offsetHeight;
+      var w=page.offsetWidth;
       var availW=(8.5 - 2*MARGIN)*DPI;     // ~787px printable width
       var availH=(11  - 2*MARGIN)*DPI;     // ~1027px printable height
-      var scale=Math.min(availW/w, availH/h, 1)*0.995;
-      /* lock width so max-width:100% doesn't reflow it inside the narrower wrapper */
-      page.style.width=w+'px'; page.style.maxWidth='none';
-      var wrap=document.createElement('div');
-      wrap.id='__print-wrap';
-      wrap.style.cssText='width:'+(w*scale)+'px;height:'+(h*scale)+'px;overflow:hidden;margin:0 auto;';
-      page.parentNode.insertBefore(wrap, page);
-      wrap.appendChild(page);
-      page.style.transformOrigin='top left';
-      page.style.transform='scale('+scale+')';
-      saved.wrapped=true;
+
+      /* On mobile the page is already narrower than the print area — let CSS
+         handle it (width:100% in @media print). Only apply the scale-to-fit
+         wrapper on desktop where the layout is wider than the printable width. */
+      if(w > availW + 20){
+        var h=page.offsetHeight;
+        var scale=Math.min(availW/w, availH/h, 1)*0.995;
+        /* lock width so max-width:100% doesn't reflow it inside the narrower wrapper */
+        page.style.width=w+'px'; page.style.maxWidth='none';
+        var wrap=document.createElement('div');
+        wrap.id='__print-wrap';
+        wrap.style.cssText='width:'+(w*scale)+'px;height:'+(h*scale)+'px;overflow:hidden;margin:0 auto;';
+        page.parentNode.insertBefore(wrap, page);
+        wrap.appendChild(page);
+        page.style.transformOrigin='top left';
+        page.style.transform='scale('+scale+')';
+        saved.wrapped=true;
+      } else {
+        /* Mobile / narrow: just let @media print CSS fill the page width */
+        page.style.width='100%'; page.style.maxWidth='100%';
+        saved.wrapped=false;
+      }
     }
   }
 
