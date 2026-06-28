@@ -1659,11 +1659,7 @@ document.addEventListener('DOMContentLoaded',function(){
       inline:{},
       placeholders:[],
       canvasDisplay:null,
-      transform: page ? page.style.transform : '',
-      margin: page ? page.style.margin : '',
-      transformOrigin: page ? page.style.transformOrigin : '',
-      width: page ? page.style.width : '',
-      maxWidth: page ? page.style.maxWidth : ''
+      zoom: page ? page.style.zoom : ''
     };
     ['--accent','--accent-rgb','--text','--panel','--bg3'].forEach(function(p){ saved.inline[p]=body.style.getPropertyValue(p); });
 
@@ -1699,7 +1695,7 @@ document.addEventListener('DOMContentLoaded',function(){
         'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}';
       document.head.appendChild(st);
 
-      page.style.transform='none'; page.style.margin='0';
+      page.style.zoom='';                            // measure natural size first
       var w=page.offsetWidth, h=page.offsetHeight;   // reflowed to the enlarged layout
       /* the larger font triggers a small async metric reflow that grows height a
          few % AFTER this sync measurement; pad for it so the footer isn't clipped */
@@ -1712,16 +1708,10 @@ document.addEventListener('DOMContentLoaded',function(){
                 (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
       var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
       var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
-      /* fixed-size, overflow:hidden wrapper makes the *layout* height shrink so
-         it can't spill to a 2nd page (a bare transform leaves the box full-size) */
-      var wrap=document.createElement('div');
-      wrap.id='__print-wrap';
-      wrap.style.cssText='width:'+(w*scale)+'px;height:'+(hSafe*scale)+'px;overflow:hidden;margin:0 auto;';
-      page.parentNode.insertBefore(wrap, page);
-      wrap.appendChild(page);
-      page.style.transformOrigin='top left';
-      page.style.transform='scale('+scale+')';
-      saved.wrapped=true;
+      /* CSS zoom resizes the actual layout box (unlike transform), so the print
+         engine paginates on the shrunk size -> reliably one page, incl. Safari */
+      page.style.zoom=scale;
+      saved.zoomed=true;
     }
   }
 
@@ -1734,13 +1724,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var cv=document.getElementById('seasonal-canvas');
     if(cv) cv.style.display=saved.canvasDisplay||'';
     saved.placeholders.forEach(function(pair){ pair[0].setAttribute('placeholder',pair[1]); });
-    if(page){
-      var wrap=document.getElementById('__print-wrap');
-      if(wrap && saved.wrapped){ wrap.parentNode.insertBefore(page, wrap); wrap.parentNode.removeChild(wrap); }
-      page.style.transform=saved.transform||'';
-      page.style.transformOrigin=saved.transformOrigin||'';
-      page.style.margin=saved.margin||'';
-    }
+    if(page) page.style.zoom=saved.zoom||'';
     var st=document.getElementById('__print-style'); if(st) st.parentNode.removeChild(st);
     saved=null;
   }
