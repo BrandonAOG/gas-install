@@ -335,8 +335,6 @@
     @page{ size:8.5in 11in; margin:0.15in; }
     html,body{
       background:#fff !important; padding:0 !important; margin:0 !important;
-      width:100% !important;
-      -webkit-print-color-adjust:exact; print-color-adjust:exact;
     }
     /* strip the screen "desk" backdrop and any dark-mode shell */
     body, body.dark-mode{ background:#fff !important; }
@@ -344,25 +342,22 @@
     .action-bar{ display:none !important; }
     #seasonal-canvas{ display:none !important; }
     .header::after{ display:none !important; }      /* animated scanline */
-    .page::before,.page::after{ display:none !important; }   /* corner decorations */
-    .page-corner-bl,.page-corner-br{ display:none !important; }
     /* hide all placeholder text in the printout */
     input::placeholder, textarea::placeholder{ color:transparent !important; opacity:0 !important; }
-    /* the sheet itself — CSS fallback so mobile works without beforeprint JS */
+    /* the sheet itself (scaled to fit via JS at print time) */
     .page{
-      width:100% !important;
-      max-width:100% !important;
-      margin:0 !important;
-      border-left:none !important;
-      border-right:none !important;
       box-shadow:none !important;
-      transform:none !important;       /* JS may override on desktop; CSS is the mobile fallback */
       transform-origin:top left;
     }
     .page, .header, .footer, .section, .top-grid, .meta-grid{ break-inside:avoid; }
-    /* on narrow-viewport prints (mobile) keep two-col grids readable */
+    /* force the full desktop layout when printing from a phone */
+    .page{ width:850px !important; max-width:none !important;
+           border-left:2px solid var(--cyan) !important; border-right:2px solid var(--cyan) !important; }
     .top-grid{ grid-template-columns:1fr 1fr !important; }
+    .top-col:first-child{ border-right:1px solid var(--border) !important; border-bottom:none !important; }
     .meta-grid{ grid-template-columns:1fr 1fr !important; }
+    .meta-grid .ml{ border-right:1px solid var(--border) !important; border-bottom:none !important; }
+    .doc-title{ font-size:1.15rem !important; letter-spacing:4px !important; }
   }
 </style>
 </head>
@@ -1647,6 +1642,11 @@ document.addEventListener('DOMContentLoaded',function(){
 /* ===== PDF PRINT: light/default theme, no placeholders, fit one 8.5x11 page (.15in margins) ===== */
 (function(){
   var DPI=96, MARGIN=0.15;                 // inches
+  /* PRINT-ONLY enlargement (screen layout is untouched): wider sheet + bigger
+     base font + a boost for the tiny uppercase labels so paper text is legible. */
+  var PRINT_WIDTH=1200;                     // px wide sheet for the printout only
+  var PRINT_ROOT='22px';                    // base font-size while printing
+  var PRINT_LABEL_REM='0.70rem';            // size for the small labels while printing
   var saved=null;
 
   function preparePrint(){
@@ -1681,33 +1681,41 @@ document.addEventListener('DOMContentLoaded',function(){
       el.removeAttribute('placeholder');
     });
 
+    /* Build the printout layout: wider sheet, bigger base font, boosted labels,
+       full desktop two-column grids (so phones don't print the mobile reflow).
+       Injected as a normal stylesheet so it governs BOTH the measurement below
+       and the actual print render -> the scale we compute always matches. */
     if(page){
+      var st=document.createElement('style');
+      st.id='__print-style';
+      st.textContent=
+        'html{font-size:'+PRINT_ROOT+' !important;}'+
+        '#page{width:'+PRINT_WIDTH+'px !important;max-width:none !important;}'+
+        '.top-grid{grid-template-columns:1fr 1fr !important;}'+
+        '.top-col:first-child{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
+        '.meta-grid{grid-template-columns:1fr 1fr !important;}'+
+        '.meta-grid .ml{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
+        'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}';
+      document.head.appendChild(st);
+
       page.style.transform='none'; page.style.margin='0';
-      var w=page.offsetWidth;
+      var w=page.offsetWidth, h=page.offsetHeight;   // reflowed to the enlarged layout
+      /* the larger font triggers a small async metric reflow that grows height a
+         few % AFTER this sync measurement; pad for it so the footer isn't clipped */
+      var hSafe=h*1.05;
       var availW=(8.5 - 2*MARGIN)*DPI;     // ~787px printable width
       var availH=(11  - 2*MARGIN)*DPI;     // ~1027px printable height
-
-      /* On mobile the page is already narrower than the print area — let CSS
-         handle it (width:100% in @media print). Only apply the scale-to-fit
-         wrapper on desktop where the layout is wider than the printable width. */
-      if(w > availW + 20){
-        var h=page.offsetHeight;
-        var scale=Math.min(availW/w, availH/h, 1)*0.995;
-        /* lock width so max-width:100% doesn't reflow it inside the narrower wrapper */
-        page.style.width=w+'px'; page.style.maxWidth='none';
-        var wrap=document.createElement('div');
-        wrap.id='__print-wrap';
-        wrap.style.cssText='width:'+(w*scale)+'px;height:'+(h*scale)+'px;overflow:hidden;margin:0 auto;';
-        page.parentNode.insertBefore(wrap, page);
-        wrap.appendChild(page);
-        page.style.transformOrigin='top left';
-        page.style.transform='scale('+scale+')';
-        saved.wrapped=true;
-      } else {
-        /* Mobile / narrow: just let @media print CSS fill the page width */
-        page.style.width='100%'; page.style.maxWidth='100%';
-        saved.wrapped=false;
-      }
+      var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
+      /* fixed-size, overflow:hidden wrapper makes the *layout* height shrink so
+         it can't spill to a 2nd page (a bare transform leaves the box full-size) */
+      var wrap=document.createElement('div');
+      wrap.id='__print-wrap';
+      wrap.style.cssText='width:'+(w*scale)+'px;height:'+(hSafe*scale)+'px;overflow:hidden;margin:0 auto;';
+      page.parentNode.insertBefore(wrap, page);
+      wrap.appendChild(page);
+      page.style.transformOrigin='top left';
+      page.style.transform='scale('+scale+')';
+      saved.wrapped=true;
     }
   }
 
@@ -1726,9 +1734,8 @@ document.addEventListener('DOMContentLoaded',function(){
       page.style.transform=saved.transform||'';
       page.style.transformOrigin=saved.transformOrigin||'';
       page.style.margin=saved.margin||'';
-      page.style.width=saved.width||'';
-      page.style.maxWidth=saved.maxWidth||'';
     }
+    var st=document.getElementById('__print-style'); if(st) st.parentNode.removeChild(st);
     saved=null;
   }
 
