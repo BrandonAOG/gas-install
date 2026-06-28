@@ -602,8 +602,6 @@
           <label class="check-item"><input type="checkbox"><span class="box"></span><span class="ct">Legs In Concrete</span></label>
           <label class="check-item"><input type="checkbox"><span class="box"></span><span class="ct">Bolted To Pad</span></label>
           <label class="check-item"><input type="checkbox"><span class="box"></span><span class="ct">Cantilever</span></label>
-        </div>
-        <div class="row">
           <label class="check-item"><input type="checkbox"><span class="box"></span><span class="ct">Existing</span></label>
         </div>
         <textarea placeholder="Additional pad notes…"></textarea>
@@ -1740,7 +1738,17 @@ document.addEventListener('DOMContentLoaded',function(){
         '.top-col:first-child{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
         '.meta-grid{grid-template-columns:1fr 1fr !important;}'+
         '.meta-grid .ml{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
-        'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}';
+        'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}'+
+        /* Section titles were scaling off the 22px print root unchecked -> huge.
+           Pin them smaller and cut the wide letter-spacing so they don't blow out. */
+        '.section-header{font-size:0.62rem !important;letter-spacing:2px !important;padding:5px 14px !important;}'+
+        '.col-label{font-size:0.6rem !important;letter-spacing:2px !important;}'+
+        /* The wide print sheet stretched .row gaps, opening a gap between the
+           Placement and Elec.Run rows and wrapping "Existing" to its own line.
+           Tighten gaps and stop groups from wrapping mid-row. */
+        '.row{gap:5px 14px !important;margin-bottom:5px !important;}'+
+        '.grp{flex-wrap:nowrap !important;}'+
+        '.check-item .ct,.yn-group label{white-space:nowrap !important;}';
       document.head.appendChild(st);
       saved.zoomed=true;
       /* Measurement + zoom is now done in finishPrintLayout(), called from a
