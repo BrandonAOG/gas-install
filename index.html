@@ -373,6 +373,12 @@
       border-left:2px solid var(--cyan) !important;
       border-right:2px solid var(--cyan) !important;
     }
+    body.dark-mode .page{
+      background:#fff !important;
+      background-image:none !important;
+      border-color:var(--cyan) !important;
+      box-shadow:none !important;
+    }
     body.dark-mode .section::before,
     body.dark-mode .top-grid::before,
     body.dark-mode .header::after{ display:none !important; }
@@ -1736,25 +1742,29 @@ document.addEventListener('DOMContentLoaded',function(){
         '.meta-grid .ml{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
         'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}';
       document.head.appendChild(st);
-
-      page.style.zoom='';                            // measure natural size first
-      var w=page.offsetWidth, h=page.offsetHeight;   // reflowed to the enlarged layout
-      /* the larger font triggers a small async metric reflow that grows height a
-         few % AFTER this sync measurement; pad for it so the footer isn't clipped */
-      var hSafe=h*1.05;
-      var availW=(8.5 - 2*MARGIN)*DPI;     // ~787px printable width
-      /* iOS Safari's Save-to-PDF injects its own URL/date header + page-number
-         footer that steal ~1.4in of height it doesn't tell CSS about; reserve it
-         there so the sheet still fits one page. Other browsers keep full height. */
-      var iOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
-                (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-      var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
-      var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
-      /* CSS zoom resizes the actual layout box (unlike transform), so the print
-         engine paginates on the shrunk size -> reliably one page, incl. Safari */
-      page.style.zoom=scale;
       saved.zoomed=true;
+      /* Measurement + zoom is now done in finishPrintLayout(), called from a
+         rAF AFTER this stylesheet has actually reflowed the page. Measuring here
+         (same tick) read the pre-reflow size, so the computed scale was too weak
+         and everything printed oversized. */
     }
+  }
+
+  /* Runs after the print stylesheet has reflowed: measure the truly-enlarged
+     page, compute the shrink-to-fit scale, apply it. Must be called from inside
+     a requestAnimationFrame so the layout is settled. */
+  function finishPrintLayout(){
+    var page=document.getElementById('page');
+    if(!page || !saved) return;
+    page.style.zoom='';                            // measure natural enlarged size
+    var w=page.offsetWidth, h=page.offsetHeight;   // now reflowed to print layout
+    var hSafe=h*1.05;
+    var availW=(8.5 - 2*MARGIN)*DPI;
+    var iOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+              (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+    var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
+    var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
+    page.style.zoom=scale;
   }
 
   function restorePrint(){
@@ -1795,19 +1805,21 @@ document.addEventListener('DOMContentLoaded',function(){
     }
     document.addEventListener('visibilitychange', onVis);
 
-    /* CRITICAL: preparePrint() removed .dark-mode and injected a stylesheet on
-       THIS tick. iOS Safari snapshots the page for the preview before that style
-       recalc + reflow finishes if we print synchronously, so ~90% of the time it
-       captures the still-dark frame. Wait two animation frames (style + layout
-       flushed) plus a short paint delay, THEN print. */
+    /* CRITICAL: preparePrint() removed .dark-mode and injected the print
+       stylesheet on THIS tick. iOS Safari snapshots the page before that style
+       recalc + reflow finishes if we print synchronously. Wait two animation
+       frames so the enlarged layout is fully flushed, THEN measure + zoom (in
+       finishPrintLayout) against the real reflowed size, then print. */
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
-        setTimeout(function(){
-          printingStarted=true;
-          try{ window.print(); }catch(e){}
-          /* Long safety-net restore only — far beyond any real save flow. */
-          setTimeout(restoreOnce, 60000);
-        }, 60);
+        finishPrintLayout();          // measure the truly-reflowed page, apply zoom
+        requestAnimationFrame(function(){
+          setTimeout(function(){
+            printingStarted=true;
+            try{ window.print(); }catch(e){}
+            setTimeout(restoreOnce, 60000);
+          }, 60);
+        });
       });
     });
   };
