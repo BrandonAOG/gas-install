@@ -338,6 +338,46 @@
     }
     /* strip the screen "desk" backdrop and any dark-mode shell */
     body, body.dark-mode{ background:#fff !important; }
+    /* Mobile Safari prints background graphics, so dark-mode panels/text leak
+       through. Neutralize every dark-mode rule back to the light print look. */
+    body.dark-mode .page,
+    body.dark-mode .header,
+    body.dark-mode .top-grid,
+    body.dark-mode .meta-grid,
+    body.dark-mode .section,
+    body.dark-mode .gas-panel,
+    body.dark-mode textarea,
+    body.dark-mode .check-item,
+    body.dark-mode .yn-group,
+    body.dark-mode .bore{
+      background:#fff !important; box-shadow:none !important;
+    }
+    body.dark-mode .col-label,
+    body.dark-mode .section-header{
+      background:#f4f6fb !important; color:#0A0E27 !important; text-shadow:none !important;
+    }
+    body.dark-mode .company-name,
+    body.dark-mode .doc-title,
+    body.dark-mode .col-label,
+    body.dark-mode .section-header,
+    body.dark-mode .section-header svg,
+    body.dark-mode .col-label svg,
+    body.dark-mode input,
+    body.dark-mode .footer{
+      color:#0A0E27 !important; text-shadow:none !important;
+    }
+    body.dark-mode .logo-mark,
+    body.dark-mode .logo-img{ filter:none !important; }
+    body.dark-mode .footer{
+      background:#0A0E27 !important; color:#fff !important;
+    }
+    body.dark-mode .section::before,
+    body.dark-mode .top-grid::before,
+    body.dark-mode .header::after{ display:none !important; }
+    body.dark-mode .section-header .dot,
+    body.dark-mode .col-label .dot{
+      background:var(--cyan) !important; box-shadow:none !important;
+    }
     /* hide on-screen chrome */
     .action-bar{ display:none !important; }
     #seasonal-canvas{ display:none !important; }
@@ -351,7 +391,7 @@
     }
     .page, .header, .footer, .section, .top-grid, .meta-grid{ break-inside:avoid; }
     /* force the full desktop layout when printing from a phone */
-    .page{ width:100% !important; max-width:100% !important;
+    .page{ width:850px !important; max-width:none !important;
            border-left:2px solid var(--cyan) !important; border-right:2px solid var(--cyan) !important; }
     .top-grid{ grid-template-columns:1fr 1fr !important; }
     .top-col:first-child{ border-right:1px solid var(--border) !important; border-bottom:none !important; }
@@ -1642,13 +1682,9 @@ document.addEventListener('DOMContentLoaded',function(){
 /* ===== PDF PRINT: light/default theme, no placeholders, fit one 8.5x11 page (.15in margins) ===== */
 (function(){
   var DPI=96, MARGIN=0.15;                 // inches
-  
-  // Detect Safari (desktop + iOS)
-  var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-  
   /* PRINT-ONLY enlargement (screen layout is untouched): wider sheet + bigger
      base font + a boost for the tiny uppercase labels so paper text is legible. */
-  var PRINT_WIDTH = isSafari ? 1200 : 1200;  // 1300px for Safari, 1200px for others
+  var PRINT_WIDTH=1200;                     // px wide sheet for the printout only
   var PRINT_ROOT='22px';                    // base font-size while printing
   var PRINT_LABEL_REM='0.70rem';            // size for the small labels while printing
   var saved=null;
@@ -1663,15 +1699,14 @@ document.addEventListener('DOMContentLoaded',function(){
       inline:{},
       placeholders:[],
       canvasDisplay:null,
-      transform: page ? page.style.transform : '',
-      transformOrigin: page ? page.style.transformOrigin : ''
+      zoom: page ? page.style.zoom : ''
     };
     ['--accent','--accent-rgb','--text','--panel','--bg3'].forEach(function(p){ saved.inline[p]=body.style.getPropertyValue(p); });
 
-    /* force the light, un-themed default (Safari keeps dark mode) */
-    if(saved.dark && !isSafari) body.classList.remove('dark-mode');
-    if(!isSafari) saved.seasons.forEach(function(c){ body.classList.remove(c); });
-    if(!isSafari) ['--accent','--accent-rgb','--text','--panel','--bg3'].forEach(function(p){ body.style.removeProperty(p); });
+    /* force the light, un-themed default */
+    if(saved.dark) body.classList.remove('dark-mode');
+    saved.seasons.forEach(function(c){ body.classList.remove(c); });
+    ['--accent','--accent-rgb','--text','--panel','--bg3'].forEach(function(p){ body.style.removeProperty(p); });
 
     /* drop the live seasonal particle canvas from the printout */
     var cv=document.getElementById('seasonal-canvas');
@@ -1691,13 +1726,8 @@ document.addEventListener('DOMContentLoaded',function(){
       var st=document.createElement('style');
       st.id='__print-style';
       st.textContent=
-        'html{font-size:'+PRINT_ROOT+' !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }'+
-        '#page{' +
-        '  width:'+PRINT_WIDTH+'px !important;' +
-        '  max-width:none !important;' +
-        '  height: var(--print-forced-height, auto) !important;' +
-        '  overflow: hidden !important;' +
-        '}'+
+        'html{font-size:'+PRINT_ROOT+' !important;}'+
+        '#page{width:'+PRINT_WIDTH+'px !important;max-width:none !important;}'+
         '.top-grid{grid-template-columns:1fr 1fr !important;}'+
         '.top-col:first-child{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
         '.meta-grid{grid-template-columns:1fr 1fr !important;}'+
@@ -1705,8 +1735,7 @@ document.addEventListener('DOMContentLoaded',function(){
         'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}';
       document.head.appendChild(st);
 
-      page.style.transform='';                            // measure natural size first
-      page.style.transformOrigin='';
+      page.style.zoom='';                            // measure natural size first
       var w=page.offsetWidth, h=page.offsetHeight;   // reflowed to the enlarged layout
       /* the larger font triggers a small async metric reflow that grows height a
          few % AFTER this sync measurement; pad for it so the footer isn't clipped */
@@ -1719,14 +1748,9 @@ document.addEventListener('DOMContentLoaded',function(){
                 (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
       var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
       var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
-      /* Use transform scale3d for better cross-browser print support */
-      page.style.transformOrigin = 'top left';
-      page.style.transform = 'scale3d(' + scale + ', ' + scale + ', 1)';
-      
-      // Update the CSS variable to explicitly force Safari's container height down
-      var calculatedHeight = Math.ceil(hSafe * scale);
-      page.style.setProperty('--print-forced-height', calculatedHeight + 'px');
-      
+      /* CSS zoom resizes the actual layout box (unlike transform), so the print
+         engine paginates on the shrunk size -> reliably one page, incl. Safari */
+      page.style.zoom=scale;
       saved.zoomed=true;
     }
   }
@@ -1734,16 +1758,13 @@ document.addEventListener('DOMContentLoaded',function(){
   function restorePrint(){
     if(!saved) return;
     var body=document.body, page=document.getElementById('page');
-    if(saved.dark && !isSafari) body.classList.add('dark-mode');
-    if(!isSafari) saved.seasons.forEach(function(c){ body.classList.add(c); });
-    if(!isSafari) Object.keys(saved.inline).forEach(function(p){ if(saved.inline[p]) body.style.setProperty(p,saved.inline[p]); });
+    if(saved.dark) body.classList.add('dark-mode');
+    saved.seasons.forEach(function(c){ body.classList.add(c); });
+    Object.keys(saved.inline).forEach(function(p){ if(saved.inline[p]) body.style.setProperty(p,saved.inline[p]); });
     var cv=document.getElementById('seasonal-canvas');
     if(cv) cv.style.display=saved.canvasDisplay||'';
     saved.placeholders.forEach(function(pair){ pair[0].setAttribute('placeholder',pair[1]); });
-    if(page) { 
-      page.style.transform = saved.transform || '';
-      page.style.transformOrigin = saved.transformOrigin || '';
-    }
+    if(page) page.style.zoom=saved.zoom||'';
     var st=document.getElementById('__print-style'); if(st) st.parentNode.removeChild(st);
     saved=null;
   }
