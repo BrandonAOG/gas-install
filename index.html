@@ -338,46 +338,48 @@
     }
     /* strip the screen "desk" backdrop and any dark-mode shell */
     body, body.dark-mode{ background:#fff !important; }
-    /* Mobile Safari prints background graphics, so dark-mode panels/text leak
-       through. Neutralize every dark-mode rule back to the light print look. */
+    /* Mobile Safari prints background graphics, so any dark-mode rule that the
+       JS prep didn't strip (e.g. when printing via Safari's own Share > Print,
+       which never fires beforeprint) leaks the dark shell onto paper. Catch-all:
+       wipe EVERY dark-mode background/shadow/glow back to the light print look,
+       no matter which element it is. */
+    body.dark-mode *{
+      background:transparent !important;
+      background-image:none !important;
+      box-shadow:none !important;
+      text-shadow:none !important;
+      filter:none !important;
+      color:#0A0E27 !important;
+      border-color:var(--border) !important;
+    }
+    body.dark-mode,
     body.dark-mode .page,
-    body.dark-mode .header,
+    body.dark-mode .section,
     body.dark-mode .top-grid,
     body.dark-mode .meta-grid,
-    body.dark-mode .section,
     body.dark-mode .gas-panel,
     body.dark-mode textarea,
+    body.dark-mode input,
     body.dark-mode .check-item,
     body.dark-mode .yn-group,
     body.dark-mode .bore{
-      background:#fff !important; box-shadow:none !important;
+      background:#fff !important;
     }
     body.dark-mode .col-label,
     body.dark-mode .section-header{
-      background:#f4f6fb !important; color:#0A0E27 !important; text-shadow:none !important;
+      background:#f4f6fb !important;
     }
-    body.dark-mode .company-name,
-    body.dark-mode .doc-title,
-    body.dark-mode .col-label,
-    body.dark-mode .section-header,
-    body.dark-mode .section-header svg,
-    body.dark-mode .col-label svg,
-    body.dark-mode input,
-    body.dark-mode .footer{
-      color:#0A0E27 !important; text-shadow:none !important;
-    }
-    body.dark-mode .logo-mark,
-    body.dark-mode .logo-img{ filter:none !important; }
-    body.dark-mode .footer{
-      background:#0A0E27 !important; color:#fff !important;
+    body.dark-mode .page{
+      border-left:2px solid var(--cyan) !important;
+      border-right:2px solid var(--cyan) !important;
     }
     body.dark-mode .section::before,
     body.dark-mode .top-grid::before,
     body.dark-mode .header::after{ display:none !important; }
     body.dark-mode .section-header .dot,
-    body.dark-mode .col-label .dot{
-      background:var(--cyan) !important; box-shadow:none !important;
-    }
+    body.dark-mode .col-label .dot{ background:var(--cyan) !important; }
+    body.dark-mode .footer{ background:#0A0E27 !important; }
+    body.dark-mode .footer *{ color:#fff !important; }
     /* hide on-screen chrome */
     .action-bar{ display:none !important; }
     #seasonal-canvas{ display:none !important; }
