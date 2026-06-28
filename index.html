@@ -1659,7 +1659,8 @@ document.addEventListener('DOMContentLoaded',function(){
       inline:{},
       placeholders:[],
       canvasDisplay:null,
-      zoom: page ? page.style.zoom : ''
+      transform: page ? page.style.transform : '',
+      transformOrigin: page ? page.style.transformOrigin : ''
     };
     ['--accent','--accent-rgb','--text','--panel','--bg3'].forEach(function(p){ saved.inline[p]=body.style.getPropertyValue(p); });
 
@@ -1679,15 +1680,18 @@ document.addEventListener('DOMContentLoaded',function(){
     });
 
     /* Build the printout layout: wider sheet, bigger base font, boosted labels,
-       full desktop two-column grids (so phones don't print the mobile reflow).
-       Injected as a normal stylesheet so it governs BOTH the measurement below
-       and the actual print render -> the scale we compute always matches. */
+       full desktop two-column grids (so phones don't print the mobile reflow). */
     if(page){
       var st=document.createElement('style');
       st.id='__print-style';
       st.textContent=
-        'html{font-size:'+PRINT_ROOT+' !important;}'+
-        '#page{width:'+PRINT_WIDTH+'px !important;max-width:none !important;}'+
+        'html{font-size:'+PRINT_ROOT+' !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }'+
+        '#page{' +
+        '  width:'+PRINT_WIDTH+'px !important;' +
+        '  max-width:none !important;' +
+        '  height: var(--print-forced-height, auto) !important;' + // Safari fix: Forces page height box to shrink
+        '  overflow: hidden !important;' +
+        '}'+
         '.top-grid{grid-template-columns:1fr 1fr !important;}'+
         '.top-col:first-child{border-right:1px solid var(--border) !important;border-bottom:none !important;}'+
         '.meta-grid{grid-template-columns:1fr 1fr !important;}'+
@@ -1695,26 +1699,39 @@ document.addEventListener('DOMContentLoaded',function(){
         'label,.lbl,.col-label,.gas-label,.check-item,.yn-group label,.bore .t{font-size:'+PRINT_LABEL_REM+' !important;}';
       document.head.appendChild(st);
 
-      page.style.zoom='';                            // measure natural size first
+      page.style.transform=''; 
+      page.style.transformOrigin='';
+      
       var w=page.offsetWidth, h=page.offsetHeight;   // reflowed to the enlarged layout
-      /* the larger font triggers a small async metric reflow that grows height a
-         few % AFTER this sync measurement; pad for it so the footer isn't clipped */
       var hSafe=h*1.05;
       var availW=(8.5 - 2*MARGIN)*DPI;     // ~787px printable width
-      /* iOS Safari's Save-to-PDF injects its own URL/date header + page-number
-         footer that steal ~1.4in of height it doesn't tell CSS about; reserve it
-         there so the sheet still fits one page. Other browsers keep full height. */
-      var iOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
-                (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-      var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
-      var scale=Math.min(availW/w, availH/hSafe, 1)*0.82;
-      /* CSS zoom resizes the actual layout box (unlike transform), so the print
-         engine paginates on the shrunk size -> reliably one page, incl. Safari */
-      page.style.zoom=scale;
+      
+      /* Robust Safari Touch/iOS detection (Avoids broken UserAgent sniffing) */
+      var isSafariTarget = /Constructor/i.test(window.HTMLElement) || 
+                           (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)) ||
+                           (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+      
+      var availH=(11 - 2*MARGIN - (isSafariTarget?1.4:0))*DPI;
+      var scale=Math.min(availW/w, availH/hSafe, 1)*0.96;
+      
+      /* SAFARI REWRITE: Use scale3d and update document properties.
+         Safari will render the element smaller, but keep the layout container large.
+         To force Safari to cleanly fit it onto one page, we dynamically declare a 
+         custom layout height property matching the downscaled size. */
+      page.style.transformOrigin = 'top left';
+      page.style.transform = 'scale3d(' + scale + ', ' + scale + ', 1)';
+      
+      // Update the CSS variable to explicitly force Safari's container height down
+      var calculatedHeight = Math.ceil(hSafe * scale);
+      page.style.setProperty('--print-forced-height', calculatedHeight + 'px');
+      
       saved.zoomed=true;
     }
   }
-
+  
+  // Make function globally available if called externally
+  window.preparePrint = preparePrint;
+}
   function restorePrint(){
     if(!saved) return;
     var body=document.body, page=document.getElementById('page');
