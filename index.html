@@ -365,7 +365,7 @@
 
 <div class="action-bar" id="action-bar">
   <a class="ab-btn" href="#">🏠 Home</a>
-  <a class="ab-btn" onclick="window.print()" style="cursor:pointer;">📄 PDF</a>
+  <a class="ab-btn" onclick="printPDF()" style="cursor:pointer;">📄 PDF</a>
   <a class="ab-btn" style="cursor:pointer;">📝 Edit PDF</a>
   <a class="ab-btn" onclick="if(confirm('Clear all fields?'))document.querySelectorAll('input,textarea').forEach(function(e){if(e.type==='radio'||e.type==='checkbox')e.checked=false;else e.value='';});" style="cursor:pointer;">🗑 Clear</a>
   <a class="ab-btn" style="cursor:pointer;">📂 Load</a>
@@ -1650,6 +1650,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var saved=null;
 
   function preparePrint(){
+    if(saved) return;                 // already prepared (e.g. button + beforeprint both fired)
     var body=document.body;
     var page=document.getElementById('page');
     saved={
@@ -1746,6 +1747,23 @@ document.addEventListener('DOMContentLoaded',function(){
 
   window.addEventListener('beforeprint', preparePrint);
   window.addEventListener('afterprint', restorePrint);
+
+  /* Button entry point. iOS Safari never fires beforeprint/afterprint, so we
+     can't depend on them — run the prep on the click itself and restore when the
+     user returns to the page (iOS) or via afterprint (desktop), with a fallback. */
+  window.printPDF=function(){
+    preparePrint();
+    var done=false;
+    function restoreOnce(){
+      if(done) return; done=true;
+      document.removeEventListener('visibilitychange', onVis);
+      restorePrint();
+    }
+    function onVis(){ if(document.visibilityState==='visible') restoreOnce(); }
+    document.addEventListener('visibilitychange', onVis);  // iOS: return from share sheet
+    setTimeout(restoreOnce, 4000);                         // fallback (and desktop also uses afterprint)
+    try{ window.print(); }catch(e){}
+  };
 })();
 </script>
 </body>
