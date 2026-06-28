@@ -1707,7 +1707,7 @@ document.addEventListener('DOMContentLoaded',function(){
       var iOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
                 (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
       var availH=(11 - 2*MARGIN - (iOS?1.4:0))*DPI;
-      var scale=Math.min(availW/w, availH/hSafe, 1)*0.995;
+      var scale=Math.min(availW/w, availH/hSafe, 1)*0.82;
       /* CSS zoom resizes the actual layout box (unlike transform), so the print
          engine paginates on the shrunk size -> reliably one page, incl. Safari */
       page.style.zoom=scale;
